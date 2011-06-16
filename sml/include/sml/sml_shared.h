@@ -102,8 +102,8 @@ void sml_buf_optional_write(sml_buffer *buf);
 void sml_buf_update_bytes_read(sml_buffer *buf, int bytes);
 
 // Checks if the next field is a skipped optional field, updates the buffer accordingly
-int mc_sml_is_optional_skipped(sml_buffer *buf);
-#define SML_SKIP_OPTIONAL (mc_sml_is_optional_skipped(buf)) ? 0 :
+int sml_buf_optional_is_skipped(sml_buffer *buf);
+#define SML_SKIP_OPTIONAL (sml_buf_optional_is_skipped(buf)) ? 0 :
 
 void hexdump(unsigned char *buffer, size_t buffer_len);
 

@@ -121,7 +121,7 @@ void sml_buffer_free(sml_buffer *buf) {
     }
 }
 
-int mc_sml_is_optional_skipped(sml_buffer *buf) {
+int sml_buf_optional_is_skipped(sml_buffer *buf) {
 	if (sml_buf_get_current_byte(buf) == SML_OPTIONAL_SKIPPED) {
 		sml_buf_update_bytes_read(buf, 1);
 		return 1;
