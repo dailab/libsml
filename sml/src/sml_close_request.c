@@ -32,7 +32,7 @@ void sml_close_request_write(sml_close_request *msg, sml_buffer *buf) {
 
     if (msg->global_signature != NULL){
     	sml_octet_string_write(msg->global_signature,buf);
-    } else mc_sml_optional_write(buf);
+    } else sml_buf_optional_write(buf);
 }
 
 sml_close_request * sml_close_request_parse(sml_buffer *buf) {

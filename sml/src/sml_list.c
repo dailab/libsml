@@ -101,7 +101,7 @@ error:
 
 void sml_list_write(sml_list *list, sml_buffer *buf){
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 1);
-    mc_sml_optional_write(buf);
+    sml_buf_optional_write(buf);
    //
 }
 

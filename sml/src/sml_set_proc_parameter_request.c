@@ -29,9 +29,9 @@ sml_set_proc_parameter_request *sml_set_proc_parameter_request_init() {
 
 void sml_set_proc_parameter_request_write(sml_set_proc_parameter_request *msg, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
-    mc_sml_optional_write(buf);
-    mc_sml_optional_write(buf);
-    mc_sml_optional_write(buf);
+    sml_buf_optional_write(buf);
+    sml_buf_optional_write(buf);
+    sml_buf_optional_write(buf);
     sml_tree_path_write(msg->parameter_tree_path, buf);
     sml_tree_write(msg->parameter_tree, buf);
 }

@@ -58,13 +58,13 @@ sml_open_request *sml_open_request_init() {
 void sml_open_request_write(sml_open_request *msg, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 7);
     
-    mc_sml_optional_write(buf);
+    sml_buf_optional_write(buf);
     sml_octet_string_write(msg->client_id, buf);
     sml_octet_string_write(msg->req_file_id, buf);
     sml_octet_string_write(msg->server_id, buf);
     sml_octet_string_write(msg->username,buf);
     sml_octet_string_write(msg->password,buf);
-    mc_sml_optional_write(buf);
+    sml_buf_optional_write(buf);
 
 }
 

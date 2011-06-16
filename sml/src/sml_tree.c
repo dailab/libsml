@@ -69,8 +69,8 @@ void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
     sml_octet_string_write(tree->parameter_name, buf);
     // TODO
     sml_proc_par_value_write(tree->parameter_value, buf);
-    //mc_sml_optional_write(buf);
-    mc_sml_optional_write(buf);
+    //sml_buf_optional_write(buf);
+    sml_buf_optional_write(buf);
 }
 
 sml_proc_par_value *sml_proc_par_value_init(u8 tag, void *data) {

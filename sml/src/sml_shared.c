@@ -106,7 +106,7 @@ sml_buffer *sml_buffer_init(size_t length) {
     return buf;
 }
 
-void mc_sml_optional_write(sml_buffer *buf) {
+void sml_buf_optional_write(sml_buffer *buf) {
     buf->buffer[buf->cursor] = SML_OPTIONAL_SKIPPED;
     buf->cursor++;
 }

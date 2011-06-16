@@ -34,17 +34,17 @@ void sml_get_proc_parameter_request_write(sml_get_proc_parameter_request *msg, s
     // optional server_id
     if (msg->server_id != NULL){
     	sml_octet_string_write(msg->server_id, buf);
-    } else  mc_sml_optional_write(buf);
+    } else  sml_buf_optional_write(buf);
 
     // optional username
     if (msg->username != NULL) {
     	sml_octet_string_write(msg->username, buf);
-    } else mc_sml_optional_write(buf);
+    } else sml_buf_optional_write(buf);
 
     // optional password
     if (msg->password != NULL){
     	sml_octet_string_write(msg->password, buf);
-    } else mc_sml_optional_write(buf);
+    } else sml_buf_optional_write(buf);
 
     sml_tree_path_write(msg->parameter_tree_path, buf);
 
