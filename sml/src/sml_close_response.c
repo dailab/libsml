@@ -36,7 +36,7 @@ sml_close_response *sml_close_response_parse(sml_buffer *buf) {
 	}
     
     msg->global_signature = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-    if (mc_sml_buf_has_errors(buf)) goto error;
+    if (sml_buf_has_errors(buf)) goto error;
     
     return msg;
     

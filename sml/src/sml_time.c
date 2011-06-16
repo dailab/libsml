@@ -36,10 +36,10 @@ sml_time *sml_time_parse(sml_buffer *buf) {
 	}
 	
 	tme->tag = mc_sml_parse_u8(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tme->data = mc_sml_parse_u32(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	return tme;
 	

@@ -37,25 +37,25 @@ sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
 	}
 
 	msg->client_id = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->server_id = sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->list_name = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->act_sensor_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->val_list = sml_list_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->list_signature = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->act_gateway_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	return msg;
 	

@@ -77,7 +77,7 @@ void sml_buf_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned in
     buf->cursor++;
 }
 
-int mc_sml_buf_has_errors(sml_buffer *buf) {
+int sml_buf_has_errors(sml_buffer *buf) {
 	return buf->error != 0;
 }
 

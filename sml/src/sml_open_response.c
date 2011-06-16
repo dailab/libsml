@@ -36,22 +36,22 @@ sml_open_response *sml_open_response_parse(sml_buffer *buf) {
 	}
 	
 	msg->codepage = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->client_id = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->req_file_id = sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->server_id = sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->ref_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->sml_version = SML_SKIP_OPTIONAL mc_sml_parse_u8(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	return msg;
 error:

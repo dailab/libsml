@@ -70,25 +70,25 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 		}
 
 		cur->obj_name = sml_octet_string_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 		
 		cur->status = SML_SKIP_OPTIONAL sml_status_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 		
 		cur->val_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 		
 		cur->unit = SML_SKIP_OPTIONAL mc_sml_parse_u8(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 
 		cur->scaler = SML_SKIP_OPTIONAL mc_sml_parse_i8(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 
 		cur->value = SML_SKIP_OPTIONAL sml_value_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 
 		cur->value_signature = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 		
 		cur->next = 0;
 	}

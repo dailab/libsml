@@ -53,19 +53,19 @@ sml_message *sml_message_parse(sml_buffer *buf) {
 	}
 	
 	msg->transaction_id = sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->group_id = mc_sml_parse_u8(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->abort_on_error = mc_sml_parse_u8(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->message_body = sml_message_body_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
     
 	msg->crc = mc_sml_parse_u16(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	if (mc_sml_buf_get_current_byte(buf) == SML_MESSAGE_END) {
 		mc_sml_buf_update_read_bytes(buf, 1);
@@ -131,7 +131,7 @@ sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 	}
 	
 	msg_body->tag = mc_sml_parse_u16(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	switch (msg_body->tag) {
         case SML_MESSAGE_OPEN_REQUEST:

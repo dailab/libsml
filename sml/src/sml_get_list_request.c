@@ -71,19 +71,19 @@ sml_get_list_request *sml_get_list_request_parse(sml_buffer *buf) {
 	}
 	
 	msg->client_id = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->server_id = sml_octet_string_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 
 	msg->username = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->password = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 
 	msg->list_name = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-		if (mc_sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) goto error;
 
 	return msg;
 	

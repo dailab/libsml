@@ -83,25 +83,25 @@ sml_open_request *sml_open_request_parse(sml_buffer *buf) {
 	}
     
     msg->codepage = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
     
     msg->client_id = sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
     
     msg->req_file_id = sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
     
     msg->server_id = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
     
     msg->username = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
     
     msg->password = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
     
     msg->sml_version = SML_SKIP_OPTIONAL mc_sml_parse_u8(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
     
     return msg;
     

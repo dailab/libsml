@@ -95,7 +95,7 @@ sml_value *sml_value_parse(sml_buffer *buf) {
 			buf->error = 1;
 			break;
 	}
-	if (mc_sml_buf_has_errors(buf)) {
+	if (sml_buf_has_errors(buf)) {
 		free(value);
 		return 0;
 	}

@@ -35,16 +35,16 @@ sml_attention_response *sml_attention_response_parse(sml_buffer *buf){
 	}
 
 	msg->server_id = sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->attention_number = sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->attention_message = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->attention_details = SML_SKIP_OPTIONAL sml_tree_parse(buf);
-	if (mc_sml_buf_has_errors(buf)) goto error;
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	return msg;
 	
