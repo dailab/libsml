@@ -1,3 +1,21 @@
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// DAI-Labor, TU-Berlin
+// 
+// This file is part of libSML.
+// 
+// libSML is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// libSML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with libSML.  If not, see <http://www.gnu.org/licenses/>.
+
 #ifndef _SML_SHARED_H
 #define	_SML_SHARED_H
 
@@ -7,8 +25,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -71,13 +87,11 @@ void mc_sml_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned int
 // Checks if a error is occured.
 int mc_sml_buf_has_errors(sml_buffer *buf);
 
-
 // Returns the type field of the current byte.
 int mc_sml_buf_get_current_type(sml_buffer *buf);
 
 // Returns the current byte.
 unsigned char mc_sml_buf_get_current_byte(sml_buffer *buf);
-
 
 // Returns a pointer to the current buffer position.
 unsigned char *mc_sml_buf_get_current_buf(sml_buffer *buf);
@@ -96,6 +110,5 @@ void hexdump(unsigned char *buffer, size_t buffer_len);
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif
