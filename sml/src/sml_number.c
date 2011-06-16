@@ -42,7 +42,7 @@ u64 mc_sml_parse_number(sml_buffer *buf, unsigned char type, int max_size) {
 	for (i = 0; i < l; i++) {
 		n <<= 8;
 		n |= sml_buf_get_current_byte(buf);
-		mc_sml_buf_update_read_bytes(buf, 1);
+		sml_buf_update_bytes_read(buf, 1);
 	}
 	return n;
 }

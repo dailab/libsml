@@ -99,7 +99,7 @@ unsigned char *sml_buf_get_current_buf(sml_buffer *buf);
 void sml_buf_optional_write(sml_buffer *buf);
 
 // Sets the number of bytes read (moves the cursor forward)
-void mc_sml_buf_update_read_bytes(sml_buffer *buf, int bytes);
+void sml_buf_update_bytes_read(sml_buffer *buf, int bytes);
 
 // Checks if the next field is a skipped optional field, updates the buffer accordingly
 int mc_sml_is_optional_skipped(sml_buffer *buf);

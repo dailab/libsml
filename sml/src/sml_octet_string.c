@@ -94,7 +94,7 @@ octet_string *sml_octet_string_parse(sml_buffer *buf) {
 	}
 	
     octet_string *str = sml_octet_string_init(sml_buf_get_current_buf(buf), l);
-	mc_sml_buf_update_read_bytes(buf, l);
+	sml_buf_update_bytes_read(buf, l);
 	return str;
 }
 

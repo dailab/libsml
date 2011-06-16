@@ -34,12 +34,12 @@ int sml_buf_get_next_length(sml_buffer *buf) {
 		if ((byte & SML_ANOTHER_TL) != SML_ANOTHER_TL) {
 			break;
 		}
-        mc_sml_buf_update_read_bytes(buf, 1);
+        sml_buf_update_bytes_read(buf, 1);
         if(list) {
             list += -1;
         }
 	}
-	mc_sml_buf_update_read_bytes(buf, 1);
+	sml_buf_update_bytes_read(buf, 1);
 	return length + list;
 }
 
@@ -93,7 +93,7 @@ unsigned char *sml_buf_get_current_buf(sml_buffer *buf) {
 	return &(buf->buffer[buf->cursor]);
 }
 
-void mc_sml_buf_update_read_bytes(sml_buffer *buf, int bytes) {
+void sml_buf_update_bytes_read(sml_buffer *buf, int bytes) {
 	buf->cursor += bytes;
 }
 
@@ -123,7 +123,7 @@ void sml_buffer_free(sml_buffer *buf) {
 
 int mc_sml_is_optional_skipped(sml_buffer *buf) {
 	if (sml_buf_get_current_byte(buf) == SML_OPTIONAL_SKIPPED) {
-		mc_sml_buf_update_read_bytes(buf, 1);
+		sml_buf_update_bytes_read(buf, 1);
 		return 1;
 	}
 	return 0;
