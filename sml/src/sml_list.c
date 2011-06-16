@@ -42,7 +42,7 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 		return 0;
 	}
 	
-	elems = mc_sml_get_length(buf);
+	elems = sml_buf_get_next_length(buf);
 	sml_list *start = 0;
 	sml_list *cur = 0;
 	sml_list *tmp;
@@ -54,7 +54,7 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 			goto error;
 		}
 		
-		if (mc_sml_get_length(buf) != 7) {
+		if (sml_buf_get_next_length(buf) != 7) {
 			buf->error = 1;
 			goto error;
 		}

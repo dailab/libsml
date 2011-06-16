@@ -87,7 +87,7 @@ octet_string *sml_octet_string_parse(sml_buffer *buf) {
 		return 0;
 	}
 	
-	l = mc_sml_get_length(buf);
+	l = sml_buf_get_next_length(buf);
 	if (l < 0) {
 		buf->error = 1;
 		return 0;

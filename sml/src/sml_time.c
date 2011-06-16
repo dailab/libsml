@@ -30,7 +30,7 @@ sml_time *sml_time_parse(sml_buffer *buf) {
 		goto error;
 	}
 	
-	if (mc_sml_get_length(buf) != 2) {
+	if (sml_buf_get_next_length(buf) != 2) {
 		buf->error = 1;
 		goto error;
 	}

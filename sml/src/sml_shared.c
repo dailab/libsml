@@ -21,7 +21,7 @@
 #include <sml/sml_shared.h>
 #include <stdio.h>
 
-int mc_sml_get_length(sml_buffer *buf) {
+int sml_buf_get_next_length(sml_buffer *buf) {
 	int length = 0;
 	unsigned char byte = mc_sml_buf_get_current_byte(buf);
 	int list = ((byte & SML_TYPE_FIELD) == SML_TYPE_LIST) ? 0 : -1;

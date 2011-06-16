@@ -30,7 +30,7 @@ sml_open_response *sml_open_response_parse(sml_buffer *buf) {
 		goto error;
 	}
 	
-	if (mc_sml_get_length(buf) != 6) {
+	if (sml_buf_get_next_length(buf) != 6) {
 		buf->error = 1;
 		goto error;
 	}

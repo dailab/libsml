@@ -29,7 +29,7 @@ sml_attention_response *sml_attention_response_parse(sml_buffer *buf){
 		goto error;
 	}
 
-	if (mc_sml_get_length(buf) != 4) {
+	if (sml_buf_get_next_length(buf) != 4) {
 		buf->error = 1;
 		goto error;
 	}

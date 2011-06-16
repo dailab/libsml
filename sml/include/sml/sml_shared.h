@@ -80,7 +80,7 @@ void sml_buffer_free(sml_buffer *buf);
 
 // Returns the length of the following data structure. Sets the cursor position to 
 // the value field.
-int mc_sml_get_length(sml_buffer *buf);
+int sml_buf_get_next_length(sml_buffer *buf);
 
 void mc_sml_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned int l);
 

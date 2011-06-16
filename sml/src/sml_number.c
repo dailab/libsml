@@ -30,7 +30,7 @@ u64 mc_sml_parse_number(sml_buffer *buf, unsigned char type, int max_size) {
 		return 0;
 	}
 	
-	l = mc_sml_get_length(buf);
+	l = sml_buf_get_next_length(buf);
 	if (l < 0 || l > max_size) {
 		buf->error = 1;
 		return 0;

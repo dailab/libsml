@@ -31,7 +31,7 @@ sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
 		goto error;
 	}
 	
-	if (mc_sml_get_length(buf) != 7) {
+	if (sml_buf_get_next_length(buf) != 7) {
 		buf->error = 1;
 		goto error;
 	}

@@ -65,7 +65,7 @@ sml_get_list_request *sml_get_list_request_parse(sml_buffer *buf) {
 		goto error;
 	}
 	
-	if (mc_sml_get_length(buf) != 5) {
+	if (sml_buf_get_next_length(buf) != 5) {
 		buf->error = 1;
 		goto error;
 	}

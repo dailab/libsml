@@ -81,7 +81,7 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf
 		goto error;
 	}
 	
-	if (mc_sml_get_length(buf) != 9) {
+	if (sml_buf_get_next_length(buf) != 9) {
 		buf->error = 1;
 		goto error;
 	}
