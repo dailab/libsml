@@ -91,7 +91,7 @@ int sml_buf_has_errors(sml_buffer *buf);
 int sml_buf_get_next_type(sml_buffer *buf);
 
 // Returns the current byte.
-unsigned char mc_sml_buf_get_current_byte(sml_buffer *buf);
+unsigned char sml_buf_get_current_byte(sml_buffer *buf);
 
 // Returns a pointer to the current buffer position.
 unsigned char *mc_sml_buf_get_current_buf(sml_buffer *buf);

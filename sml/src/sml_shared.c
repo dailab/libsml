@@ -23,11 +23,11 @@
 
 int sml_buf_get_next_length(sml_buffer *buf) {
 	int length = 0;
-	unsigned char byte = mc_sml_buf_get_current_byte(buf);
+	unsigned char byte = sml_buf_get_current_byte(buf);
 	int list = ((byte & SML_TYPE_FIELD) == SML_TYPE_LIST) ? 0 : -1;
 	
 	for (;buf->cursor < buf->buffer_len;) {
-		byte = mc_sml_buf_get_current_byte(buf);
+		byte = sml_buf_get_current_byte(buf);
 		length <<= 4;
 		length |= (byte & SML_LENGTH_FIELD);
 		
@@ -85,7 +85,7 @@ int sml_buf_get_next_type(sml_buffer *buf) {
 	return (buf->buffer[buf->cursor] & SML_TYPE_FIELD);
 }
 
-unsigned char mc_sml_buf_get_current_byte(sml_buffer *buf) {
+unsigned char sml_buf_get_current_byte(sml_buffer *buf) {
 	return buf->buffer[buf->cursor];
 }
 
@@ -122,7 +122,7 @@ void sml_buffer_free(sml_buffer *buf) {
 }
 
 int mc_sml_is_optional_skipped(sml_buffer *buf) {
-	if (mc_sml_buf_get_current_byte(buf) == SML_OPTIONAL_SKIPPED) {
+	if (sml_buf_get_current_byte(buf) == SML_OPTIONAL_SKIPPED) {
 		mc_sml_buf_update_read_bytes(buf, 1);
 		return 1;
 	}

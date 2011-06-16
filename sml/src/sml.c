@@ -64,7 +64,7 @@ sml_file *sml_file_parse(unsigned char *buffer, size_t buffer_len) {
     // parsing all messages
     for (; buf->cursor < buf->buffer_len;) {
         
-        if(mc_sml_buf_get_current_byte(buf) == SML_MESSAGE_END) {
+        if(sml_buf_get_current_byte(buf) == SML_MESSAGE_END) {
             // reading trailing zeroed bytes
             mc_sml_buf_update_read_bytes(buf, 1);
             continue;

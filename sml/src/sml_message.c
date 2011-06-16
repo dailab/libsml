@@ -67,7 +67,7 @@ sml_message *sml_message_parse(sml_buffer *buf) {
 	msg->crc = mc_sml_parse_u16(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
-	if (mc_sml_buf_get_current_byte(buf) == SML_MESSAGE_END) {
+	if (sml_buf_get_current_byte(buf) == SML_MESSAGE_END) {
 		mc_sml_buf_update_read_bytes(buf, 1);
 	}
 	return msg;
