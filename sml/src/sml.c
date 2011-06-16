@@ -32,7 +32,7 @@
 /*
 void mc_sml_hexdump_rest(sml_buffer *buf) {
 	int i;
-    unsigned char *rest = mc_sml_buf_get_current_buf(buf);
+    unsigned char *rest = sml_buf_get_current_buf(buf);
     for (i = 0; i < buf->buffer_len - buf->cursor; i++) {
 		printf("%02X ", (unsigned char) rest[i]);
 		if ((i + 1) % 8 == 0) {

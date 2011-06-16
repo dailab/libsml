@@ -94,7 +94,7 @@ int sml_buf_get_next_type(sml_buffer *buf);
 unsigned char sml_buf_get_current_byte(sml_buffer *buf);
 
 // Returns a pointer to the current buffer position.
-unsigned char *mc_sml_buf_get_current_buf(sml_buffer *buf);
+unsigned char *sml_buf_get_current_buf(sml_buffer *buf);
 
 void mc_sml_optional_write(sml_buffer *buf);
 

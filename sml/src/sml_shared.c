@@ -89,7 +89,7 @@ unsigned char sml_buf_get_current_byte(sml_buffer *buf) {
 	return buf->buffer[buf->cursor];
 }
 
-unsigned char *mc_sml_buf_get_current_buf(sml_buffer *buf) {
+unsigned char *sml_buf_get_current_buf(sml_buffer *buf) {
 	return &(buf->buffer[buf->cursor]);
 }
 
