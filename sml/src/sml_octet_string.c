@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 
-#ifdef SML_WITH_UUID_LIB
+#ifndef _NO_UUID_LIB
 #include <uuid/uuid.h>
 #endif
 
@@ -105,7 +105,7 @@ void sml_octet_string_write(octet_string *str, sml_buffer *buf) {
 }
 
 octet_string *sml_octet_string_generate_uuid() {
-#ifdef SML_WITH_UUID_LIB
+#ifndef _NO_UUID_LIB
     uuid_t uuid;
     uuid_generate(uuid);
     return sml_octet_string_init(uuid, 16);

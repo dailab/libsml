@@ -1,4 +1,7 @@
-CFLAGS+=-I./include/ -fPIC -g -Wall
+CFLAGS += -I./include/ -fPIC -g -Wall
+
+# Available Flags:
+# _NO_UUID_LIB - compile without uuid lib
 
 LIB_DIR=./lib
 OBJ_LIB=$(LIB_DIR)/libsml.o
