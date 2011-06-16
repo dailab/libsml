@@ -28,7 +28,7 @@
 #define MC_SML_BUFFER_LEN 8096
 
 // Invokes on every incoming SML message the given method. The buffer is freed afterwards.
-void mc_sml_transport_listen(int fd, void (*mc_sml_transport_receiver)(unsigned char *buffer, size_t buffer_len)) {
+void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len)) {
 
 	fd_set readfds;
 	FD_ZERO(&readfds);
@@ -81,7 +81,7 @@ void mc_sml_transport_listen(int fd, void (*mc_sml_transport_receiver)(unsigned 
 							char *sml_file = (char *) malloc(i);
 							memcpy(sml_file, &(buf[0]), i);
 							// without the SML transport stuff
-							mc_sml_transport_receiver((unsigned char *)(sml_file ), i);
+							sml_transport_receiver((unsigned char *)(sml_file ), i);
 							free(sml_file);
 							i = -1;
 							esc = 0;

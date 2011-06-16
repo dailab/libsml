@@ -42,8 +42,6 @@ void sml_file_write(sml_file *file);
 void sml_file_free(sml_file *file);
 void sml_file_print(sml_file *file);
 
-void mc_sml_hexdump(unsigned char *buffer, size_t buffer_len);
-
 #ifdef __cplusplus
 }
 #endif

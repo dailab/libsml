@@ -29,25 +29,6 @@
 // EDL meter must provide at least 250 bytes as a receive buffer
 #define SML_FILE_BUFFER_LENGTH 512
 
-/*
-void mc_sml_hexdump_rest(sml_buffer *buf) {
-	int i;
-    unsigned char *rest = sml_buf_get_current_buf(buf);
-    for (i = 0; i < buf->buffer_len - buf->cursor; i++) {
-		printf("%02X ", (unsigned char) rest[i]);
-		if ((i + 1) % 8 == 0) {
-			printf("\n");
-		}
-	}
-	printf("\n");
-}
-*/
-
-void mc_sml_hexdump(unsigned char *buffer, size_t buffer_len) {
-	printf("SML dump (%zu bytes)\n", buffer_len);
-	hexdump(buffer, buffer_len);
-}
-
 sml_file *sml_file_parse(unsigned char *buffer, size_t buffer_len) {
     
 	//buffer += 8;
