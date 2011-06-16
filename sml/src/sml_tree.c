@@ -36,7 +36,7 @@ void sml_tree_path_add_path_entry(sml_tree_path *tree_path, octet_string *entry)
 void sml_tree_path_write(sml_tree_path *tree_path, sml_buffer *buf) {
     int i;
     if (tree_path->path_entries && tree_path->path_entries_len > 0) {
-        mc_sml_set_type_and_length(buf, SML_TYPE_LIST, tree_path->path_entries_len);
+        sml_buf_set_type_and_length(buf, SML_TYPE_LIST, tree_path->path_entries_len);
         for (i = 0; i < tree_path->path_entries_len; i++) {
             sml_octet_string_write(tree_path->path_entries[i], buf);
         }
@@ -65,7 +65,7 @@ void sml_tree_free(sml_tree *tree){
 }
 
 void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
-    mc_sml_set_type_and_length(buf, SML_TYPE_LIST, 3);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 3);
     sml_octet_string_write(tree->parameter_name, buf);
     // TODO
     sml_proc_par_value_write(tree->parameter_value, buf);
@@ -103,7 +103,7 @@ sml_proc_par_value *sml_proc_par_value_init(u8 tag, void *data) {
 }
 
 void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
-    mc_sml_set_type_and_length(buf, SML_TYPE_LIST, 2);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
     sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8, (u64) value->tag, buf);
 
     switch (value->tag) {

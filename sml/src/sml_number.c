@@ -48,7 +48,7 @@ u64 mc_sml_parse_number(sml_buffer *buf, unsigned char type, int max_size) {
 }
 
 void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf) {
-    mc_sml_set_type_and_length(buf, type, size);
+    sml_buf_set_type_and_length(buf, type, size);
     int i;
     u64 mask = 0xFF;
     mask <<= (8 * (size - 1));

@@ -28,7 +28,7 @@ sml_close_request *sml_close_request_init() {
 }
 
 void sml_close_request_write(sml_close_request *msg, sml_buffer *buf) {
-    mc_sml_set_type_and_length(buf, SML_TYPE_LIST, 1);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 1);
 
     if (msg->global_signature != NULL){
     	sml_octet_string_write(msg->global_signature,buf);

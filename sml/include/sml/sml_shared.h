@@ -82,7 +82,7 @@ void sml_buffer_free(sml_buffer *buf);
 // the value field.
 int sml_buf_get_next_length(sml_buffer *buf);
 
-void mc_sml_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned int l);
+void sml_buf_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned int l);
 
 // Checks if a error is occured.
 int mc_sml_buf_has_errors(sml_buffer *buf);

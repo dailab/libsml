@@ -33,7 +33,7 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_init(){
 }
 
 void sml_get_profile_pack_request_write(sml_get_profile_pack_request *msg, sml_buffer *buf) {
-    mc_sml_set_type_and_length(buf, SML_TYPE_LIST, 9);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 9);
 
     // server_id
     if (msg->server_id != NULL) {

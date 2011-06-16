@@ -99,7 +99,7 @@ void sml_message_free(sml_message *msg) {
 
 void sml_message_write(sml_message *msg, sml_buffer *buf) {
     int msg_start = buf->cursor;
-    mc_sml_set_type_and_length(buf, SML_TYPE_LIST, 6);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 6);
     sml_octet_string_write(msg->transaction_id, buf);
     sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8, (u64) msg->group_id, buf);
     sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8, (u64) msg->abort_on_error, buf);
@@ -176,7 +176,7 @@ sml_message_body *sml_message_body_init(u16 tag, void *data) {
 }
 
 void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
-    mc_sml_set_type_and_length(buf, SML_TYPE_LIST, 2);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
     sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_16, (u64) message_body->tag, buf);
     
     switch (message_body->tag) {

@@ -43,7 +43,7 @@ int sml_buf_get_next_length(sml_buffer *buf) {
 	return length + list;
 }
 
-void mc_sml_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned int l) {
+void sml_buf_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned int l) {
     // set the type
     buf->buffer[buf->cursor] |= type;
     

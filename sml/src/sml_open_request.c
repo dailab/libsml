@@ -56,7 +56,7 @@ sml_open_request *sml_open_request_init() {
 }
 */
 void sml_open_request_write(sml_open_request *msg, sml_buffer *buf) {
-    mc_sml_set_type_and_length(buf, SML_TYPE_LIST, 7);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 7);
     
     mc_sml_optional_write(buf);
     sml_octet_string_write(msg->client_id, buf);

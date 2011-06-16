@@ -29,7 +29,7 @@ sml_get_proc_parameter_request *sml_get_proc_parameter_request_init() {
 }
 
 void sml_get_proc_parameter_request_write(sml_get_proc_parameter_request *msg, sml_buffer *buf) {
-    mc_sml_set_type_and_length(buf, SML_TYPE_LIST, 5);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
 
     // optional server_id
     if (msg->server_id != NULL){
