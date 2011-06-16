@@ -100,7 +100,7 @@ sml_open_request *sml_open_request_parse(sml_buffer *buf) {
     msg->password = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
     
-    msg->sml_version = SML_SKIP_OPTIONAL mc_sml_parse_u8(buf);
+    msg->sml_version = SML_SKIP_OPTIONAL sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
     
     return msg;

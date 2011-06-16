@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdio.h>
 
-u64 mc_sml_parse_number(sml_buffer *buf, unsigned char type, int max_size) {
+u64 sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
 
 	int l, i;
 	u64 n = 0;

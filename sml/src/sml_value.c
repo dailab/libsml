@@ -35,23 +35,23 @@ sml_value *sml_value_parse(sml_buffer *buf) {
 		case SML_TYPE_UNSIGNED:
 			switch (byte & SML_LENGTH_FIELD) {
 				case SML_TYPE_NUMBER_8:
-					value->data.uint8 = mc_sml_parse_u8(buf);
+					value->data.uint8 = sml_u8_parse(buf);
                     value->type |= SML_TYPE_NUMBER_8;
 					break;
 				case SML_TYPE_NUMBER_16:
-					value->data.uint16 = mc_sml_parse_u16(buf);
+					value->data.uint16 = sml_u16_parse(buf);
                     value->type |= SML_TYPE_NUMBER_16;
 					break;
 				case SML_TYPE_NUMBER_16 + 1:
 				case SML_TYPE_NUMBER_32:
-					value->data.uint32 = mc_sml_parse_u32(buf);
+					value->data.uint32 = sml_u32_parse(buf);
                     value->type |= SML_TYPE_NUMBER_32;
 					break;
 				case SML_TYPE_NUMBER_32 + 1:
 				case SML_TYPE_NUMBER_32 + 2:
 				case SML_TYPE_NUMBER_32 + 3:
 				case SML_TYPE_NUMBER_64:
-					value->data.uint64 = mc_sml_parse_u64(buf);
+					value->data.uint64 = sml_u64_parse(buf);
                     value->type |= SML_TYPE_NUMBER_64;
 					break;
 				default:
@@ -67,23 +67,23 @@ sml_value *sml_value_parse(sml_buffer *buf) {
 			// TODO: check if same problem exists for other SML_TYPEs too
 			switch ((byte & SML_LENGTH_FIELD)-1) {
 				case SML_TYPE_NUMBER_8:
-					value->data.int8 = mc_sml_parse_i8(buf);
+					value->data.int8 = sml_i8_parse(buf);
                     value->type |= SML_TYPE_NUMBER_8;
 					break;
 				case SML_TYPE_NUMBER_16:
-					value->data.int16 = mc_sml_parse_i16(buf);
+					value->data.int16 = sml_i16_parse(buf);
                     value->type |= SML_TYPE_NUMBER_16;
 					break;
 				case SML_TYPE_NUMBER_16 + 1:
 				case SML_TYPE_NUMBER_32:
-					value->data.int32 = mc_sml_parse_i32(buf);
+					value->data.int32 = sml_i32_parse(buf);
                     value->type |= SML_TYPE_NUMBER_32;
 					break;
 				case SML_TYPE_NUMBER_32 + 1:
 				case SML_TYPE_NUMBER_32 + 2:
 				case SML_TYPE_NUMBER_32 + 3:
 				case SML_TYPE_NUMBER_64:
-					value->data.int64 = mc_sml_parse_i64(buf);
+					value->data.int64 = sml_i64_parse(buf);
                     value->type |= SML_TYPE_NUMBER_64;
 					break;
 				default:

@@ -78,10 +78,10 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 		cur->val_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
 		if (sml_buf_has_errors(buf)) goto error;
 		
-		cur->unit = SML_SKIP_OPTIONAL mc_sml_parse_u8(buf);
+		cur->unit = SML_SKIP_OPTIONAL sml_u8_parse(buf);
 		if (sml_buf_has_errors(buf)) goto error;
 
-		cur->scaler = SML_SKIP_OPTIONAL mc_sml_parse_i8(buf);
+		cur->scaler = SML_SKIP_OPTIONAL sml_i8_parse(buf);
 		if (sml_buf_has_errors(buf)) goto error;
 
 		cur->value = SML_SKIP_OPTIONAL sml_value_parse(buf);

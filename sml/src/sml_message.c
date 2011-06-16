@@ -55,16 +55,16 @@ sml_message *sml_message_parse(sml_buffer *buf) {
 	msg->transaction_id = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
-	msg->group_id = mc_sml_parse_u8(buf);
+	msg->group_id = sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
-	msg->abort_on_error = mc_sml_parse_u8(buf);
+	msg->abort_on_error = sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	msg->message_body = sml_message_body_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
     
-	msg->crc = mc_sml_parse_u16(buf);
+	msg->crc = sml_u16_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	if (sml_buf_get_current_byte(buf) == SML_MESSAGE_END) {
@@ -130,7 +130,7 @@ sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 		goto error;
 	}
 	
-	msg_body->tag = mc_sml_parse_u16(buf);
+	msg_body->tag = sml_u16_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	switch (msg_body->tag) {

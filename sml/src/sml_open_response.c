@@ -50,7 +50,7 @@ sml_open_response *sml_open_response_parse(sml_buffer *buf) {
 	msg->ref_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
-	msg->sml_version = SML_SKIP_OPTIONAL mc_sml_parse_u8(buf);
+	msg->sml_version = SML_SKIP_OPTIONAL sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	return msg;
