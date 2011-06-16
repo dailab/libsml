@@ -25,7 +25,7 @@
 sml_time *sml_time_parse(sml_buffer *buf) {
 	sml_time *tme = (sml_time *) malloc(sizeof(sml_time));
 	
-	if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}

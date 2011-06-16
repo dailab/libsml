@@ -22,7 +22,7 @@
 #include <stdio.h>
 
 sml_value *sml_value_parse(sml_buffer *buf) {
-	int type = mc_sml_buf_get_current_type(buf);
+	int type = sml_buf_get_next_type(buf);
 	unsigned char byte = mc_sml_buf_get_current_byte(buf);
 	
 	sml_value *value = (sml_value *) malloc(sizeof(sml_value));

@@ -42,7 +42,7 @@ sml_message *sml_message_parse(sml_buffer *buf) {
 	sml_message *msg = (sml_message *) malloc(sizeof(sml_message));
 	memset(msg, 0, sizeof(sml_message));
 	
-	if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}
@@ -120,7 +120,7 @@ sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 	sml_message_body *msg_body = (sml_message_body *) malloc(sizeof(sml_message_body));
 	memset(msg_body, 0, sizeof(sml_message_body));
 	
-	if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}

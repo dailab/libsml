@@ -88,7 +88,7 @@ void sml_buf_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned in
 int sml_buf_has_errors(sml_buffer *buf);
 
 // Returns the type field of the current byte.
-int mc_sml_buf_get_current_type(sml_buffer *buf);
+int sml_buf_get_next_type(sml_buffer *buf);
 
 // Returns the current byte.
 unsigned char mc_sml_buf_get_current_byte(sml_buffer *buf);

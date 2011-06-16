@@ -24,7 +24,7 @@ sml_attention_response *sml_attention_response_parse(sml_buffer *buf){
 	sml_attention_response *msg = (sml_attention_response *) malloc(sizeof(sml_attention_response));
 	memset(msg, 0, sizeof(sml_attention_response));
 
-	if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}

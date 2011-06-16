@@ -82,7 +82,7 @@ void sml_octet_string_free(octet_string *str) {
 
 octet_string *sml_octet_string_parse(sml_buffer *buf) {
     int l;
-	if (mc_sml_buf_get_current_type(buf) != SML_TYPE_OCTET_STRING) {
+	if (sml_buf_get_next_type(buf) != SML_TYPE_OCTET_STRING) {
 		buf->error = 1;
 		return 0;
 	}

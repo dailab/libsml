@@ -72,7 +72,7 @@ sml_open_request *sml_open_request_parse(sml_buffer *buf) {
     sml_open_request *msg = (sml_open_request *) malloc(sizeof(sml_open_request));
     memset(msg, 0, sizeof(sml_open_request));
     
-    if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+    if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}

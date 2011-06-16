@@ -81,7 +81,7 @@ int sml_buf_has_errors(sml_buffer *buf) {
 	return buf->error != 0;
 }
 
-int mc_sml_buf_get_current_type(sml_buffer *buf) {
+int sml_buf_get_next_type(sml_buffer *buf) {
 	return (buf->buffer[buf->cursor] & SML_TYPE_FIELD);
 }
 

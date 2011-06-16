@@ -25,7 +25,7 @@ u64 mc_sml_parse_number(sml_buffer *buf, unsigned char type, int max_size) {
 
 	int l, i;
 	u64 n = 0;
-	if (mc_sml_buf_get_current_type(buf) != type) {
+	if (sml_buf_get_next_type(buf) != type) {
 		buf->error = 1;
 		return 0;
 	}

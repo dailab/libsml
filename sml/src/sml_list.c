@@ -37,7 +37,7 @@ sml_list *sml_list_init(){
 
 sml_list *sml_list_parse(sml_buffer *buf) {
 	int elems, i;
-	if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		return 0;
 	}
@@ -49,7 +49,7 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 	
 	for (i = 0; i < elems; i++) {
 		
-		if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+		if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 			buf->error = 1;
 			goto error;
 		}

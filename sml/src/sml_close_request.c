@@ -39,7 +39,7 @@ sml_close_request * sml_close_request_parse(sml_buffer *buf) {
     sml_close_request *msg = (sml_close_request *) malloc(sizeof(sml_close_request));
     memset(msg, 0, sizeof(sml_close_request));
     
-    if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+    if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}

@@ -25,7 +25,7 @@ sml_close_response *sml_close_response_parse(sml_buffer *buf) {
     sml_close_response *msg = (sml_close_response *) malloc(sizeof(sml_close_response));
     memset(msg, 0, sizeof(sml_close_response));
     
-    if (mc_sml_buf_get_current_type(buf) != SML_TYPE_LIST) {
+    if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}
