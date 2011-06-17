@@ -8,4 +8,5 @@ This is an alpha version, meaning the basics are implemented but there is still 
 Examples how to use libSML are in the examples directory.
 
 ## License
+
 libSML is licensed with the GPL, other licenses are available.
