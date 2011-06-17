@@ -31,8 +31,6 @@
 
 sml_file *sml_file_parse(unsigned char *buffer, size_t buffer_len) {
     
-	//buffer += 8;
-	//buffer_len -= 16;
     sml_file *file = (sml_file*) malloc(sizeof(sml_file));
     memset(file, 0, sizeof(sml_file));
     
@@ -51,16 +49,16 @@ sml_file *sml_file_parse(unsigned char *buffer, size_t buffer_len) {
             continue;
         }
         
-		msg = sml_message_parse(buf);
-		
+        msg = sml_message_parse(buf);
+        
         if (sml_buf_has_errors(buf)) {
-			printf("warning: could not read the whole file\n");
-           break;
+            printf("warning: could not read the whole file\n");
+            break;
         }
 
         sml_file_add_message(file, msg);
 
-	}
+    }
     return file;
 }
 
