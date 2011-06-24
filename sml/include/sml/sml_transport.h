@@ -20,15 +20,28 @@
 #define	_SML_TRANSPORT_H
 
 #include <stdlib.h>
+#include <sml/sml.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-//void (*sml_transport_receiver_fun)(unsigned char *buffer, size_t buffer_len) = 0;
-
+// sml_transport_listen reads continously bytes from fd and scans 
+// for the SML transport protocol escape sequences. If a SML file
+// is detected, the sml_transporter_receiver is called with the 
+// complete bytes, including the escape sequences.
+// The buffer is free'd after the sml_transport_receiver comes 
+// back.
 void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len));
+
+// sml_transport_writes adds the SML transport protocol escape 
+// sequences and writes the given file to fd. The file must be 
+// in the parsed format.
+// The number of bytes written is returned, 0 if there was an
+// error.
+// The sml_file must be free'd elsewhere.
+int sml_transport_write(int fd, sml_file *file);
+
 #ifdef __cplusplus
 }
 #endif

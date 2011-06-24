@@ -24,10 +24,11 @@
 #include <sys/types.h>
 #include <string.h>
 #include <unistd.h>
+#include <sml/sml_shared.h>
+#include <sml/sml_crc16.h>
 
 #define MC_SML_BUFFER_LEN 8096
 
-// Invokes on every incoming SML message the given method. The buffer is freed afterwards.
 void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len)) {
 
 	fd_set readfds;
@@ -80,8 +81,7 @@ void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *
 						if (end == 5) {
 							char *sml_file = (char *) malloc(i);
 							memcpy(sml_file, &(buf[0]), i);
-							// without the SML transport stuff
-							sml_transport_receiver((unsigned char *)(sml_file ), i);
+							sml_transport_receiver((unsigned char *)(sml_file), i);
 							free(sml_file);
 							i = -1;
 							esc = 0;
@@ -114,6 +114,44 @@ void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *
 	printf("error: no end sequence found, buffer full.");
 }
 
-
-
+int sml_transport_write(int fd, sml_file *file) {
+	
+	unsigned char start_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x01, 0x01, 0x01, 0x01};
+	unsigned char end_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x1a};
+	sml_buffer *buf = file->buf;
+	buf->cursor = 0;
+	
+	// add start sequence
+	memcpy(sml_buf_get_current_buf(buf), start_seq, 8);
+	buf->cursor += 8;
+	
+	// add file
+	sml_file_write(file);
+	
+	// add padding bytes
+	int padding = (buf->cursor % 4) ? (4 - buf->cursor % 4) : 0;
+	if (padding) {
+		// write zeroed bytes 
+		memset(sml_buf_get_current_buf(buf), 0, padding);
+		buf->cursor += padding;
+	}
+	
+	// begin end sequence
+	memcpy(sml_buf_get_current_buf(buf), end_seq, 5);
+	buf->cursor += 5;
+	
+	// add padding info
+	buf->buffer[buf->cursor++] = (unsigned char) padding;
+	
+	// add crc checksum
+	u16 crc = sml_crc16_calculate(buf->buffer, buf->cursor);
+	buf->buffer[buf->cursor++] = (unsigned char) ((crc & 0xFF00) >> 8);
+	buf->buffer[buf->cursor++] = (unsigned char) (crc & 0x00FF);
+	
+	size_t wr = write(fd, buf->buffer, buf->cursor);
+	if (wr == buf->cursor) {
+		return wr;
+	}
+	return 0;
+}
 

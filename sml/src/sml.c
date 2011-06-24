@@ -78,7 +78,6 @@ void sml_file_add_message(sml_file *file, sml_message *message) {
 }
 
 void sml_file_write(sml_file *file) {
-   
     int i;
     if (file->messages && file->messages_len > 0) {
         for (i = 0; i < file->messages_len; i++) {
@@ -116,15 +115,6 @@ void sml_file_print(sml_file *file) {
 
 
 
-
-
-
-
-
-
-
-											 
-											 
 
 
 
