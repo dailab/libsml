@@ -44,7 +44,7 @@ sml_time *sml_time_parse(sml_buffer *buf) {
 	return tme;
 	
 error:
-	free(tme);
+	sml_time_free(tme);
 	return 0;
 }
 

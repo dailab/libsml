@@ -106,7 +106,7 @@ sml_open_request *sml_open_request_parse(sml_buffer *buf) {
     return msg;
     
 error: 
-	free(msg);
+	sml_open_request_free(msg);
 	return 0;
 }
 

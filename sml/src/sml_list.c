@@ -96,6 +96,7 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 	
 error:
 	buf->error = 1;
+	sml_list_free(start);
 	return 0;
 }
 

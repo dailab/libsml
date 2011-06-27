@@ -54,7 +54,7 @@ sml_status *sml_status_parse(sml_buffer *buf) {
 			break;
 	}
 	if (sml_buf_has_errors(buf)) {
-		free(state);
+		sml_status_free(state);
 		return 0;
 	}
 	

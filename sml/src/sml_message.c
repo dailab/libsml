@@ -74,7 +74,7 @@ sml_message *sml_message_parse(sml_buffer *buf) {
     
 error:
 	// TODO: free encapsulated stuff 
-	free(msg);
+	sml_message_free(msg);
 	return 0;
 }
 

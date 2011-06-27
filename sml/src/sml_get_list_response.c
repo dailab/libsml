@@ -60,7 +60,7 @@ sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
 	return msg;
 	
 error: 
-	free(msg);
+	sml_get_list_response_free(msg);
 	return 0;
     
 }

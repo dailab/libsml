@@ -112,7 +112,7 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf
 	return msg;
 	
   error:
-	free(msg);
+	sml_get_profile_pack_request_free(msg);
 	return 0;
     
 }

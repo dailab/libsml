@@ -55,7 +55,7 @@ sml_open_response *sml_open_response_parse(sml_buffer *buf) {
 	
 	return msg;
 error:
-	free(msg);
+	sml_open_response_free(msg);
 	return 0;
 }
 
