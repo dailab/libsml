@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-#include <sml/sml.h>
+#include <sml/sml_file.h>
 #include <sml/sml_transport.h>
 
 void transport_receiver(unsigned char *buffer, size_t buffer_len) {

@@ -20,7 +20,7 @@
 #define	_SML_TRANSPORT_H
 
 #include <stdlib.h>
-#include <sml/sml.h>
+#include <sml/sml_file.h>
 
 #ifdef __cplusplus
 extern "C" {

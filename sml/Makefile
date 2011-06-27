@@ -9,7 +9,7 @@ DYN_LIB=$(LIB_DIR)/libsml.so
 ST_LIB=$(LIB_DIR)/libsml.a
 
 OBJS = \
-	src/sml.o \
+	src/sml_file.o \
 	src/sml_attention_response.o \
 	src/sml_transport.o \
 	src/sml_octet_string.o \

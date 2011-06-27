@@ -17,7 +17,7 @@
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <sml/sml.h>
+#include <sml/sml_file.h>
 #include <sml/sml_shared.h>
 #include <sml/sml_message.h>
 #include <sml/sml_number.h>
