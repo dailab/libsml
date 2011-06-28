@@ -32,9 +32,7 @@
 #include <sml/sml_attention_response.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-
-#define SML_MESSAGE_TRANSACTION_MAGIC_NUMBER 0x6F4D654E   
+#include <unistd.h> 
 
 // SML MESSAGE
 
@@ -81,12 +79,10 @@ error:
 sml_message *sml_message_init() {
     sml_message *msg = (sml_message *) malloc(sizeof(sml_message));
     memset(msg, 0, sizeof(sml_message));
-    
-    int id = ((unsigned int) getpid()) | SML_MESSAGE_TRANSACTION_MAGIC_NUMBER;
-    msg->transaction_id = sml_octet_string_init((unsigned char *)&id, sizeof(int));
-    
+	msg->transaction_id = sml_octet_string_generate_uuid();
     return msg;
 }
+
 void sml_message_free(sml_message *msg) {
     if (msg) {
         if (msg->transaction_id) 
