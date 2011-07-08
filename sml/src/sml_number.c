@@ -22,8 +22,8 @@
 #include <stdio.h>
 
 u64 sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
-
 	int l, i;
+	unsigned char b;
 	u64 n = 0;
 	if (sml_buf_get_next_type(buf) != type) {
 		buf->error = 1;
@@ -36,13 +36,24 @@ u64 sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
 		return 0;
 	}
 	
-	// TODO: this doesn't work for integers (leading 1's)
-	// mathias runge: -> fixed bug in sml_value_parse for SML_TYPE_INTEGER -> see comment in sml_value.cpp
-	//					 maybe this one is fixed too?
-	for (i = 0; i < l; i++) {
-		n <<= 8;
-		n |= sml_buf_get_current_byte(buf);
-		sml_buf_update_bytes_read(buf, 1);
+	b = sml_buf_get_current_byte(buf);
+	// negative value with leading 1's
+	if (type == SML_TYPE_INTEGER && b & 128) {
+		n =~ n;
+		b = 0xFF;
+		for (i = 0; i < l; i++) {
+			n <<= 8;
+			n |= b;
+			n = (n & ~b) | sml_buf_get_current_byte(buf);
+			sml_buf_update_bytes_read(buf, 1);
+		}
+	}
+	else {
+		for (i = 0; i < l; i++) {
+			n <<= 8;
+			n |= sml_buf_get_current_byte(buf);
+			sml_buf_update_bytes_read(buf, 1);
+		}
 	}
 	return n;
 }
