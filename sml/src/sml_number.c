@@ -22,7 +22,7 @@
 #include <stdio.h>
 
 u64 sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
-	int l, i, j;
+	int l, i;
 	unsigned char b;
 	u64 n = 0;
 	if (sml_buf_get_next_type(buf) != type) {
