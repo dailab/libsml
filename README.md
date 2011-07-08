@@ -5,6 +5,7 @@ libSML is a library which implements the Smart Messaging Language (SML) protocol
 It can be utilized to communicate to FNN specified Smart Meters or Smart Meter components (EDL/MUC).
 
 ### Usage
+<<<<<<< HEAD
 Compile with
  
 	make
