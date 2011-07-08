@@ -49,7 +49,7 @@ sml_close_request * sml_close_request_parse(sml_buffer *buf) {
 		goto error;
 	}
     
-    msg->global_signature = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
+    msg->global_signature = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
     
     return msg;

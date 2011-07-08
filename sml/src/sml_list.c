@@ -87,7 +87,7 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 		cur->value = SML_SKIP_OPTIONAL sml_value_parse(buf);
 		if (sml_buf_has_errors(buf)) goto error;
 
-		cur->value_signature = SML_SKIP_OPTIONAL sml_octet_string_parse(buf);
+		cur->value_signature = sml_octet_string_parse(buf);
 		if (sml_buf_has_errors(buf)) goto error;
 		
 		cur->next = 0;
