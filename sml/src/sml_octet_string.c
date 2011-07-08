@@ -25,6 +25,10 @@
 #include <uuid/uuid.h>
 #endif
 
+uint8_t ctoi(uint8_t c);
+uint8_t c2toi(uint8_t c1, uint8_t c2);
+uint8_t c2ptoi(char* c);
+
 octet_string *sml_octet_string_init(unsigned char *str, int length) {
     octet_string *s = (octet_string *)malloc(sizeof(octet_string));
     memset(s, 0, sizeof(octet_string));
@@ -34,29 +38,6 @@ octet_string *sml_octet_string_init(unsigned char *str, int length) {
         s->len = length;
     }
 	return s;
-}
-
-uint8_t ctoi(uint8_t c){
-    uint8_t ret = 0;
-    
-    if((c >= '0') && (c <= '9')){
-        ret = c - '0';
-    } else if((c >= 'a') && (c <= 'f')){
-        ret = c - 'a' + 10;
-    } else if((c >= 'A') && (c <= 'F')){
-        ret = c - 'A' + 10;
-    }
-    
-    return ret;
-}
-
-
-inline uint8_t c2toi(uint8_t c1, uint8_t c2){
-    return ctoi(c1) << 4 | ctoi(c2);
-}
-
-inline uint8_t c2ptoi(char* c){
-    return ctoi((uint8_t)c[0]) << 4 | ctoi((uint8_t)c[1]);
 }
 
 octet_string *sml_octet_string_init_from_hex(char *str) {
@@ -81,6 +62,10 @@ void sml_octet_string_free(octet_string *str) {
 }
 
 octet_string *sml_octet_string_parse(sml_buffer *buf) {
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
+	
     int l;
 	if (sml_buf_get_next_type(buf) != SML_TYPE_OCTET_STRING) {
 		buf->error = 1;
@@ -97,7 +82,6 @@ octet_string *sml_octet_string_parse(sml_buffer *buf) {
 	sml_buf_update_bytes_read(buf, l);
 	return str;
 }
-
 
 void sml_octet_string_write(octet_string *str, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_OCTET_STRING, (unsigned int) str->len);
@@ -127,6 +111,28 @@ int sml_octet_string_cmp_with_hex(octet_string *str, char *hex) {
     return result;
 }
 
+uint8_t ctoi(uint8_t c){
+	uint8_t ret = 0;
+
+    if((c >= '0') && (c <= '9')) {
+		ret = c - '0';
+    } 
+	else if((c >= 'a') && (c <= 'f')) {
+		ret = c - 'a' + 10;
+    } 
+	else if((c >= 'A') && (c <= 'F')) {
+		ret = c - 'A' + 10;
+	}
+	return ret;
+}
+
+uint8_t c2toi(uint8_t c1, uint8_t c2) {
+	return ctoi(c1) << 4 | ctoi(c2);
+}
+
+uint8_t c2ptoi(char* c) {
+	return ctoi((uint8_t)c[0]) << 4 | ctoi((uint8_t)c[1]);
+}
 
 
 
