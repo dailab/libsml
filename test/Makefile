@@ -6,12 +6,15 @@ UNITY = \
 	unity/unity_fixture.o
 
 OBJS = \
-	src/test_sml_octet_string.o
+	src/test_helper.o \
+	src/sml_octet_string_test.o \
+	src/sml_buffer_test.o \
+	src/sml_number_test.o
 
 test_run: libsml test
 	@./test
 
-test : $(UNITY) $(OBJS)
+test : $(UNITY) $(OBJS) $(LIBSML)
 	$(CC) $(CFLAGS) $(LIBSML) $^ test_main.c -o test
 
 .PHONY: code
@@ -24,7 +27,7 @@ libsml :
 .PHONY: clean
 clean :
 	@rm -f unity/*.o
-	@rm -f src/*.tst
+	@rm -f src/*.o
 
 
 
