@@ -23,10 +23,18 @@
 TEST_GROUP(sml_octet_string);
 
 sml_buffer *buf;
+
 void expected_octet_string(octet_string *str, char *content, int len) {
 	TEST_ASSERT_NOT_NULL(str);
 	TEST_ASSERT_EQUAL(len, str->len);
 	TEST_ASSERT_EQUAL_MEMORY(content, str->str, len);
+}
+
+void expected_buf(char *hex, int len) {
+	unsigned char expected_buf[len];
+	hex2binary(hex, expected_buf);
+	TEST_ASSERT_EQUAL_MEMORY(expected_buf, buf->buffer, len);
+	TEST_ASSERT_EQUAL(len, buf->cursor);
 }
 
 TEST_SETUP(sml_octet_string) {
@@ -64,11 +72,24 @@ TEST(sml_octet_string, parse_optional) {
 	TEST_ASSERT_EQUAL(1, buf->cursor);
 }
 
+TEST(sml_octet_string, write) {
+	octet_string *str = sml_octet_string_init((unsigned char *)"Hallo", 5);
+	sml_octet_string_write(str, buf);
+	expected_buf("0648616C6C6F", 6);
+}
+
+TEST(sml_octet_string, write_optional) {
+	sml_octet_string_write(0, buf);
+	expected_buf("01", 1);
+}
+
 TEST_GROUP_RUNNER(sml_octet_string) {
 	RUN_TEST_CASE(sml_octet_string, init);
 	RUN_TEST_CASE(sml_octet_string, parse);
 	RUN_TEST_CASE(sml_octet_string, parse_multiple_tl_fields);
 	RUN_TEST_CASE(sml_octet_string, parse_optional);
+	RUN_TEST_CASE(sml_octet_string, write);
+	RUN_TEST_CASE(sml_octet_string, write_optional);
 }
 
 
