@@ -21,10 +21,21 @@
 #include <string.h>
 #include <stdio.h>
 
-u64 sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
+#define SML_BIG_ENDIAN 1
+#define SML_LITTLE_ENDIAN 0
+
+int sml_number_endian();
+void sml_number_byte_swap(unsigned char *bytes, int bytes_len);
+
+void *sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
+	
 	int l, i;
 	unsigned char b;
-	u64 n = 0;
+	short negative_int = 0;
+	
 	if (sml_buf_get_next_type(buf) != type) {
 		buf->error = 1;
 		return 0;
@@ -36,26 +47,28 @@ u64 sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
 		return 0;
 	}
 	
+	unsigned char *np = malloc(max_size);
+	memset(np, 0, max_size);
+
 	b = sml_buf_get_current_byte(buf);
-	// negative value with leading 1's
-	if (type == SML_TYPE_INTEGER && b & 128) {
-		n =~ n;
-		b = 0xFF;
-		for (i = 0; i < l; i++) {
-			n <<= 8;
-			n |= b;
-			n = (n & ~b) | sml_buf_get_current_byte(buf);
-			sml_buf_update_bytes_read(buf, 1);
+	if (type == SML_TYPE_INTEGER && (b & 128)) {
+		negative_int = 1;
+	}
+	
+	int missing_bytes = max_size - l;
+	memcpy(&(np[missing_bytes]), sml_buf_get_current_buf(buf), l);
+	
+	if (negative_int) {
+		for (i = 0; i < missing_bytes; i++) {
+			np[i] = 0xFF;
 		}
 	}
-	else {
-		for (i = 0; i < l; i++) {
-			n <<= 8;
-			n |= sml_buf_get_current_byte(buf);
-			sml_buf_update_bytes_read(buf, 1);
-		}
+	
+	if (!(sml_number_endian() == SML_BIG_ENDIAN)) {
+		sml_number_byte_swap(np, max_size);
 	}
-	return n;
+
+	return np;
 }
 
 void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf) {
@@ -70,3 +83,23 @@ void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf) 
     }
     buf->cursor += size;
 }
+
+void sml_number_byte_swap(unsigned char *bytes, int bytes_len) {
+	int i;
+	unsigned char ob[bytes_len];
+	memcpy(&ob, bytes, bytes_len);
+	for (i = 0; i < bytes_len; i++) {
+		bytes[i] = ob[bytes_len - (i + 1)];
+	}
+}
+
+int sml_number_endian() {
+	int i = 1;
+	char *p = (char *)&i;
+	
+	if (p[0] == 1)
+		return SML_LITTLE_ENDIAN;
+	else
+		return SML_BIG_ENDIAN;
+}
+
