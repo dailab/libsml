@@ -11,7 +11,7 @@ Compile with
 
 The resulting binaries are located in sml/lib
 
-An expample how to use libSML are in the examples directory.
+An expample how to use libSML is in the examples directory.
 
 ### License
 Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed - DAI-Labor, TU-Berlin
