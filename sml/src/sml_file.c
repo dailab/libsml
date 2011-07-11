@@ -109,7 +109,7 @@ void sml_file_print(sml_file *file) {
     int i;
     printf("SML file (%d SML messages, %d bytes)\n", file->messages_len, file->buf->cursor);
     for (i = 0; i < file->messages_len; i++) {
-        printf("SML message %4.X\n", file->messages[i]->message_body->tag);
+        printf("SML message %4.X\n", *(file->messages[i]->message_body->tag));
     }
 }
 
