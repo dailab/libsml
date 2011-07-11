@@ -25,11 +25,30 @@ TEST_GROUP(sml_number);
 
 sml_buffer *buf;
 
+void sml_number_test_expected_buf(char *hex, int len) {
+	unsigned char expected_buf[len];
+	hex2binary(hex, expected_buf);
+	TEST_ASSERT_EQUAL_MEMORY(expected_buf, buf->buffer, len);
+	TEST_ASSERT_EQUAL(len, buf->cursor);
+}
+
 TEST_SETUP(sml_number) {
 	buf = sml_buffer_init(512);
 }
 
 TEST_TEAR_DOWN(sml_number) {}
+
+TEST(sml_number, init_unsigned8) {
+	u8 *n = sml_u8_init(1);
+	TEST_ASSERT_NOT_NULL(n);
+	TEST_ASSERT_EQUAL(1, *n);
+}
+
+TEST(sml_number, init_integer16) {
+	i16 *n = sml_i16_init(-1);
+	TEST_ASSERT_NOT_NULL(n);
+	TEST_ASSERT_EQUAL(-1, *n);
+}
 
 TEST(sml_number, parse_unsigned8) {
 	hex2binary("6201", sml_buf_get_current_buf(buf));
@@ -64,7 +83,6 @@ TEST(sml_number, parse_unsigned32_optional) {
 
 TEST(sml_number, parse_unsigned64) {
 	hex2binary("690000000000000001", sml_buf_get_current_buf(buf));
-	//u64 *n = sml_u64_parse(buf);
 	u64 *n = sml_u64_parse(buf);
 	TEST_ASSERT_EQUAL(1, *n);
 }
@@ -105,7 +123,27 @@ TEST(sml_number, parse_int64_fewer_bytes) {
 	TEST_ASSERT_EQUAL(-5000, *n);
 }
 
+TEST(sml_number, write_unsigned8) {
+	u8 *n = sml_u8_init(1);
+	sml_u8_write(n, buf);
+	sml_number_test_expected_buf("6201", 2);
+}
+
+TEST(sml_number, write_integer32) {
+	i32 *n = sml_i32_init(-5000);
+	sml_i32_write(n, buf);
+	sml_number_test_expected_buf("55FFFFEC78", 5);
+}
+
+TEST(sml_number, write_integer8_optional) {
+	sml_i8_write(0, buf);
+	sml_number_test_expected_buf("01", 1);
+}
+
 TEST_GROUP_RUNNER(sml_number) {
+	RUN_TEST_CASE(sml_number, init_unsigned8);
+	RUN_TEST_CASE(sml_number, init_integer16);
+
 	RUN_TEST_CASE(sml_number, parse_unsigned8);
 	RUN_TEST_CASE(sml_number, parse_unsigned16);
 	RUN_TEST_CASE(sml_number, parse_unsigned32);
@@ -119,6 +157,9 @@ TEST_GROUP_RUNNER(sml_number) {
 	RUN_TEST_CASE(sml_number, parse_int64);
 	RUN_TEST_CASE(sml_number, parse_int64_fewer_bytes);
 	
+	RUN_TEST_CASE(sml_number, write_unsigned8);
+	RUN_TEST_CASE(sml_number, write_integer32);
+	RUN_TEST_CASE(sml_number, write_integer8_optional);
 }
 
 

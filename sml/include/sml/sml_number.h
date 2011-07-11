@@ -27,10 +27,24 @@ extern "C" {
 #endif
 
 
+void *sml_number_init(u64 number, unsigned char type, int size);
+
 // Parses a number. Identified by type (SML_TYPE_INTEGER or SML_TYPE_UNSIGNED) 
 // and maximal number of bytes (SML_TYPE_NUMBER_8, SML_TYPE_NUMBER_16, 
 // SML_TYPE_NUMBER_32, SML_TYPE_NUMBER_64)
 void *sml_number_parse(sml_buffer *buf, unsigned char type, int max_size);
+
+void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf);
+void sml_number_write_new(void *np, unsigned char type, int size, sml_buffer *buf);
+
+#define sml_u8_init(n) (u8 *) sml_number_init(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8)
+#define sml_u16_init(n) (u16 *) sml_number_init(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_16)
+#define sml_u32_init(n) (u32 *) sml_number_init(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_32)
+#define sml_u64_init(n) (u64 *) sml_number_init(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_64)
+#define sml_i8_init(n) (i8 *) sml_number_init(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_8)
+#define sml_i16_init(n) (i16 *) sml_number_init(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_16)
+#define sml_i32_init(n) (i32 *) sml_number_init(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_32)
+#define sml_i64_init(n) (i64 *) sml_number_init(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_64)
 
 #define sml_u8_parse(buf) (u8 *) sml_number_parse(buf, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8)
 #define sml_u16_parse(buf) (u16 *) sml_number_parse(buf, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_16)
@@ -41,7 +55,14 @@ void *sml_number_parse(sml_buffer *buf, unsigned char type, int max_size);
 #define sml_i32_parse(buf) (i32 *) sml_number_parse(buf, SML_TYPE_INTEGER, SML_TYPE_NUMBER_32)
 #define sml_i64_parse(buf) (i64 *) sml_number_parse(buf, SML_TYPE_INTEGER, SML_TYPE_NUMBER_64)
 
-void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf);
+#define sml_u8_write(n, buf) sml_number_write_new(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8, buf)
+#define sml_u16_write(n, buf) sml_number_write_new(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_16, buf)
+#define sml_u32_write(n, buf) sml_number_write_new(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_32, buf)
+#define sml_u64_write(n, buf) sml_number_write_new(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_64, buf)
+#define sml_i8_write(n, buf) sml_number_write_new(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_8, buf)
+#define sml_i16_write(n, buf) sml_number_write_new(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_16, buf)
+#define sml_i32_write(n, buf) sml_number_write_new(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_32, buf)
+#define sml_i64_write(n, buf) sml_number_write_new(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_64, buf)
 
 typedef u8 sml_unit;
 

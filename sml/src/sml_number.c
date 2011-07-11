@@ -27,6 +27,13 @@
 int sml_number_endian();
 void sml_number_byte_swap(unsigned char *bytes, int bytes_len);
 
+void *sml_number_init(u64 number, unsigned char type, int size) {
+	unsigned char *np = malloc(size);
+	memset(np, 0, size);
+	memcpy(np, &number, size);
+	return np;
+}
+
 void *sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
 	if (sml_buf_optional_is_skipped(buf)) {
 		return 0;
@@ -82,6 +89,22 @@ void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf) 
         mask >>= 8;
     }
     buf->cursor += size;
+}
+
+void sml_number_write_new(void *np, unsigned char type, int size, sml_buffer *buf) {
+	if (np == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
+	sml_buf_set_type_and_length(buf, type, size);
+	memcpy(sml_buf_get_current_buf(buf), np, size);
+	
+	if (!(sml_number_endian() == SML_BIG_ENDIAN)) {
+		sml_number_byte_swap(sml_buf_get_current_buf(buf), size);
+	}
+	
+	sml_buf_update_bytes_read(buf, size);
 }
 
 void sml_number_byte_swap(unsigned char *bytes, int bytes_len) {
