@@ -77,9 +77,9 @@ sml_proc_par_value *sml_proc_par_value_init(u8 tag, void *data) {
     
     sml_proc_par_value *value = (sml_proc_par_value *) malloc(sizeof(sml_proc_par_value));
     memset(value, 0, sizeof(sml_proc_par_value));
-    value->tag = tag;
+    value->tag = sml_u8_init(tag);
     
-    switch (tag) {
+    switch (*(value->tag)) {
         case SML_PROC_PAR_VALUE_TAG_VALUE:
             value->data.value = (sml_value*)data;
             break;
@@ -104,9 +104,9 @@ sml_proc_par_value *sml_proc_par_value_init(u8 tag, void *data) {
 
 void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
-    sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8, (u64) value->tag, buf);
+	sml_u8_write(value->tag, buf);
 
-    switch (value->tag) {
+    switch (*(value->tag)) {
         case SML_PROC_PAR_VALUE_TAG_VALUE:
             sml_value_write(value->data.value, buf);
             break;

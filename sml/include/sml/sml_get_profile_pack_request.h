@@ -38,7 +38,7 @@ typedef struct {
 	sml_time *begin_time;		// optional
 	sml_time *end_time;			// optional
 	sml_tree_path *parameter_tree_path;
-	// sml_object_list * object_list; // optional		sml_object_list not implemented yet
+	void *object_list; // sml_object_list * object_list; // optional		sml_object_list not implemented yet
 	sml_tree *das_details;		// optional
 } sml_get_profile_pack_request;
 

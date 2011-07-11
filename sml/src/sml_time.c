@@ -48,9 +48,13 @@ error:
 	return 0;
 }
 
-void sml_time_write(sml_time *time, sml_buffer *buf){
-	 printf("NYI: %s (writing optional flag instead)\n", __FUNCTION__);
-	 sml_buf_optional_write(buf);
+void sml_time_write(sml_time *time, sml_buffer *buf) {
+	if (time == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	printf("NYI: %s (writing optional flag instead)\n", __FUNCTION__);
+	sml_buf_optional_write(buf);
 }
 
 void sml_time_free(sml_time *time) {

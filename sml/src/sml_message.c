@@ -96,13 +96,12 @@ void sml_message_write(sml_message *msg, sml_buffer *buf) {
     int msg_start = buf->cursor;
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 6);
     sml_octet_string_write(msg->transaction_id, buf);
-    sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8, (u64) msg->group_id, buf);
-    sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8, (u64) msg->abort_on_error, buf);
+	sml_u8_write(msg->group_id, buf);
+	sml_u8_write(msg->abort_on_error, buf);
     sml_message_body_write(msg->message_body, buf);
     
-    msg->crc = sml_crc16_calculate(&(buf->buffer[msg_start]), buf->cursor - msg_start);
-    
-    sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_16, (u64) msg->crc, buf);
+	msg->crc = sml_u16_init(sml_crc16_calculate(&(buf->buffer[msg_start]), buf->cursor - msg_start));
+	sml_u16_write(msg->crc, buf);
     
     // end of message
     buf->buffer[buf->cursor] = 0x0;
@@ -128,7 +127,7 @@ sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 	msg_body->tag = sml_u16_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
-	switch (msg_body->tag) {
+	switch (*(msg_body->tag)) {
         case SML_MESSAGE_OPEN_REQUEST:
             msg_body->data = sml_open_request_parse(buf);
             break;
@@ -151,7 +150,7 @@ sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 			msg_body->data = sml_attention_response_parse(buf);
 			break;
         default:
-            printf("error: message type %04X not yet implemented\n", msg_body->tag);
+            printf("error: message type %04X not yet implemented\n", *(msg_body->tag));
 			break;
 	}
 	
@@ -165,16 +164,16 @@ error:
 sml_message_body *sml_message_body_init(u16 tag, void *data) {
     sml_message_body *message_body = (sml_message_body *) malloc(sizeof(sml_message_body));
     memset(message_body, 0, sizeof(sml_message_body));
-    message_body->tag = tag;
+    message_body->tag = sml_u16_init(tag);
     message_body->data = data;
     return message_body;
 }
 
 void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
-    sml_number_write(SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_16, (u64) message_body->tag, buf);
+	sml_u16_write(message_body->tag, buf);
     
-    switch (message_body->tag) {
+    switch (*(message_body->tag)) {
         case SML_MESSAGE_OPEN_REQUEST:
             sml_open_request_write((sml_open_request *) message_body->data, buf);
 			break;
@@ -194,14 +193,14 @@ void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
            	sml_get_profile_pack_request_write((sml_get_profile_pack_request *)message_body->data, buf);
            	break;
 		default:
-            printf("error: message type %04X not yet implemented\n", message_body->tag);
+            printf("error: message type %04X not yet implemented\n", *(message_body->tag));
 			break;
     }
 }
 
 void sml_message_body_free(sml_message_body *message_body) {
     if (message_body) {
-        switch (message_body->tag) {
+        switch (*(message_body->tag)) {
             case SML_MESSAGE_OPEN_REQUEST:
                 sml_open_request_free((sml_open_request *) message_body->data);
                 break;
@@ -224,7 +223,7 @@ void sml_message_body_free(sml_message_body *message_body) {
                 sml_get_list_response_free((sml_get_list_response *) message_body->data);
                 break;
             default:
-                printf("NYI: %s for message type %04X\n", __FUNCTION__, message_body->tag);
+                printf("NYI: %s for message type %04X\n", __FUNCTION__, *(message_body->tag));
                 break;
         }
         

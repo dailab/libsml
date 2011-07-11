@@ -55,16 +55,16 @@ extern "C" {
 
 
 typedef struct {
-	u16 tag;
+	u16 *tag;
 	void *data;
 } sml_message_body;
 
 typedef struct {
 	octet_string *transaction_id;
-	u8 group_id;
-	u8 abort_on_error;
+	u8 *group_id;
+	u8 *abort_on_error;
 	sml_message_body *message_body;
-	u16 crc;
+	u16 *crc;
 	/* end of message */
 } sml_message;
 

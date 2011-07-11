@@ -33,41 +33,19 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_init(){
 }
 
 void sml_get_profile_pack_request_write(sml_get_profile_pack_request *msg, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 9);
-
-    // server_id
-    if (msg->server_id != NULL) {
-    	sml_octet_string_write(msg->server_id,buf);
-    } else sml_buf_optional_write(buf);
-
-    // username
-    if (msg->username != NULL) {
-    	sml_octet_string_write(msg->username,buf);
-    } else sml_buf_optional_write(buf);
-
-    // password
-    if (msg->password != NULL) {
-    	sml_octet_string_write(msg->password,buf);
-    } else sml_buf_optional_write(buf);
-
-    // with_rawdata
-    if (msg->with_rawdata != NULL) {
-      printf("TODO: %s - comparision is not valid", __FUNCTION__);
-    	sml_boolean_write(msg->with_rawdata,buf);
-    } else sml_buf_optional_write(buf); // with_rawdata
-
-    // begin_time
-    if (msg->begin_time != NULL){
-    	sml_time_write(msg->begin_time, buf);
-    } else sml_buf_optional_write(buf); // begin_time
-    sml_buf_optional_write(buf); // end_time
-
-    // parameter_tree_path is not optional
-    sml_tree_path_write(msg->parameter_tree_path, buf);
-
-    sml_buf_optional_write(buf); // object_list
+    
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 9);
+	sml_octet_string_write(msg->server_id, buf);
+	sml_octet_string_write(msg->username, buf);
+	sml_octet_string_write(msg->password, buf);
+	sml_boolean_write(msg->with_rawdata, buf);
+	sml_time_write(msg->begin_time, buf);
+	sml_time_write(msg->end_time, buf);
+	sml_tree_path_write(msg->parameter_tree_path, buf);
+	
+	printf("TODO: %s - some struct members aren't written", __FUNCTION__);
+	sml_buf_optional_write(buf); // object_list
     sml_buf_optional_write(buf); // das_details
-    printf("request_write");
 }
 
 

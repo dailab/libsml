@@ -37,7 +37,7 @@ extern "C" {
 
 // TODO
 typedef struct {
-    u8 tag;
+    u8 *tag;
     union {
         sml_value *value;
         // sml_period_entry

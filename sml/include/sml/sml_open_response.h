@@ -35,7 +35,7 @@ typedef struct {
 	octet_string *req_file_id;
 	octet_string *server_id;
 	sml_time *ref_time; // optional
-	u8 sml_version; // optional
+	u8 *sml_version; // optional
 } sml_open_response;
 
 sml_open_response *sml_open_response_parse(sml_buffer *buf);

@@ -34,7 +34,7 @@ void *sml_number_init(u64 number, unsigned char type, int size);
 // SML_TYPE_NUMBER_32, SML_TYPE_NUMBER_64)
 void *sml_number_parse(sml_buffer *buf, unsigned char type, int max_size);
 
-void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf);
+//void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf);
 void sml_number_write_new(void *np, unsigned char type, int size, sml_buffer *buf);
 
 #define sml_u8_init(n) (u8 *) sml_number_init(n, SML_TYPE_UNSIGNED, SML_TYPE_NUMBER_8)

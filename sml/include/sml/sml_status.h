@@ -27,10 +27,10 @@ extern "C" {
 
 
 typedef union {
-	u8 status8;
-	u16 status16;
-	u32 status32;
-	u64 status64;
+	u8 *status8;
+	u16 *status16;
+	u32 *status32;
+	u64 *status64;
 } sml_status;
 
 sml_status *sml_status_parse(sml_buffer *buf);

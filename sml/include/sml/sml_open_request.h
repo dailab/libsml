@@ -35,7 +35,7 @@ typedef struct {
 	octet_string *server_id; // optional
 	octet_string *username; // optional
 	octet_string *password; // optional
-	u8 sml_version; // optional
+	u8 *sml_version; // optional
 } sml_open_request;
 
 //sml_open_request *sml_open_request_init();
