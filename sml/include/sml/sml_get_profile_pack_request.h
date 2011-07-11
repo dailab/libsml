@@ -34,7 +34,7 @@ typedef struct {
 	octet_string *server_id;	// optional
 	octet_string *username; 	//  optional
 	octet_string *password; 	//  optional
-	sml_boolean with_rawdata;  // optional
+	sml_boolean *with_rawdata;  // optional
 	sml_time *begin_time;		// optional
 	sml_time *end_time;			// optional
 	sml_tree_path *parameter_tree_path;

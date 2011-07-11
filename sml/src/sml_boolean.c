@@ -20,12 +20,40 @@
 #include <sml/sml_boolean.h>
 #include <stdio.h>
 
-sml_boolean sml_boolean_parse(sml_buffer *buf) {
-    printf("NYI: %s\n", __FUNCTION__);
-    return 0;
+sml_boolean *sml_boolean_init(u8 b) {
+	sml_boolean *boolean = malloc(sizeof(u8));
+	*boolean = b;
+	return boolean;
 }
 
-void sml_boolean_write(sml_boolean boolean, sml_buffer *buf) {
+sml_boolean *sml_boolean_parse(sml_buffer *buf) {
+	
+	int l;
+	if (sml_buf_get_next_type(buf) != SML_TYPE_BOOLEAN) {
+		buf->error = 1;
+		return 0;
+	}
+	
+	l = sml_buf_get_next_length(buf);
+	if (l != 1) {
+		buf->error = 1;
+		return 0;
+	}
+	
+	if (sml_buf_get_current_byte(buf)) {
+		return sml_boolean_init(SML_BOOLEAN_TRUE);
+	}
+	else {
+		return sml_boolean_init(SML_BOOLEAN_FALSE);
+	}
+}
+
+void sml_boolean_write(sml_boolean *boolean, sml_buffer *buf) {
+	if (boolean == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
     sml_buf_set_type_and_length(buf, SML_TYPE_BOOLEAN, 1);
     if (boolean == SML_BOOLEAN_FALSE) {
         buf->buffer[buf->cursor] = SML_BOOLEAN_FALSE;

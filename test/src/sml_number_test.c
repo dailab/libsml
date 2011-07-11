@@ -36,7 +36,9 @@ TEST_SETUP(sml_number) {
 	buf = sml_buffer_init(512);
 }
 
-TEST_TEAR_DOWN(sml_number) {}
+TEST_TEAR_DOWN(sml_number) {
+	sml_buffer_free(buf);
+}
 
 TEST(sml_number, init_unsigned8) {
 	u8 *n = sml_u8_init(1);

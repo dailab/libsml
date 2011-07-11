@@ -42,7 +42,7 @@ TEST_SETUP(sml_octet_string) {
 }
 
 TEST_TEAR_DOWN(sml_octet_string) {
-	
+	sml_buffer_free(buf);
 }
 
 TEST(sml_octet_string, init) {

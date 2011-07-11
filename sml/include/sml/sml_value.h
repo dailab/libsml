@@ -32,7 +32,7 @@ extern "C" {
 typedef struct {
     u8 type;
     union {
-        sml_boolean boolean;
+        sml_boolean *boolean;
         octet_string *bytes; // can has zero length
         i8 *int8;
         i16 *int16;
