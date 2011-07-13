@@ -47,8 +47,7 @@ int serial_port_open(const char* device) {
 	tcgetattr( fd, &config ) ;
 	
 	// set 8-N-1
-	config.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP
-										 | INLCR | IGNCR | ICRNL | IXON);
+	config.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
 	config.c_oflag &= ~OPOST;
 	config.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
 	config.c_cflag &= ~(CSIZE | PARENB | PARODD | CSTOPB);
@@ -63,25 +62,32 @@ int serial_port_open(const char* device) {
 }
 
 void transport_receiver(unsigned char *buffer, size_t buffer_len) {
-    // the buffer contains the whole message, with transport escape sequences.
-    // these escape sequences are stripped here. 
-    sml_file *file = sml_file_parse(buffer + 8, buffer_len - 16);
-    
-    // the sml file is parsed
-    sml_file_print(file);
-    
-    // all elements returned by parsing functions must be free'd
-    sml_file_free(file);
+	
+	// the buffer contains the whole message, with transport escape sequences.
+	// these escape sequences are stripped here. 
+	sml_file *file = sml_file_parse(buffer + 8, buffer_len - 16);
+	// the sml file is parsed now
+	
+	// read here some values ..
+	
+	// this prints some information about the file
+	sml_file_print(file);
+	
+	// free the malloc'd memory
+	sml_file_free(file);
 }
 
 int main(int argc, char **argv) {
-    char *device = "/dev/cu.usbserial";
-    
+	// this example assumes that a EDL21 meter sending SML messages via a
+	// serial device. Adjust as needed.
+	char *device = "/dev/cu.usbserial";
 	int fd = serial_port_open(device);
-
-    // this is a blocking call
-    sml_transport_listen(fd, &transport_receiver);
-    
-    close(fd);
-    return 0;
+	
+	if (fd < 0) {
+		// listen on the serial device, this call is blocking.
+		sml_transport_listen(fd, &transport_receiver);
+		close(fd);
+	}
+	
+	return 0;
 }
