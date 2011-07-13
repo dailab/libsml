@@ -83,6 +83,15 @@ TEST(sml_octet_string, write_optional) {
 	sml_octet_string_expected_buf("01", 1);
 }
 
+TEST(sml_octet_string, cmp) {
+	octet_string *s1 = sml_octet_string_init((unsigned char *)"Hallo", 5);
+	octet_string *s2 = sml_octet_string_init((unsigned char *)"Hi", 2);
+	octet_string *s3 = sml_octet_string_init((unsigned char *)"Hallo", 5);
+	
+	TEST_ASSERT_TRUE(sml_octet_string_cmp(s1, s2) != 0);
+	TEST_ASSERT_TRUE(sml_octet_string_cmp(s1, s3) == 0);
+}
+
 TEST_GROUP_RUNNER(sml_octet_string) {
 	RUN_TEST_CASE(sml_octet_string, init);
 	RUN_TEST_CASE(sml_octet_string, parse);
@@ -90,6 +99,7 @@ TEST_GROUP_RUNNER(sml_octet_string) {
 	RUN_TEST_CASE(sml_octet_string, parse_optional);
 	RUN_TEST_CASE(sml_octet_string, write);
 	RUN_TEST_CASE(sml_octet_string, write_optional);
+	RUN_TEST_CASE(sml_octet_string, cmp);
 }
 
 

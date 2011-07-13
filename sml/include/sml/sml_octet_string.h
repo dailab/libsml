@@ -46,6 +46,7 @@ octet_string *sml_octet_string_parse(sml_buffer *buf);
 
 void sml_octet_string_write(octet_string *str, sml_buffer *buf);
 
+int sml_octet_string_cmp(octet_string *s1, octet_string *s2);
 int sml_octet_string_cmp_with_hex(octet_string *str, char *hex);
 
 octet_string *sml_octet_string_generate_uuid();

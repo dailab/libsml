@@ -105,6 +105,14 @@ octet_string *sml_octet_string_generate_uuid() {
 #endif
 }
 
+int sml_octet_string_cmp(octet_string *s1, octet_string *s2)  {
+	if (s1->len != s2->len) {
+		return -1;
+	}
+	return memcmp(s1->str, s2->str, s1->len);
+}
+
+
 int sml_octet_string_cmp_with_hex(octet_string *str, char *hex) {
     octet_string *hstr = sml_octet_string_init_from_hex(hex);
     if (str->len != hstr->len) {
