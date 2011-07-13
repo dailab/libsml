@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 	char *device = "/dev/cu.usbserial";
 	int fd = serial_port_open(device);
 	
-	if (fd < 0) {
+	if (fd > 0) {
 		// listen on the serial device, this call is blocking.
 		sml_transport_listen(fd, &transport_receiver);
 		close(fd);
