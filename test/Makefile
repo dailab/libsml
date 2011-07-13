@@ -10,7 +10,9 @@ OBJS = \
 	src/sml_octet_string_test.o \
 	src/sml_buffer_test.o \
 	src/sml_number_test.o \
-	src/sml_boolean_test.o
+	src/sml_boolean_test.o \
+	src/sml_file_test.o \
+	src/sml_message_test.o
 
 test_run: libsml test
 	@./test
