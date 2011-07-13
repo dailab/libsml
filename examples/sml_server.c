@@ -20,8 +20,47 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <termios.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ioctl.h>
+
 #include <sml/sml_file.h>
 #include <sml/sml_transport.h>
+
+int serial_port_open(const char* device) {
+	int bits;
+	struct termios config;
+	memset(&config, 0, sizeof(config));
+	
+	int fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
+	if (fd < 0) {
+		printf("error: open(%s): %s\n", device, strerror(errno));
+		return -1;
+	}
+	
+	// set RTS
+	ioctl(fd, TIOCMGET, &bits);
+	bits |= TIOCM_RTS;
+	ioctl(fd, TIOCMSET, &bits);
+     
+	tcgetattr( fd, &config ) ;
+	
+	// set 8-N-1
+	config.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP
+										 | INLCR | IGNCR | ICRNL | IXON);
+	config.c_oflag &= ~OPOST;
+	config.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+	config.c_cflag &= ~(CSIZE | PARENB | PARODD | CSTOPB);
+	config.c_cflag |= CS8;
+
+	// set speed to 9600 baud
+	cfsetispeed( &config, B9600);
+	cfsetospeed( &config, B9600);
+	
+	tcsetattr(fd, TCSANOW, &config);
+	return fd;
+}
 
 void transport_receiver(unsigned char *buffer, size_t buffer_len) {
     // the buffer contains the whole message, with transport escape sequences.
@@ -36,15 +75,10 @@ void transport_receiver(unsigned char *buffer, size_t buffer_len) {
 }
 
 int main(int argc, char **argv) {
-    char *device = "your device here";
+    char *device = "/dev/cu.usbserial";
     
-    // this depends on your device (serial port, ip)
-    int fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
-    if (fd < 0) {
-        printf("error: %s - %s\n", device, strerror(errno));
-        return -1;
-    }
-    
+	int fd = serial_port_open(device);
+
     // this is a blocking call
     sml_transport_listen(fd, &transport_receiver);
     
