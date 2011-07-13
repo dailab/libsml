@@ -74,6 +74,7 @@ void *sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
 	if (!(sml_number_endian() == SML_BIG_ENDIAN)) {
 		sml_number_byte_swap(np, max_size);
 	}
+	sml_buf_update_bytes_read(buf, l);
 
 	return np;
 }

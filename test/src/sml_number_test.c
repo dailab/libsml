@@ -56,6 +56,7 @@ TEST(sml_number, parse_unsigned8) {
 	hex2binary("6201", sml_buf_get_current_buf(buf));
 	u8 *n = sml_u8_parse(buf);
 	TEST_ASSERT_EQUAL(1, *n);
+	TEST_ASSERT_EQUAL(2, buf->cursor);
 }
 
 TEST(sml_number, parse_unsigned16) {
