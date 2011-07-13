@@ -44,9 +44,16 @@ TEST(sml_message, init_unique_transaction_id) {
 	TEST_ASSERT_TRUE(sml_octet_string_cmp(msg1->transaction_id, msg2->transaction_id) != 0);
 }
 
+TEST(sml_message, parse) {
+	hex2binary("7607003800003FB662006200726301017601010700380042153D0B06454D48010271533BCD010163820800", sml_buf_get_current_buf(buf));
+	sml_message *msg = sml_message_parse(buf);
+	TEST_ASSERT_NOT_NULL(msg);
+}
+
 TEST_GROUP_RUNNER(sml_message) {
 	RUN_TEST_CASE(sml_message, init);
 	RUN_TEST_CASE(sml_message, init_unique_transaction_id);
+	RUN_TEST_CASE(sml_message, parse);
 }
 
 
