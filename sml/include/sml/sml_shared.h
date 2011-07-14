@@ -36,22 +36,24 @@ typedef int16_t i16;
 typedef int32_t i32;
 typedef int64_t i64;
 
-#define SML_ANOTHER_TL			0x80
-#define SML_TYPE_FIELD			0x70
-#define SML_LENGTH_FIELD		0xF
-#define SML_OPTIONAL_SKIPPED	0x1
-#define SML_MESSAGE_END			0x0
+#define SML_MESSAGE_END				0x0
 
-#define SML_TYPE_OCTET_STRING	0
-#define SML_TYPE_LIST			112
-#define SML_TYPE_BOOLEAN		64
-#define SML_TYPE_INTEGER		80
-#define SML_TYPE_UNSIGNED		96
+#define SML_TYPE_FIELD				0x70
+#define SML_LENGTH_FIELD			0xF
+#define SML_ANOTHER_TL				0x80
 
-#define SML_TYPE_NUMBER_8		sizeof(u8)
-#define SML_TYPE_NUMBER_16		sizeof(u16)
-#define SML_TYPE_NUMBER_32		sizeof(u32)
-#define SML_TYPE_NUMBER_64		sizeof(u64)
+#define SML_TYPE_OCTET_STRING		0x0
+#define SML_TYPE_BOOLEAN			0x40
+#define SML_TYPE_INTEGER			0x50
+#define SML_TYPE_UNSIGNED			0x60
+#define SML_TYPE_LIST				0x70
+
+#define SML_OPTIONAL_SKIPPED		0x1
+
+#define SML_TYPE_NUMBER_8			sizeof(u8)
+#define SML_TYPE_NUMBER_16			sizeof(u16)
+#define SML_TYPE_NUMBER_32			sizeof(u32)
+#define SML_TYPE_NUMBER_64			sizeof(u64)
 
 
 // This sml_buffer is used in two different use-cases.
