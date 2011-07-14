@@ -17,6 +17,7 @@
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "test_helper.h"
+#include "../unity/unity_fixture.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -49,5 +50,18 @@ int hex2binary(char *hex, unsigned char *buf) {
 		buf[i] = test_helper_c2ptoi(&(hex[i * 2]));
 	}
 	return i;
+}
+
+void expected_buf(sml_buffer *buf, char *hex, int len) {
+	unsigned char expected_buf[len];
+	hex2binary(hex, expected_buf);
+	TEST_ASSERT_EQUAL_MEMORY(expected_buf, buf->buffer, len);
+	TEST_ASSERT_EQUAL(len, buf->cursor);
+}
+
+void expected_octet_string(octet_string *str, char *content, int len) {
+	TEST_ASSERT_NOT_NULL(str);
+	TEST_ASSERT_EQUAL(len, str->len);
+	TEST_ASSERT_EQUAL_MEMORY(content, str->str, len);
 }
 

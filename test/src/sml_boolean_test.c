@@ -24,13 +24,6 @@ TEST_GROUP(sml_boolean);
 
 sml_buffer *buf;
 
-void sml_boolean_test_expected_buf(char *hex, int len) {
-	unsigned char expected_buf[len];
-	hex2binary(hex, expected_buf);
-	TEST_ASSERT_EQUAL_MEMORY(expected_buf, buf->buffer, len);
-	TEST_ASSERT_EQUAL(len, buf->cursor);
-}
-
 TEST_SETUP(sml_boolean) {
 	buf = sml_buffer_init(512);
 }
@@ -68,12 +61,12 @@ TEST(sml_boolean, parse_optional) {
 TEST(sml_boolean, write) {
 	sml_boolean *b = sml_boolean_init(SML_BOOLEAN_TRUE);
 	sml_boolean_write(b, buf);
-	sml_boolean_test_expected_buf("42FF", 2);
+	expected_buf(buf, "42FF", 2);
 }
 
 TEST(sml_boolean, write_optional) {
 	sml_boolean_write(0, buf);
-	sml_boolean_test_expected_buf("01", 1);
+	expected_buf(buf, "01", 1);
 }
 
 

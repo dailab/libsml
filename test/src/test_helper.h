@@ -19,6 +19,11 @@
 #ifndef TEST_HELPER_H_
 #define TEST_HELPER_H_
 
+#include <sml/sml_shared.h>
+#include <sml/sml_octet_string.h>
+
 int hex2binary(char *hex, unsigned char *buf);
+void expected_buf(sml_buffer *buf, char *hex, int len);
+void expected_octet_string(octet_string *str, char *content, int len);
 
 #endif 

@@ -25,13 +25,6 @@ TEST_GROUP(sml_number);
 
 sml_buffer *buf;
 
-void sml_number_test_expected_buf(char *hex, int len) {
-	unsigned char expected_buf[len];
-	hex2binary(hex, expected_buf);
-	TEST_ASSERT_EQUAL_MEMORY(expected_buf, buf->buffer, len);
-	TEST_ASSERT_EQUAL(len, buf->cursor);
-}
-
 TEST_SETUP(sml_number) {
 	buf = sml_buffer_init(512);
 }
@@ -129,18 +122,18 @@ TEST(sml_number, parse_int64_fewer_bytes) {
 TEST(sml_number, write_unsigned8) {
 	u8 *n = sml_u8_init(1);
 	sml_u8_write(n, buf);
-	sml_number_test_expected_buf("6201", 2);
+	expected_buf(buf, "6201", 2);
 }
 
 TEST(sml_number, write_integer32) {
 	i32 *n = sml_i32_init(-5000);
 	sml_i32_write(n, buf);
-	sml_number_test_expected_buf("55FFFFEC78", 5);
+	expected_buf(buf, "55FFFFEC78", 5);
 }
 
 TEST(sml_number, write_integer8_optional) {
 	sml_i8_write(0, buf);
-	sml_number_test_expected_buf("01", 1);
+	expected_buf(buf, "01", 1);
 }
 
 TEST_GROUP_RUNNER(sml_number) {
