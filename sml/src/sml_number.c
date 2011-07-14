@@ -79,22 +79,7 @@ void *sml_number_parse(sml_buffer *buf, unsigned char type, int max_size) {
 	return np;
 }
 
-/*
-void sml_number_write(unsigned char type, int size, u64 value, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, type, size);
-    int i;
-    u64 mask = 0xFF;
-    mask <<= (8 * (size - 1));
-    
-    for (i = 0; i < size; i++) {
-        buf->buffer[buf->cursor + i] = (unsigned char) ((mask & value) >> (8 * (size - i - 1)));
-        mask >>= 8;
-    }
-    buf->cursor += size;
-}
-*/
-
-void sml_number_write_new(void *np, unsigned char type, int size, sml_buffer *buf) {
+void sml_number_write(void *np, unsigned char type, int size, sml_buffer *buf) {
 	if (np == 0) {
 		sml_buf_optional_write(buf);
 		return;
