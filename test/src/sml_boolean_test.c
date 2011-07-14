@@ -58,10 +58,16 @@ TEST(sml_boolean, parse_optional) {
 	TEST_ASSERT_NULL(b);
 }
 
-TEST(sml_boolean, write) {
+TEST(sml_boolean, write_true) {
 	sml_boolean *b = sml_boolean_init(SML_BOOLEAN_TRUE);
 	sml_boolean_write(b, buf);
 	expected_buf(buf, "42FF", 2);
+}
+
+TEST(sml_boolean, write_false) {
+	sml_boolean *b = sml_boolean_init(SML_BOOLEAN_FALSE);
+	sml_boolean_write(b, buf);
+	expected_buf(buf, "4200", 2);
 }
 
 TEST(sml_boolean, write_optional) {
@@ -75,6 +81,7 @@ TEST_GROUP_RUNNER(sml_boolean) {
 	RUN_TEST_CASE(sml_boolean, parse_true);
 	RUN_TEST_CASE(sml_boolean, parse_false);
 	RUN_TEST_CASE(sml_boolean, parse_optional);	
-	RUN_TEST_CASE(sml_boolean, write);
+	RUN_TEST_CASE(sml_boolean, write_true);
+	RUN_TEST_CASE(sml_boolean, write_false);
 	RUN_TEST_CASE(sml_boolean, write_optional);
 }
