@@ -129,3 +129,9 @@ int sml_number_endian() {
 		return SML_BIG_ENDIAN;
 }
 
+void sml_number_free(void *np) {
+	if (np) {
+		free(np);
+	}
+}
+
