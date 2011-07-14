@@ -55,8 +55,74 @@ TEST(sml_value, parse_boolean) {
 	TEST_ASSERT_FALSE(*(v->data.boolean));
 }
 
+TEST(sml_value, parse_unsigned32) {
+	hex2binary("6500000001", sml_buf_get_current_buf(buf));
+	sml_value *v = sml_value_parse(buf);
+	
+	TEST_ASSERT_NOT_NULL(v);
+	TEST_ASSERT_EQUAL(1, *(v->data.uint32));
+	TEST_ASSERT_EQUAL((SML_TYPE_UNSIGNED | SML_TYPE_NUMBER_32), v->type);
+
+}
+
+TEST(sml_value, parse_integer64_fewer_bytes) {
+	hex2binary("58FFFFFFFFFFFF0F", sml_buf_get_current_buf(buf));
+	sml_value *v = sml_value_parse(buf);
+	
+	TEST_ASSERT_EQUAL(-241, *(v->data.int64));
+	TEST_ASSERT_EQUAL((SML_TYPE_INTEGER | SML_TYPE_NUMBER_64), v->type);
+}
+
+TEST(sml_value, write_octet_string) {
+	sml_value *v = sml_value_init();
+	v->type = SML_TYPE_OCTET_STRING;
+	v->data.bytes = sml_octet_string_init((unsigned char *)"Hallo", 5);
+	
+	sml_value_write(v, buf);
+	expected_buf(buf, "0648616C6C6F", 6);
+}
+
+TEST(sml_value, write_boolean) {
+	sml_value *v = sml_value_init();
+	v->type = SML_TYPE_BOOLEAN;
+	v->data.boolean = sml_boolean_init(SML_BOOLEAN_FALSE);
+	
+	sml_value_write(v, buf);
+	expected_buf(buf, "4200", 2);
+}
+
+TEST(sml_value, write_unsigned32) {
+	sml_value *v = sml_value_init();
+	v->type = SML_TYPE_UNSIGNED | SML_TYPE_NUMBER_32;
+	v->data.uint32 = sml_u32_init(42);
+	
+	sml_value_write(v, buf);
+	expected_buf(buf, "650000002A", 5);
+}
+
+TEST(sml_value, write_integer16) {
+	sml_value *v = sml_value_init();
+	v->type = SML_TYPE_INTEGER | SML_TYPE_NUMBER_16;
+	v->data.int16 = sml_i16_init(-5);
+	
+	sml_value_write(v, buf);
+	expected_buf(buf, "53FFFB", 3);
+}
+
+TEST(sml_value, write_optional) {
+	sml_value_write(0, buf);
+	expected_buf(buf, "01", 1);
+}
+
 TEST_GROUP_RUNNER(sml_value) {
 	RUN_TEST_CASE(sml_value, init);
 	RUN_TEST_CASE(sml_value, parse_octet_string);
 	RUN_TEST_CASE(sml_value, parse_boolean);
+	RUN_TEST_CASE(sml_value, parse_unsigned32);
+	RUN_TEST_CASE(sml_value, parse_integer64_fewer_bytes);
+	RUN_TEST_CASE(sml_value, write_octet_string);
+	RUN_TEST_CASE(sml_value, write_boolean);
+	RUN_TEST_CASE(sml_value, write_unsigned32);
+	RUN_TEST_CASE(sml_value, write_integer16);
+	RUN_TEST_CASE(sml_value, write_optional);
 }
