@@ -11,6 +11,7 @@ OBJS = \
 	src/sml_buffer_test.o \
 	src/sml_number_test.o \
 	src/sml_boolean_test.o \
+	src/sml_value_test.o \
 	src/sml_file_test.o \
 	src/sml_message_test.o
 

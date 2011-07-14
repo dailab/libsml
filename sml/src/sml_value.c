@@ -32,6 +32,9 @@ sml_value *sml_value_parse(sml_buffer *buf) {
 		case SML_TYPE_OCTET_STRING:
 			value->data.bytes = sml_octet_string_parse(buf);
 			break;
+		case SML_TYPE_BOOLEAN:
+			value->data.boolean = sml_boolean_parse(buf);
+			break;
 		case SML_TYPE_UNSIGNED:
 			switch (byte & SML_LENGTH_FIELD) {
 				case SML_TYPE_NUMBER_8:

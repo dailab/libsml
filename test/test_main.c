@@ -23,6 +23,7 @@ static void runAllTests() {
 	RUN_TEST_GROUP(sml_buffer);
 	RUN_TEST_GROUP(sml_number);
 	RUN_TEST_GROUP(sml_boolean);
+	RUN_TEST_GROUP(sml_value);
 	RUN_TEST_GROUP(sml_message);
 	RUN_TEST_GROUP(sml_file);
 }
