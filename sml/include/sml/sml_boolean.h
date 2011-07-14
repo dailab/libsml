@@ -33,6 +33,7 @@ typedef u8 sml_boolean;
 sml_boolean *sml_boolean_init(u8 b);
 sml_boolean *sml_boolean_parse(sml_buffer *buf);
 void sml_boolean_write(sml_boolean *boolean, sml_buffer *buf);
+void sml_boolean_free(sml_boolean *b);
 
 #ifdef __cplusplus
 }

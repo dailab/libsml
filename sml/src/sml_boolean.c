@@ -64,5 +64,11 @@ void sml_boolean_write(sml_boolean *boolean, sml_buffer *buf) {
     buf->cursor++;
 }
 
+void sml_boolean_free(sml_boolean *b) {
+	if (b) {
+		free(b);
+	}
+}
+
 
 
