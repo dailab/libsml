@@ -57,8 +57,10 @@ void sml_time_write(sml_time *time, sml_buffer *buf) {
 	sml_buf_optional_write(buf);
 }
 
-void sml_time_free(sml_time *time) {
-    if (time) {
-        free(time);
+void sml_time_free(sml_time *tme) {
+    if (tme) {
+		sml_number_free(tme->tag);
+		sml_number_free(tme->data);
+        free(tme);
     }
 }

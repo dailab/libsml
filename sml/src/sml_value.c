@@ -117,9 +117,17 @@ sml_value *sml_value_init() {
 
 void sml_value_free(sml_value *value) {
     if (value) {
-        if (value->type == SML_TYPE_OCTET_STRING) {
-            sml_octet_string_free(value->data.bytes);
-        }
+		switch (value->type) {
+			case SML_TYPE_OCTET_STRING:
+				sml_octet_string_free(value->data.bytes);
+				break;
+			case SML_TYPE_BOOLEAN:
+				sml_boolean_free(value->data.boolean);
+				break;
+			default:
+				sml_number_free(value->data.int8);
+				break;
+		}
         free(value);
     }
 }

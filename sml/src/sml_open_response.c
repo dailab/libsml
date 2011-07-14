@@ -50,7 +50,7 @@ sml_open_response *sml_open_response_parse(sml_buffer *buf) {
 	msg->ref_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
-	msg->sml_version = SML_SKIP_OPTIONAL sml_u8_parse(buf);
+	msg->sml_version = sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	return msg;
@@ -66,6 +66,7 @@ void sml_open_response_free(sml_open_response *msg) {
         sml_octet_string_free(msg->req_file_id);
         sml_octet_string_free(msg->server_id);
         sml_time_free(msg->ref_time);
+		sml_number_free(msg->sml_version);
         free(msg);
     }
 }

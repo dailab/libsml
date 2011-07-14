@@ -63,6 +63,7 @@ sml_status *sml_status_parse(sml_buffer *buf) {
 
 void sml_status_free(sml_status *status) {
     if (status) {
+		sml_number_free(status->status8);
         free(status);
     }
 }

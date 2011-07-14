@@ -31,27 +31,10 @@ void sml_get_list_request_write(sml_get_list_request *msg, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
 
     sml_octet_string_write(msg->client_id, buf);
-
-    // optional server_id
-    if (msg->server_id != NULL){
-    	sml_octet_string_write(msg->server_id, buf);
-    } else sml_buf_optional_write(buf);
-
-    // optional username
-    if (msg->username != NULL){
-    	sml_octet_string_write(msg->username, buf);
-    } else sml_buf_optional_write(buf);
-
-    // optional password
-    if (msg->password != NULL){
-    	sml_octet_string_write(msg->password, buf);
-    } else sml_buf_optional_write(buf);
-
-    // optional list_name
-    if (msg->list_name != NULL){
-      sml_octet_string_write(msg->list_name,buf);
-    } else  sml_buf_optional_write(buf);
-
+	sml_octet_string_write(msg->server_id, buf);
+	sml_octet_string_write(msg->username, buf);
+	sml_octet_string_write(msg->password, buf);
+	sml_octet_string_write(msg->list_name,buf);
 }
 
 

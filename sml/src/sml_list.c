@@ -111,6 +111,8 @@ void sml_list_entry_free(sml_list *list) {
         sml_octet_string_free(list->obj_name);
         sml_status_free(list->status);
         sml_time_free(list->val_time);
+		sml_number_free(list->unit);
+		sml_number_free(list->scaler);
         sml_value_free(list->value);
         sml_octet_string_free(list->value_signature);
         free(list);

@@ -31,24 +31,11 @@ sml_get_proc_parameter_request *sml_get_proc_parameter_request_init() {
 void sml_get_proc_parameter_request_write(sml_get_proc_parameter_request *msg, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
 
-    // optional server_id
-    if (msg->server_id != NULL){
-    	sml_octet_string_write(msg->server_id, buf);
-    } else  sml_buf_optional_write(buf);
-
-    // optional username
-    if (msg->username != NULL) {
-    	sml_octet_string_write(msg->username, buf);
-    } else sml_buf_optional_write(buf);
-
-    // optional password
-    if (msg->password != NULL){
-    	sml_octet_string_write(msg->password, buf);
-    } else sml_buf_optional_write(buf);
-
-    sml_tree_path_write(msg->parameter_tree_path, buf);
-
-    sml_tree_write(msg->parameter_tree, buf);
+	sml_octet_string_write(msg->server_id, buf);
+	sml_octet_string_write(msg->username, buf);
+	sml_octet_string_write(msg->password, buf);
+	sml_tree_path_write(msg->parameter_tree_path, buf);
+	sml_tree_write(msg->parameter_tree, buf);
 }
 
 void sml_get_proc_parameter_request_free(sml_get_proc_parameter_request *msg) {

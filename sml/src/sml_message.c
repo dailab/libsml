@@ -84,10 +84,11 @@ sml_message *sml_message_init() {
 
 void sml_message_free(sml_message *msg) {
     if (msg) {
-        if (msg->transaction_id) 
-            sml_octet_string_free(msg->transaction_id);
-        if (msg->message_body)
-            sml_message_body_free(msg->message_body);
+		sml_octet_string_free(msg->transaction_id);
+		sml_number_free(msg->group_id);
+		sml_number_free(msg->abort_on_error);
+		sml_message_body_free(msg->message_body);
+		sml_number_free(msg->crc);
         free(msg);
     }
 }
@@ -200,6 +201,8 @@ void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
 
 void sml_message_body_free(sml_message_body *message_body) {
     if (message_body) {
+		sml_number_free(message_body->tag);
+		
         switch (*(message_body->tag)) {
             case SML_MESSAGE_OPEN_REQUEST:
                 sml_open_request_free((sml_open_request *) message_body->data);

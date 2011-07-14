@@ -19,8 +19,6 @@
 
 #include <sml/sml_set_proc_parameter_request.h>
 
-#include <stdio.h>
-
 sml_set_proc_parameter_request *sml_set_proc_parameter_request_init() {
     sml_set_proc_parameter_request *msg = (sml_set_proc_parameter_request *) malloc(sizeof (sml_set_proc_parameter_request));
     memset(msg, 0, sizeof(sml_set_proc_parameter_request));
@@ -29,15 +27,22 @@ sml_set_proc_parameter_request *sml_set_proc_parameter_request_init() {
 
 void sml_set_proc_parameter_request_write(sml_set_proc_parameter_request *msg, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
-    sml_buf_optional_write(buf);
-    sml_buf_optional_write(buf);
-    sml_buf_optional_write(buf);
+    sml_octet_string_write(msg->server_id, buf);
+	sml_octet_string_write(msg->username, buf);
+    sml_octet_string_write(msg->password, buf);
     sml_tree_path_write(msg->parameter_tree_path, buf);
     sml_tree_write(msg->parameter_tree, buf);
 }
 
 void sml_set_proc_parameter_request_free(sml_set_proc_parameter_request *msg) {
-    printf("NYI: %s\n", __FUNCTION__);
+	if (msg) {
+		sml_octet_string_free(msg->server_id);
+		sml_octet_string_free(msg->username);
+		sml_octet_string_free(msg->password);
+		sml_tree_path_free(msg->parameter_tree_path);
+		sml_tree_free(msg->parameter_tree);
+		free(msg);
+	}
 }
 
 
