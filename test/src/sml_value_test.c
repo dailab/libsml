@@ -73,6 +73,14 @@ TEST(sml_value, parse_integer64_fewer_bytes) {
 	TEST_ASSERT_EQUAL((SML_TYPE_INTEGER | SML_TYPE_NUMBER_64), v->type);
 }
 
+TEST(sml_value, parse_optional) {
+	hex2binary("01", sml_buf_get_current_buf(buf));
+	sml_value *v = sml_value_parse(buf);
+	
+	TEST_ASSERT_NULL(v);
+	TEST_ASSERT_EQUAL(1, buf->cursor);
+}
+
 TEST(sml_value, write_octet_string) {
 	sml_value *v = sml_value_init();
 	v->type = SML_TYPE_OCTET_STRING;
@@ -120,6 +128,7 @@ TEST_GROUP_RUNNER(sml_value) {
 	RUN_TEST_CASE(sml_value, parse_boolean);
 	RUN_TEST_CASE(sml_value, parse_unsigned32);
 	RUN_TEST_CASE(sml_value, parse_integer64_fewer_bytes);
+	RUN_TEST_CASE(sml_value, parse_optional);
 	RUN_TEST_CASE(sml_value, write_octet_string);
 	RUN_TEST_CASE(sml_value, write_boolean);
 	RUN_TEST_CASE(sml_value, write_unsigned32);
