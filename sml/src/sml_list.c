@@ -26,8 +26,6 @@
 #include <stdio.h>
 
 
-
-
 sml_list *sml_list_init(){
 	 sml_list *s = (sml_list *)malloc(sizeof(sml_list));
 	 memset(s, 0, sizeof(sml_list));

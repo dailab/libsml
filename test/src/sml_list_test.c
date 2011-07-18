@@ -16,20 +16,27 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "unity/unity_fixture.h" 
+#include "../unity/unity_fixture.h"
+#include "test_helper.h"
+#include <sml/sml_list.h>
 
-static void runAllTests() {
-	RUN_TEST_GROUP(sml_octet_string);
-	RUN_TEST_GROUP(sml_buffer);
-	RUN_TEST_GROUP(sml_number);
-	RUN_TEST_GROUP(sml_boolean);
-	RUN_TEST_GROUP(sml_value);
-	RUN_TEST_GROUP(sml_status);
-	RUN_TEST_GROUP(sml_list);
-	RUN_TEST_GROUP(sml_message);
-	RUN_TEST_GROUP(sml_file);
+TEST_GROUP(sml_list);
+
+sml_buffer *buf;
+
+TEST_SETUP(sml_list) {
+	buf = sml_buffer_init(512);
 }
 
-int main(int argc, char * argv[]) {
-	return UnityMain(argc, argv, runAllTests);
+TEST_TEAR_DOWN(sml_list) {
+	sml_buffer_free(buf);
+}
+
+TEST(sml_list, init) {
+	sml_list *v = sml_list_init();
+	TEST_ASSERT_NOT_NULL(v);
+}
+
+TEST_GROUP_RUNNER(sml_list) {
+	RUN_TEST_CASE(sml_list, init);
 }
