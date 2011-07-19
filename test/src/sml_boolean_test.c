@@ -57,6 +57,7 @@ TEST(sml_boolean, parse_optional) {
 	hex2binary("01", sml_buf_get_current_buf(buf));
 	sml_boolean *b = sml_boolean_parse(buf);
 	TEST_ASSERT_NULL(b);
+	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
 }
 
 TEST(sml_boolean, write_true) {

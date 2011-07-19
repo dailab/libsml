@@ -78,7 +78,12 @@ TEST(sml_octet_string, cmp) {
 	octet_string *s3 = sml_octet_string_init((unsigned char *)"Hallo", 5);
 	
 	TEST_ASSERT_TRUE(sml_octet_string_cmp(s1, s2) != 0);
-	TEST_ASSERT_TRUE(sml_octet_string_cmp(s1, s3) == 0);
+	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp(s1, s3));
+}
+
+TEST(sml_octet_string, cmp_with_hex) {
+	octet_string *s = sml_octet_string_init((unsigned char *)"Hallo", 5);
+	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp_with_hex(s, "48616C6C6F"));
 }
 
 TEST_GROUP_RUNNER(sml_octet_string) {
@@ -89,6 +94,7 @@ TEST_GROUP_RUNNER(sml_octet_string) {
 	RUN_TEST_CASE(sml_octet_string, write);
 	RUN_TEST_CASE(sml_octet_string, write_optional);
 	RUN_TEST_CASE(sml_octet_string, cmp);
+	RUN_TEST_CASE(sml_octet_string, cmp_with_hex);
 }
 
 

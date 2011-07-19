@@ -27,6 +27,9 @@ sml_boolean *sml_boolean_init(u8 b) {
 }
 
 sml_boolean *sml_boolean_parse(sml_buffer *buf) {
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
 	
 	int l;
 	if (sml_buf_get_next_type(buf) != SML_TYPE_BOOLEAN) {
