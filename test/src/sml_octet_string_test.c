@@ -55,6 +55,8 @@ TEST(sml_octet_string, parse_multiple_tl_fields) {
 TEST(sml_octet_string, parse_optional) {
 	hex2binary("01", sml_buf_get_current_buf(buf));
 	octet_string *str = sml_octet_string_parse(buf);
+	
+	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
 	TEST_ASSERT_NULL(str);
 	TEST_ASSERT_EQUAL(1, buf->cursor);
 }

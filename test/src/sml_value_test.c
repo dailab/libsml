@@ -62,6 +62,7 @@ TEST(sml_value, parse_unsigned32) {
 	TEST_ASSERT_NOT_NULL(v);
 	TEST_ASSERT_EQUAL(1, *(v->data.uint32));
 	TEST_ASSERT_EQUAL((SML_TYPE_UNSIGNED | SML_TYPE_NUMBER_32), v->type);
+	TEST_ASSERT_EQUAL(5, buf->cursor);
 
 }
 

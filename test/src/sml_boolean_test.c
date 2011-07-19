@@ -50,6 +50,7 @@ TEST(sml_boolean, parse_false) {
 	sml_boolean *b = sml_boolean_parse(buf);
 	TEST_ASSERT_NOT_NULL(b);
 	TEST_ASSERT_EQUAL(SML_BOOLEAN_FALSE, *b);
+	TEST_ASSERT_EQUAL(2, buf->cursor);
 }
 
 TEST(sml_boolean, parse_optional) {

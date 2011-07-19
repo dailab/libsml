@@ -52,6 +52,7 @@ TEST(sml_status, parse_optional) {
 	
 	TEST_ASSERT_NULL(s);
 	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
+	TEST_ASSERT_EQUAL(1, buf->cursor);
 }
 
 TEST(sml_status, write_status32) {

@@ -41,11 +41,14 @@ sml_boolean *sml_boolean_parse(sml_buffer *buf) {
 	}
 	
 	if (sml_buf_get_current_byte(buf)) {
+		sml_buf_update_bytes_read(buf, 1);
 		return sml_boolean_init(SML_BOOLEAN_TRUE);
 	}
 	else {
+		sml_buf_update_bytes_read(buf, 1);
 		return sml_boolean_init(SML_BOOLEAN_FALSE);
 	}
+	
 }
 
 void sml_boolean_write(sml_boolean *boolean, sml_buffer *buf) {
