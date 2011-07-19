@@ -48,6 +48,7 @@ typedef struct sml_list_entry {
 sml_list *sml_list_init();
 
 void sml_list_write(sml_list *list, sml_buffer *buf);
+void sml_list_add(sml_list *list, sml_list *new_entry);
 
 sml_list *sml_list_parse(sml_buffer *buf);
 

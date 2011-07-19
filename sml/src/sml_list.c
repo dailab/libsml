@@ -25,6 +25,9 @@
 #include <sml/sml_value.h>
 #include <stdio.h>
 
+void sml_list_entry_free(sml_list *list) ;
+sml_list *sml_list_entry_parse(sml_buffer *buf);
+void sml_list_entry_write(sml_list *list, sml_buffer *buf);
 
 sml_list *sml_list_init(){
 	 sml_list *s = (sml_list *)malloc(sizeof(sml_list));
@@ -33,75 +36,123 @@ sml_list *sml_list_init(){
 	 return s;
 }
 
+void sml_list_add(sml_list *list, sml_list *new_entry) {
+	list->next = new_entry;
+}
+
+// This function doesn't free the allocated memory in error cases,
+// this is done in sml_list_parse.
+sml_list *sml_list_entry_parse(sml_buffer *buf) {
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	if (sml_buf_get_next_length(buf) != 7) {
+		buf->error = 1;
+		goto error;
+	}
+	sml_list *l = sml_list_init();	
+
+	l->obj_name = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+
+	l->status = sml_status_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+
+	l->val_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
+	l->unit = sml_u8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+
+	l->scaler = sml_i8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+
+	l->value = sml_value_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
+	l->value_signature = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+
+	return l;
+	
+	error:
+		printf("error\n");
+		buf->error = 1;
+		return 0;
+}
+
 sml_list *sml_list_parse(sml_buffer *buf) {
-	int elems, i;
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
+	
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		return 0;
 	}
 	
-	elems = sml_buf_get_next_length(buf);
-	sml_list *start = 0;
-	sml_list *cur = 0;
-	sml_list *tmp;
+	sml_list *first = 0;
+	sml_list *last = 0;
+	int elems;
 	
-	for (i = 0; i < elems; i++) {
-		
-		if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
-			buf->error = 1;
-			goto error;
-		}
-		
-		if (sml_buf_get_next_length(buf) != 7) {
-			buf->error = 1;
-			goto error;
-		}
-		
-		tmp = (sml_list *) malloc(sizeof(sml_list));
-		if (i == 0) {
-			start = tmp;
-			cur = tmp;
-		}
-		else {
-			cur->next = tmp;
-			cur = tmp;
-		}
+	elems = sml_buf_get_next_length(buf);
 
-		cur->obj_name = sml_octet_string_parse(buf);
+	if (elems > 0) {
+		first = sml_list_entry_parse(buf);
 		if (sml_buf_has_errors(buf)) goto error;
-		
-		cur->status = SML_SKIP_OPTIONAL sml_status_parse(buf);
-		if (sml_buf_has_errors(buf)) goto error;
-		
-		cur->val_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
-		if (sml_buf_has_errors(buf)) goto error;
-		
-		cur->unit = SML_SKIP_OPTIONAL sml_u8_parse(buf);
-		if (sml_buf_has_errors(buf)) goto error;
-
-		cur->scaler = SML_SKIP_OPTIONAL sml_i8_parse(buf);
-		if (sml_buf_has_errors(buf)) goto error;
-
-		cur->value = SML_SKIP_OPTIONAL sml_value_parse(buf);
-		if (sml_buf_has_errors(buf)) goto error;
-
-		cur->value_signature = sml_octet_string_parse(buf);
-		if (sml_buf_has_errors(buf)) goto error;
-		
-		cur->next = 0;
+		last = first;
+		elems--;
 	}
-	return start;
+	
+	while(elems > 0) {
+		last->next = sml_list_entry_parse(buf);
+		if (sml_buf_has_errors(buf)) goto error;
+		last = last->next;
+		elems--;
+	}
+	
+	return first;
 	
 error:
 	buf->error = 1;
-	sml_list_free(start);
+	sml_list_free(first);
 	return 0;
 }
 
+void sml_list_entry_write(sml_list *list, sml_buffer *buf) {
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 7);
+	sml_octet_string_write(list->obj_name, buf);
+	sml_status_write(list->status, buf);
+	sml_time_write(list->val_time, buf);
+	sml_u8_write(list->unit, buf);
+	sml_i8_write(list->scaler, buf);
+	sml_value_write(list->value, buf);
+	sml_octet_string_write(list->value_signature, buf);
+}
+
 void sml_list_write(sml_list *list, sml_buffer *buf){
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 1);
-    sml_buf_optional_write(buf);
-   //
+	if (list == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
+	sml_list *i = list;
+	int len = 0;
+	while(i) {
+		i = i->next;
+		len++;
+	}
+	
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, len);
+	
+	i = list;
+	while(i) {
+		sml_list_entry_write(i, buf);
+		i = i->next;
+	}
+	
 }
 
 void sml_list_entry_free(sml_list *list) {

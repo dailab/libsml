@@ -33,10 +33,58 @@ TEST_TEAR_DOWN(sml_list) {
 }
 
 TEST(sml_list, init) {
-	sml_list *v = sml_list_init();
-	TEST_ASSERT_NOT_NULL(v);
+	sml_list *l = sml_list_init();
+	TEST_ASSERT_NOT_NULL(l);
+	TEST_ASSERT_NULL(l->next);
+}
+
+TEST(sml_list, add) {
+	sml_list *l = sml_list_init();
+	sml_list *n = sml_list_init();
+	sml_list_add(l, n);
+	TEST_ASSERT_NOT_NULL(l);
+	TEST_ASSERT_NOT_NULL(l->next);
+	TEST_ASSERT_TRUE(n == l->next);
+}
+
+TEST(sml_list, parse_two_entries) {
+	hex2binary("727702610101010142000177026101010101420001",  sml_buf_get_current_buf(buf));
+	sml_list *l = sml_list_parse(buf);
+	
+	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
+	TEST_ASSERT_NOT_NULL(l);
+	TEST_ASSERT_NOT_NULL(l->next);
+	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp_with_hex(l->obj_name, "61"));
+}
+
+TEST(sml_list, parse_optional) {
+	hex2binary("01",  sml_buf_get_current_buf(buf));
+	sml_list *l = sml_list_parse(buf);
+	TEST_ASSERT_NULL(l);
+	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
+}
+
+TEST(sml_list, write_one_entry) {
+	sml_list *l = sml_list_init();
+	l->obj_name = sml_octet_string_init((unsigned char *)"Hallo", 5);
+	l->value = sml_value_init();
+	l->value->type = SML_TYPE_OCTET_STRING;
+	l->value->data.bytes = sml_octet_string_init((unsigned char *)"Hallo", 5);
+	
+	sml_list_write(l, buf);
+	expected_buf(buf, "71770648616C6C6F010101010648616C6C6F01", 19);
+}
+
+TEST(sml_list, write_optional) {
+	sml_list_write(0, buf);
+	expected_buf(buf, "01", 1);
 }
 
 TEST_GROUP_RUNNER(sml_list) {
 	RUN_TEST_CASE(sml_list, init);
+	RUN_TEST_CASE(sml_list, add);
+	RUN_TEST_CASE(sml_list, parse_two_entries);
+	RUN_TEST_CASE(sml_list, parse_optional);
+	RUN_TEST_CASE(sml_list, write_one_entry);
+	RUN_TEST_CASE(sml_list, write_optional);
 }
