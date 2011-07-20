@@ -1,5 +1,6 @@
 CFLAGS += -I../sml/include/ -Wall
 LIBSML = ../sml/lib/libsml.a
+LIBS = -luuid
 
 UNITY = \
 	unity/unity.o \
@@ -21,7 +22,7 @@ test_run: libsml test
 	@./test
 
 test : $(UNITY) $(OBJS) $(LIBSML)
-	$(CC) $(CFLAGS) $(LIBSML) $^ test_main.c -o test
+	$(CC) $(CFLAGS) $(LIBSML) $(LIBS) $^ test_main.c -o test
 
 .PHONY: code
 libsml : 

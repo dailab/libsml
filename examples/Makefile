@@ -1,6 +1,6 @@
 CFLAGS += -I../sml/include/ -g -Wall
 OBJS = sml_server.o
-LIBS = -L../sml/lib/ ../sml/lib/libsml.o
+LIBS = -L../sml/lib/ ../sml/lib/libsml.o -luuid
 
 sml_server : $(OBJS)
 	$(CC) $(CFLAGS) $(LIBS) -o sml_server $(OBJS)
