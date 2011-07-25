@@ -21,18 +21,25 @@
 #define	_SML_TIME_H
 
 #include "sml_shared.h"
+#include "sml_number.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#define SML_TIME_SEC_INDEX 0x01
+#define SML_TIME_TIMESTAMP 0x02
 
 typedef struct {
 	u8 *tag;
-	u32 *data;
+	union {
+		u32 *sec_index;
+		u32 *timestamp;
+	}
+	data;
 } sml_time;
 
-// Parses a time, updates the buffer accordingly, memory must be free'd elsewhere.
+sml_time *sml_time_init();
 sml_time *sml_time_parse(sml_buffer *buf);
 void sml_time_write(sml_time *time, sml_buffer *buf);
 void sml_time_free(sml_time *time);

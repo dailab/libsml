@@ -14,6 +14,7 @@ OBJS = \
 	src/sml_value_test.o \
 	src/sml_status_test.o \
 	src/sml_list_test.o \
+	src/sml_time_test.o \
 	src/sml_file_test.o \
 	src/sml_message_test.o
 

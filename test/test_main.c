@@ -26,6 +26,7 @@ static void runAllTests() {
 	RUN_TEST_GROUP(sml_value);
 	RUN_TEST_GROUP(sml_status);
 	RUN_TEST_GROUP(sml_list);
+	RUN_TEST_GROUP(sml_time);
 	RUN_TEST_GROUP(sml_message);
 	RUN_TEST_GROUP(sml_file);
 }
