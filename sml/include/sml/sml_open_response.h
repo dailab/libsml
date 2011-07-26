@@ -38,8 +38,9 @@ typedef struct {
 	u8 *sml_version; // optional
 } sml_open_response;
 
+sml_open_response *sml_open_response_init();
 sml_open_response *sml_open_response_parse(sml_buffer *buf);
-
+void sml_open_response_write(sml_open_response *msg, sml_buffer *buf);
 void sml_open_response_free(sml_open_response *msg);
 
 #ifdef __cplusplus

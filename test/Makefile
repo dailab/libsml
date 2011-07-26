@@ -16,6 +16,7 @@ OBJS = \
 	src/sml_list_test.o \
 	src/sml_time_test.o \
 	src/sml_file_test.o \
+	src/sml_open_request_test.o \
 	src/sml_message_test.o
 
 test_run: libsml test

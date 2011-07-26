@@ -38,16 +38,9 @@ typedef struct {
 	u8 *sml_version; // optional
 } sml_open_request;
 
-//sml_open_request *sml_open_request_init();
-
-//sml_open_request *sml_open_request_init(char* client_id,char* req_file_id, char* server_id);
-
 sml_open_request *sml_open_request_init();
-
-void sml_open_request_write(sml_open_request *msg, sml_buffer *buf);
-
 sml_open_request *sml_open_request_parse(sml_buffer *buf);
-
+void sml_open_request_write(sml_open_request *msg, sml_buffer *buf);
 void sml_open_request_free(sml_open_request *msg);
 
 #ifdef __cplusplus
