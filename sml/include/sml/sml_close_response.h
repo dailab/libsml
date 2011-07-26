@@ -28,8 +28,9 @@ extern "C" {
 
 typedef sml_close_request sml_close_response;
 
+sml_close_response *sml_close_response_init();
 sml_close_response *sml_close_response_parse(sml_buffer *buf);
-
+void sml_close_response_write(sml_close_response *msg, sml_buffer *buf);
 void sml_close_response_free(sml_close_response *msg);
 
 #ifdef __cplusplus

@@ -20,12 +20,16 @@
 #include <sml/sml_close_response.h>
 #include <stdio.h>
 
+sml_close_response *sml_close_response_init() {
+	sml_close_response *msg = (sml_close_response *) malloc(sizeof(sml_close_response));
+	memset(msg, 0, sizeof(sml_close_response));
+	return msg;
+}
+
 sml_close_response *sml_close_response_parse(sml_buffer *buf) {
-    
-    sml_close_response *msg = (sml_close_response *) malloc(sizeof(sml_close_response));
-    memset(msg, 0, sizeof(sml_close_response));
-    
-    if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+	sml_close_response *msg = sml_close_response_init();
+
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}
@@ -34,21 +38,25 @@ sml_close_response *sml_close_response_parse(sml_buffer *buf) {
 		buf->error = 1;
 		goto error;
 	}
-    
-    msg->global_signature = sml_octet_string_parse(buf);
-    if (sml_buf_has_errors(buf)) goto error;
-    
-    return msg;
-    
+	
+	msg->global_signature = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
+	return msg;
+
 error: 
 	sml_close_response_free(msg);
 	return 0;
-    
+}
+
+void sml_close_response_write(sml_close_response *msg, sml_buffer *buf) {
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 1);
+	sml_octet_string_write(msg->global_signature,buf);
 }
 
 void sml_close_response_free(sml_close_response *msg) {
-    if (msg) {
-        sml_octet_string_free(msg->global_signature);      
-        free(msg);
-    }
+	if (msg) {
+		sml_octet_string_free(msg->global_signature);      
+		free(msg);
+	}
 }
