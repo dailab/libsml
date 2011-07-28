@@ -1,3 +1,4 @@
+UNAME := $(shell uname)
 CFLAGS += -I./include/ -fPIC -g -Wall
 
 # Available Flags:
@@ -34,8 +35,12 @@ OBJS = \
 	src/sml_get_profile_pack_request.o \
 	src/sml_get_profile_pack_response.o \
 
-
+ifeq ($(UNAME), Linux)
 libsml: $(DYN_LIB) $(ST_LIB) $(OBJ_LIB)
+endif
+ifeq ($(UNAME), Darwin)
+libsml: $(ST_LIB) $(OBJ_LIB)
+endif
 
 $(DYN_LIB): $(OBJS)
 	$(LD) -shared -o $@ $^
