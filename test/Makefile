@@ -1,5 +1,10 @@
+UNAME := $(shell uname)
 CFLAGS += -I../sml/include/ -Wall
+ifeq ($(UNAME), Linux)
+LIBS = -luuid
+endif
 LIBSML = ../sml/lib/libsml.a
+
 
 UNITY = \
 	unity/unity.o \
@@ -30,7 +35,7 @@ libsml :
 	@$(MAKE) -C ../sml
 
 %.o : %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) $(LIBS) -c $^ -o $@
 
 .PHONY: clean
 clean :
