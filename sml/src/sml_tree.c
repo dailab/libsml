@@ -164,14 +164,11 @@ void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
             printf("TODO: %s\n", __FUNCTION__);
             break;
         case SML_PROC_PAR_VALUE_TAG_TIME:
-            printf("TODO: %s\n", __FUNCTION__);
-            break;
-        default:
-            if (value) {
-                free(value);
-            }
-            buf->error = 1;
-    }
+			sml_time_write(value->data.time, buf);
+			break;
+		default:
+			printf("error: unknown tag in %s\n", __FUNCTION__);
+	}
 }
 
 

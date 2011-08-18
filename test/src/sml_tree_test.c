@@ -64,10 +64,23 @@ TEST(sml_proc_par_value, parse_time) {
 	sml_proc_par_value *t = sml_proc_par_value_parse(buf);
 	TEST_ASSERT_NOT_NULL(t);
 	TEST_ASSERT_EQUAL(SML_PROC_PAR_VALUE_TAG_TIME, *(t->tag));
+	TEST_ASSERT_EQUAL(11, buf->cursor);
+}
+
+TEST(sml_proc_par_value, write_time) {
+	sml_proc_par_value *ppv = sml_proc_par_value_init();
+	ppv->tag = sml_u8_init(SML_PROC_PAR_VALUE_TAG_TIME);
+	sml_time *t = sml_time_init();
+	t->data.sec_index = sml_u32_init(255);
+	t->tag = sml_u8_init(SML_TIME_SEC_INDEX);
+	ppv->data.time = t;
+	sml_proc_par_value_write(ppv, buf);
+	expected_buf(buf, "72620472620165000000FF", 11);
 }
 
 TEST_GROUP_RUNNER(sml_proc_par_value) {
 	RUN_TEST_CASE(sml_proc_par_value, init);
 	RUN_TEST_CASE(sml_proc_par_value, parse_time);
+	RUN_TEST_CASE(sml_proc_par_value, write_time);
 }
 
