@@ -28,14 +28,11 @@
 extern "C" {
 #endif
 
+#define SML_PROC_PAR_VALUE_TAG_VALUE 			0x01
+#define SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY 	0x02
+#define SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY 		0x03
+#define SML_PROC_PAR_VALUE_TAG_TIME				0x04
 
-#define SML_PROC_PAR_VALUE_TAG_VALUE 0x01
-#define SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY 0x02
-#define SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY 0x03
-#define SML_PROC_PAR_VALUE_TAG_TIME 0x04
-
-
-// TODO
 typedef struct {
     u8 *tag;
     union {
@@ -46,32 +43,35 @@ typedef struct {
     } data;
 } sml_proc_par_value;
 
+typedef struct s_tree{
+	octet_string *parameter_name; 
+	sml_proc_par_value *parameter_value; // optional
+	struct s_tree **child_list; // optional
+	
+	int child_list_len; 
+} sml_tree;
+
 typedef struct {
     octet_string **path_entries;
     int path_entries_len;
 } sml_tree_path;
 
-typedef struct s_tree{
-    octet_string *parameter_name; 
-    sml_proc_par_value *parameter_value; // optional
-    struct s_tree **child_list; // optional
-    int child_list_len; 
-} sml_tree;
+// SML_TREE
+sml_tree *sml_tree_init();
+sml_tree *sml_tree_parse(sml_buffer *buf);
+void sml_tree_write(sml_tree *tree, sml_buffer *buf);
+void sml_tree_free(sml_tree *tree);
 
 // SML_TREE_PATH
 sml_tree_path *sml_tree_path_init();
+sml_tree_path *sml_tree_path_parse(sml_buffer *buf);
 void sml_tree_path_add_path_entry(sml_tree_path *tree_path, octet_string *entry);
 void sml_tree_path_write(sml_tree_path *tree_path, sml_buffer *buf);
 void sml_tree_path_free(sml_tree_path *tree_path);
 
-// SML_TREE
-sml_tree *sml_tree_init(octet_string *parameter_name);
-void sml_tree_write(sml_tree *tree, sml_buffer *buf);
-sml_tree *sml_tree_parse(sml_buffer *buf);
-void sml_tree_free(sml_tree *tree);
-
 // SML_PROC_PAR_VALUE
-sml_proc_par_value *sml_proc_par_value_init(u8 tag, void *data);
+sml_proc_par_value *sml_proc_par_value_init();
+sml_proc_par_value *sml_proc_par_value_parse(sml_buffer *buf);
 void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf);
 void sml_proc_par_value_free(sml_proc_par_value *value);
 

@@ -27,6 +27,11 @@ sml_tree_path *sml_tree_path_init() {
     return tree_path;
 }
 
+sml_tree_path *sml_tree_path_parse(sml_buffer *buf) {
+	printf("NYI: %s\n", __FUNCTION__);
+	return 0;
+}
+
 void sml_tree_path_add_path_entry(sml_tree_path *tree_path, octet_string *entry) {
     tree_path->path_entries_len++;
     tree_path->path_entries = (octet_string **) realloc(tree_path->path_entries, sizeof(octet_string *) * tree_path->path_entries_len);
@@ -73,12 +78,13 @@ void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
     sml_buf_optional_write(buf);
 }
 
-sml_proc_par_value *sml_proc_par_value_init(u8 tag, void *data) {
+sml_proc_par_value *sml_proc_par_value_init() {
     
     sml_proc_par_value *value = (sml_proc_par_value *) malloc(sizeof(sml_proc_par_value));
     memset(value, 0, sizeof(sml_proc_par_value));
-    value->tag = sml_u8_init(tag);
+    //value->tag = sml_u8_init(tag);
     
+/*
     switch (*(value->tag)) {
         case SML_PROC_PAR_VALUE_TAG_VALUE:
             value->data.value = (sml_value*)data;
@@ -98,8 +104,49 @@ sml_proc_par_value *sml_proc_par_value_init(u8 tag, void *data) {
             }
             return 0;
     }
-    
+*/    
     return value;
+}
+
+sml_proc_par_value *sml_proc_par_value_parse(sml_buffer *buf) {
+	sml_proc_par_value *ppv = sml_proc_par_value_init();
+	
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	if (sml_buf_get_next_length(buf) != 2) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	ppv->tag = sml_u8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
+	switch (*(ppv->tag)) {
+		case SML_PROC_PAR_VALUE_TAG_VALUE:
+			ppv->data.value = sml_value_parse(buf);
+			break;
+		case SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY:
+			printf("TODO: %s\n", __FUNCTION__);
+			break;
+		case SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY:
+			printf("TODO: %s\n", __FUNCTION__);
+			break;
+		case SML_PROC_PAR_VALUE_TAG_TIME:
+			ppv->data.time = sml_time_parse(buf);
+			break;
+		default:
+			buf->error = 1;
+			goto error;
+	}
+	
+	return ppv;
+	
+error:
+	sml_proc_par_value_free(ppv);
+	return 0;
 }
 
 void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
@@ -128,6 +175,36 @@ void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
 }
 
 
-void sml_proc_par_value_free(sml_proc_par_value *value){
-	printf("NYI: %s\n", __FUNCTION__);
+void sml_proc_par_value_free(sml_proc_par_value *ppv){
+	if (ppv) {
+		
+		if (ppv->tag) {
+			switch (*(ppv->tag)) {
+				case SML_PROC_PAR_VALUE_TAG_VALUE:
+					sml_value_free(ppv->data.value);
+					break;
+				case SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY:
+					printf("TODO: %s\n", __FUNCTION__);
+					break;
+				case SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY:
+					printf("TODO: %s\n", __FUNCTION__);
+					break;
+				case SML_PROC_PAR_VALUE_TAG_TIME:
+					sml_time_free(ppv->data.time);
+					break;
+				default:
+					if (ppv->data.value) {
+						free(ppv->data.value);
+					}
+			}
+			sml_number_free(ppv->tag);
+		}
+		else {
+			// Without the tag, there might be a memory leak. 
+			if (ppv->data.value) {
+				free(ppv->data.value);
+			}
+		}
+		free(ppv);
+	}
 }
