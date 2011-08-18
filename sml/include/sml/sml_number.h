@@ -66,6 +66,10 @@ void sml_number_free(void *np);
 #define sml_i64_write(n, buf) sml_number_write(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_64, buf)
 
 typedef u8 sml_unit;
+#define sml_unit_init(n) sml_u8_init(n)
+#define sml_unit_parse(buf) sml_u8_parse(buf)
+#define sml_unit_write(n, buf) sml_u8_write(n, buf)
+#define sml_unit_free(np) sml_number_free(np)
 
 #ifdef __cplusplus
 }
