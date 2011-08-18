@@ -105,10 +105,10 @@ sml_proc_par_value *sml_proc_par_value_parse(sml_buffer *buf) {
 			ppv->data.value = sml_value_parse(buf);
 			break;
 		case SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY:
-			printf("TODO: %s\n", __FUNCTION__);
+			ppv->data.period_entry = sml_period_entry_parse(buf);
 			break;
 		case SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY:
-			printf("TODO: %s\n", __FUNCTION__);
+			ppv->data.tupel_entry = sml_tupel_entry_parse(buf);
 			break;
 		case SML_PROC_PAR_VALUE_TAG_TIME:
 			ppv->data.time = sml_time_parse(buf);
@@ -134,10 +134,10 @@ void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
 			sml_value_write(value->data.value, buf);
 			break;
 		case SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY:
-			printf("TODO: %s\n", __FUNCTION__);
+			sml_period_entry_write(value->data.period_entry, buf);
 			break;
 		case SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY:
-			printf("TODO: %s\n", __FUNCTION__);
+			sml_tupel_entry_write(value->data.tupel_entry, buf);
 			break;
 		case SML_PROC_PAR_VALUE_TAG_TIME:
 			sml_time_write(value->data.time, buf);
@@ -156,10 +156,10 @@ void sml_proc_par_value_free(sml_proc_par_value *ppv){
 					sml_value_free(ppv->data.value);
 					break;
 				case SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY:
-					printf("TODO: %s\n", __FUNCTION__);
+					sml_period_entry_free(ppv->data.period_entry);
 					break;
 				case SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY:
-					printf("TODO: %s\n", __FUNCTION__);
+					sml_tupel_entry_free(ppv->data.tupel_entry);
 					break;
 				case SML_PROC_PAR_VALUE_TAG_TIME:
 					sml_time_free(ppv->data.time);
@@ -315,3 +315,76 @@ void sml_tupel_entry_free(sml_tupel_entry *tupel) {
 		free(tupel);
 	}
 }
+/*
+	octet_string *obj_name;
+	sml_unit *unit;
+	i8 *scaler;
+	sml_value *value;
+	octet_string *value_signature;
+*/
+sml_period_entry *sml_period_entry_init() {
+	sml_period_entry *period = (sml_period_entry *) malloc(sizeof(sml_period_entry));
+	memset(period, 0, sizeof(sml_period_entry));
+	return period;
+}
+
+sml_period_entry *sml_period_entry_parse(sml_buffer *buf) {
+	sml_period_entry *period = sml_period_entry_init();
+	
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	if (sml_buf_get_next_length(buf) != 5) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	period->obj_name = sml_octet_string_parse(buf);
+	period->unit = sml_unit_parse(buf);
+	period->scaler = sml_i8_parse(buf);
+	period->value = sml_value_parse(buf);
+	period->value_signature = sml_octet_string_parse(buf);
+	
+	if (sml_buf_has_errors(buf)) goto error;
+	
+	return period;
+	
+error:
+	sml_period_entry_free(period);
+	return 0;
+}
+
+void sml_period_entry_write(sml_period_entry *period, sml_buffer *buf) {
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
+	
+	sml_octet_string_write(period->obj_name, buf);
+	sml_unit_write(period->unit, buf);
+	sml_i8_write(period->scaler, buf);
+	sml_value_write(period->value, buf);
+	sml_octet_string_write(period->value_signature, buf);
+}
+
+void sml_period_entry_free(sml_period_entry *period) {
+	if (period) {
+		sml_octet_string_free(period->obj_name);
+		sml_unit_free(period->unit);
+		sml_number_free(period->scaler);
+		sml_value_free(period->value);
+		sml_octet_string_free(period->value_signature);
+
+		free(period);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+

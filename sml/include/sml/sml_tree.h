@@ -69,13 +69,20 @@ typedef struct {
 	octet_string *signature_mA_R2_R3;
 } sml_tupel_entry;
 
+typedef struct {
+	octet_string *obj_name;
+	sml_unit *unit;
+	i8 *scaler;
+	sml_value *value;
+	octet_string *value_signature;
+} sml_period_entry;
 
 typedef struct {
     u8 *tag;
     union {
         sml_value *value;
-        // sml_period_entry
-        // sml_tupel_entry
+		sml_period_entry *period_entry;
+		sml_tupel_entry *tupel_entry;
         sml_time *time;
     } data;
 } sml_proc_par_value;
@@ -112,10 +119,17 @@ sml_proc_par_value *sml_proc_par_value_parse(sml_buffer *buf);
 void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf);
 void sml_proc_par_value_free(sml_proc_par_value *value);
 
+// SML_TUPEL_ENTRY
 sml_tupel_entry *sml_tupel_entry_init();
 sml_tupel_entry *sml_tupel_entry_parse(sml_buffer *buf);
 void sml_tupel_entry_write(sml_tupel_entry *tupel, sml_buffer *buf);
 void sml_tupel_entry_free(sml_tupel_entry *tupel);
+
+// SML_PERIOD_ENTRY
+sml_period_entry *sml_period_entry_init();
+sml_period_entry *sml_period_entry_parse(sml_buffer *buf);
+void sml_period_entry_write(sml_period_entry *period, sml_buffer *buf);
+void sml_period_entry_free(sml_period_entry *period);
 
 #ifdef __cplusplus
 }
