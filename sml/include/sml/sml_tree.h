@@ -33,6 +33,43 @@ extern "C" {
 #define SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY 		0x03
 #define SML_PROC_PAR_VALUE_TAG_TIME				0x04
 
+
+// what a messy tupel
+typedef struct {
+	octet_string *server_id;
+	sml_time *sec_index;
+	u64 *status;
+	
+	sml_unit *unit_pA;
+	i8 *scaler_pA;
+	i64 *value_pA;
+	
+	sml_unit *unit_R1;
+	i8 *scaler_R1;
+	i64 *value_R1;
+	
+	sml_unit *unit_R4;
+	i8 *scaler_R4;
+	i64 *value_R4;
+	
+	octet_string *signature_pA_R1_R4;
+	
+	sml_unit *unit_mA;
+	i8 *scaler_mA;
+	i64 *value_mA;
+	
+	sml_unit *unit_R2;
+	i8 *scaler_R2;
+	i64 *value_R2;
+	
+	sml_unit *unit_R3;
+	i8 *scaler_R3;
+	i64 *value_R3;
+	
+	octet_string *signature_mA_R2_R3;
+} sml_tupel_entry;
+
+
 typedef struct {
     u8 *tag;
     union {
@@ -74,6 +111,11 @@ sml_proc_par_value *sml_proc_par_value_init();
 sml_proc_par_value *sml_proc_par_value_parse(sml_buffer *buf);
 void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf);
 void sml_proc_par_value_free(sml_proc_par_value *value);
+
+sml_tupel_entry *sml_tupel_entry_init();
+sml_tupel_entry *sml_tupel_entry_parse(sml_buffer *buf);
+void sml_tupel_entry_write(sml_tupel_entry *tupel, sml_buffer *buf);
+void sml_tupel_entry_free(sml_tupel_entry *tupel);
 
 #ifdef __cplusplus
 }

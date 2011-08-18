@@ -79,33 +79,9 @@ void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
 }
 
 sml_proc_par_value *sml_proc_par_value_init() {
-    
-    sml_proc_par_value *value = (sml_proc_par_value *) malloc(sizeof(sml_proc_par_value));
-    memset(value, 0, sizeof(sml_proc_par_value));
-    //value->tag = sml_u8_init(tag);
-    
-/*
-    switch (*(value->tag)) {
-        case SML_PROC_PAR_VALUE_TAG_VALUE:
-            value->data.value = (sml_value*)data;
-            break;
-        case SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY:
-            printf("TODO: %s\n", __FUNCTION__);
-            break;
-        case SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY:
-            printf("TODO: %s\n", __FUNCTION__);
-            break;
-        case SML_PROC_PAR_VALUE_TAG_TIME:
-            printf("TODO: %s\n", __FUNCTION__);
-            break;
-        default:
-            if (value) {
-                free(value);
-            }
-            return 0;
-    }
-*/    
-    return value;
+	sml_proc_par_value *value = (sml_proc_par_value *) malloc(sizeof(sml_proc_par_value));
+	memset(value, 0, sizeof(sml_proc_par_value));
+	return value;
 }
 
 sml_proc_par_value *sml_proc_par_value_parse(sml_buffer *buf) {
@@ -150,27 +126,26 @@ error:
 }
 
 void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
 	sml_u8_write(value->tag, buf);
 
-    switch (*(value->tag)) {
-        case SML_PROC_PAR_VALUE_TAG_VALUE:
-            sml_value_write(value->data.value, buf);
-            break;
-        case SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY:
-            printf("TODO: %s\n", __FUNCTION__);
-            break;
-        case SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY:
-            printf("TODO: %s\n", __FUNCTION__);
-            break;
-        case SML_PROC_PAR_VALUE_TAG_TIME:
+	switch (*(value->tag)) {
+		case SML_PROC_PAR_VALUE_TAG_VALUE:
+			sml_value_write(value->data.value, buf);
+			break;
+		case SML_PROC_PAR_VALUE_TAG_PERIOD_ENTRY:
+			printf("TODO: %s\n", __FUNCTION__);
+			break;
+		case SML_PROC_PAR_VALUE_TAG_TUPEL_ENTRY:
+			printf("TODO: %s\n", __FUNCTION__);
+			break;
+		case SML_PROC_PAR_VALUE_TAG_TIME:
 			sml_time_write(value->data.time, buf);
 			break;
 		default:
 			printf("error: unknown tag in %s\n", __FUNCTION__);
 	}
 }
-
 
 void sml_proc_par_value_free(sml_proc_par_value *ppv){
 	if (ppv) {
@@ -203,5 +178,140 @@ void sml_proc_par_value_free(sml_proc_par_value *ppv){
 			}
 		}
 		free(ppv);
+	}
+}
+
+sml_tupel_entry *sml_tupel_entry_init() {
+	sml_tupel_entry *tupel = (sml_tupel_entry *) malloc(sizeof(sml_tupel_entry));
+	memset(tupel, 0, sizeof(sml_tupel_entry));
+	return tupel;
+}
+
+sml_tupel_entry *sml_tupel_entry_parse(sml_buffer *buf) {
+	sml_tupel_entry *tupel = sml_tupel_entry_init();
+	
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	if (sml_buf_get_next_length(buf) != 23) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	tupel->server_id = sml_octet_string_parse(buf);
+	tupel->sec_index = sml_time_parse(buf);
+	tupel->status = sml_u64_parse(buf);
+	
+	tupel->unit_pA = sml_unit_parse(buf);
+	tupel->scaler_pA = sml_i8_parse(buf);
+	tupel->value_pA = sml_i64_parse(buf);
+	
+	tupel->unit_R1 = sml_unit_parse(buf);
+	tupel->scaler_R1 = sml_i8_parse(buf);
+	tupel->value_R1 = sml_i64_parse(buf);
+	
+	tupel->unit_R4 = sml_unit_parse(buf);
+	tupel->scaler_R4 = sml_i8_parse(buf);
+	tupel->value_R4 = sml_i64_parse(buf);
+	
+	tupel->signature_pA_R1_R4 = sml_octet_string_parse(buf);
+	
+	tupel->unit_mA = sml_unit_parse(buf);
+	tupel->scaler_mA = sml_i8_parse(buf);
+	tupel->value_mA = sml_i64_parse(buf);
+	
+	tupel->unit_R2 = sml_unit_parse(buf);
+	tupel->scaler_R2 = sml_i8_parse(buf);
+	tupel->value_R2 = sml_i64_parse(buf);
+	
+	tupel->unit_R3 = sml_unit_parse(buf);
+	tupel->scaler_R3 = sml_i8_parse(buf);
+	tupel->value_R3 = sml_i64_parse(buf);
+	
+	tupel->signature_mA_R2_R3 = sml_octet_string_parse(buf);
+	
+	if (sml_buf_has_errors(buf)) goto error;
+	
+	return tupel;
+
+error:
+	sml_tupel_entry_free(tupel);
+	return 0;
+}
+
+void sml_tupel_entry_write(sml_tupel_entry *tupel, sml_buffer *buf) {
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 23);
+	
+	sml_octet_string_write(tupel->server_id, buf);
+	sml_time_write(tupel->sec_index, buf);
+	sml_u64_write(tupel->status, buf);
+
+	sml_unit_write(tupel->unit_pA, buf);
+	sml_i8_write(tupel->scaler_pA, buf);
+	sml_i64_write(tupel->value_pA, buf);
+
+	sml_unit_write(tupel->unit_R1, buf);
+	sml_i8_write(tupel->scaler_R1, buf);
+	sml_i64_write(tupel->value_R1, buf);
+
+	sml_unit_write(tupel->unit_R4, buf);
+	sml_i8_write(tupel->scaler_R4, buf);
+	sml_i64_write(tupel->value_R4, buf);
+
+	sml_octet_string_write(tupel->signature_pA_R1_R4, buf);
+
+	sml_unit_write(tupel->unit_mA, buf);
+	sml_i8_write(tupel->scaler_mA, buf);
+	sml_i64_write(tupel->value_mA, buf);
+
+	sml_unit_write(tupel->unit_R2, buf);
+	sml_i8_write(tupel->scaler_R2, buf);
+	sml_i64_write(tupel->value_R2, buf);
+
+	sml_unit_write(tupel->unit_R3, buf);
+	sml_i8_write(tupel->scaler_R3, buf);
+	sml_i64_write(tupel->value_R3, buf);
+
+	sml_octet_string_write(tupel->signature_mA_R2_R3, buf);
+
+}
+
+void sml_tupel_entry_free(sml_tupel_entry *tupel) {
+	if (tupel) {
+		sml_octet_string_free(tupel->server_id);
+		sml_time_free(tupel->sec_index);
+		sml_number_free(tupel->status);
+	
+		sml_unit_free(tupel->unit_pA);
+		sml_number_free(tupel->scaler_pA);
+		sml_number_free(tupel->value_pA);
+	
+		sml_unit_free(tupel->unit_R1);
+		sml_number_free(tupel->scaler_R1);
+		sml_number_free(tupel->value_R1);
+	
+		sml_unit_free(tupel->unit_R4);
+		sml_number_free(tupel->scaler_R4);
+		sml_number_free(tupel->value_R4);
+	
+		sml_octet_string_free(tupel->signature_pA_R1_R4);
+	
+		sml_unit_free(tupel->unit_mA);
+		sml_number_free(tupel->scaler_mA);
+		sml_number_free(tupel->value_mA);
+	
+		sml_unit_free(tupel->unit_R2);
+		sml_number_free(tupel->scaler_R2);
+		sml_number_free(tupel->value_R2);
+	
+		sml_unit_free(tupel->unit_R3);
+		sml_number_free(tupel->scaler_R3);
+		sml_number_free(tupel->value_R3);
+	
+		sml_octet_string_free(tupel->signature_mA_R2_R3);
+		
+		free(tupel);
 	}
 }
