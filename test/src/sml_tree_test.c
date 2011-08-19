@@ -19,6 +19,7 @@
 #include "../unity/unity_fixture.h"
 #include "test_helper.h"
 #include <sml/sml_tree.h>
+#include <sml/sml_octet_string.h>
 
 TEST_GROUP(sml_tree);
 
@@ -41,6 +42,53 @@ TEST_GROUP_RUNNER(sml_tree) {
 	RUN_TEST_CASE(sml_tree, init);
 }
 
+
+TEST_GROUP(sml_tree_path);
+
+TEST_SETUP(sml_tree_path) {
+	buf = sml_buffer_init(512);
+}
+
+TEST_TEAR_DOWN(sml_tree_path) {
+	sml_buffer_free(buf);
+}
+
+TEST(sml_tree_path, init) {
+	sml_tree_path *t = sml_tree_path_init();
+	TEST_ASSERT_NOT_NULL(t);
+}
+
+TEST(sml_tree_path, add_entry) {
+	sml_tree_path *t = sml_tree_path_init();
+	TEST_ASSERT_NOT_NULL(t);
+	TEST_ASSERT_EQUAL(0, t->path_entries_len);
+	sml_tree_path_add_path_entry(t, sml_octet_string_init((unsigned char *)"tree", 4));
+	TEST_ASSERT_EQUAL(1, t->path_entries_len);
+}
+
+TEST(sml_tree_path, parse) {
+	hex2binary("720648616C6C6F0264", sml_buf_get_current_buf(buf));
+	sml_tree_path *t = sml_tree_path_parse(buf);
+	TEST_ASSERT_NOT_NULL(t);
+	TEST_ASSERT_EQUAL(2, t->path_entries_len);
+	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp_with_hex(t->path_entries[0], "48616C6C6F"));
+	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp_with_hex(t->path_entries[1], "64"));
+}
+
+TEST(sml_tree_path, write) {
+	sml_tree_path *t = sml_tree_path_init();
+	sml_tree_path_add_path_entry(t, sml_octet_string_init((unsigned char *)"Hallo", 5));
+	sml_tree_path_add_path_entry(t, sml_octet_string_init((unsigned char *)"Hallo", 5));
+	sml_tree_path_write(t, buf);
+	expected_buf(buf, "720648616C6C6F0648616C6C6F", 13);
+}
+
+TEST_GROUP_RUNNER(sml_tree_path) {
+	RUN_TEST_CASE(sml_tree_path, init);
+	RUN_TEST_CASE(sml_tree_path, add_entry);
+	RUN_TEST_CASE(sml_tree_path, parse);
+	RUN_TEST_CASE(sml_tree_path, write);
+}
 
 
 

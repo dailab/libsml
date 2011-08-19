@@ -34,7 +34,7 @@ extern "C" {
 #define SML_PROC_PAR_VALUE_TAG_TIME				0x04
 
 
-// what a messy tupel
+// what a messy tupel ...
 typedef struct {
 	octet_string *server_id;
 	sml_time *sec_index;
@@ -96,8 +96,8 @@ typedef struct s_tree{
 } sml_tree;
 
 typedef struct {
-    octet_string **path_entries;
-    int path_entries_len;
+	int path_entries_len;
+	octet_string **path_entries;
 } sml_tree_path;
 
 // SML_TREE
