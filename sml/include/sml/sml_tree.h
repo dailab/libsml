@@ -103,6 +103,7 @@ typedef struct {
 // SML_TREE
 sml_tree *sml_tree_init();
 sml_tree *sml_tree_parse(sml_buffer *buf);
+void sml_tree_add_tree(sml_tree *base_tree, sml_tree *tree);
 void sml_tree_write(sml_tree *tree, sml_buffer *buf);
 void sml_tree_free(sml_tree *tree);
 

@@ -31,6 +31,10 @@ sml_tree_path *sml_tree_path_init() {
 }
 
 sml_tree_path *sml_tree_path_parse(sml_buffer *buf) {
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
+	
 	sml_tree_path *tree_path = sml_tree_path_init();
 	
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
@@ -51,7 +55,6 @@ sml_tree_path *sml_tree_path_parse(sml_buffer *buf) {
 	return tree_path;
 
 error:
-printf("error\n");
 	buf->error = 1;
 	sml_tree_path_free(tree_path);
 	return 0;
@@ -66,6 +69,11 @@ void sml_tree_path_add_path_entry(sml_tree_path *tree_path, octet_string *entry)
 }
 
 void sml_tree_path_write(sml_tree_path *tree_path, sml_buffer *buf) {
+	if (tree_path == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
     int i;
     if (tree_path->path_entries && tree_path->path_entries_len > 0) {
         sml_buf_set_type_and_length(buf, SML_TYPE_LIST, tree_path->path_entries_len);
@@ -91,29 +99,97 @@ void sml_tree_path_free(sml_tree_path *tree_path){
 
 // SML_TREE
 
-sml_tree *sml_tree_init(octet_string *parameter_name) {
+sml_tree *sml_tree_init() {
     sml_tree *tree = (sml_tree *) malloc(sizeof(sml_tree));
     memset(tree, 0, sizeof(sml_tree));
-    tree->parameter_name = parameter_name;
     return tree;
 }
 
 sml_tree *sml_tree_parse(sml_buffer *buf){
-	printf("ERROR : NYI sml_tree_parse() not implemented yet");
-  return 0;
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
+	
+	sml_tree *tree = sml_tree_init();
+	
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	if (sml_buf_get_next_length(buf) != 3) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	tree->parameter_name = sml_octet_string_parse(buf);
+	tree->parameter_value = sml_proc_par_value_parse(buf);
+	
+	if (!sml_buf_optional_is_skipped(buf)) {
+		if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+			buf->error = 1;
+			goto error;
+		}
+		
+		sml_tree *c;
+		int elems;
+		for (elems = sml_buf_get_next_length(buf); elems > 0; elems--) {
+			c = sml_tree_parse(buf);
+			if (sml_buf_has_errors(buf)) goto error;
+			if (c) {
+				sml_tree_add_tree(tree, c);
+			}
+		}
+	}
+	
+	return tree;
+error:
+	sml_tree_free(tree);
+	return 0;
+}
+
+void sml_tree_add_tree(sml_tree *base_tree, sml_tree *tree) {
+	base_tree->child_list_len++;
+	base_tree->child_list = (sml_tree **) realloc(base_tree->child_list, 
+		sizeof(sml_tree *) * base_tree->child_list_len);
+	base_tree->child_list[base_tree->child_list_len - 1] = tree;
 }
 
 void sml_tree_free(sml_tree *tree){
-	printf("ERROR : NYI sml_tree_free() not implemented yet");
+	if (tree) {
+		sml_octet_string_free(tree->parameter_name);
+		sml_proc_par_value_free(tree->parameter_value);
+		int i;
+		for (i = 0; i < tree->child_list_len; i++) {
+			sml_tree_free(tree->child_list[i]);
+		}
+		
+		free(tree);
+	}
 }
 
 void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 3);
-    sml_octet_string_write(tree->parameter_name, buf);
-    // TODO
-    sml_proc_par_value_write(tree->parameter_value, buf);
-    //sml_buf_optional_write(buf);
-    sml_buf_optional_write(buf);
+	if (tree == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
+	int i;
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 3);
+
+	sml_octet_string_write(tree->parameter_name, buf);
+	sml_proc_par_value_write(tree->parameter_value, buf);
+	
+	if (tree->child_list && tree->child_list_len > 0) {
+		sml_buf_set_type_and_length(buf, SML_TYPE_LIST, tree->child_list_len);
+		
+		for (i = 0; i < tree->child_list_len; i++) {
+			sml_tree_write(tree->child_list[i], buf);
+		}
+	}
+	else {
+		sml_buf_optional_write(buf);
+	}   
 }
 
 
@@ -126,6 +202,10 @@ sml_proc_par_value *sml_proc_par_value_init() {
 }
 
 sml_proc_par_value *sml_proc_par_value_parse(sml_buffer *buf) {
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
+	
 	sml_proc_par_value *ppv = sml_proc_par_value_init();
 	
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
@@ -167,6 +247,11 @@ error:
 }
 
 void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
+	if (value == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
 	sml_u8_write(value->tag, buf);
 
@@ -232,6 +317,10 @@ sml_tupel_entry *sml_tupel_entry_init() {
 }
 
 sml_tupel_entry *sml_tupel_entry_parse(sml_buffer *buf) {
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
+	
 	sml_tupel_entry *tupel = sml_tupel_entry_init();
 	
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
@@ -286,6 +375,11 @@ error:
 }
 
 void sml_tupel_entry_write(sml_tupel_entry *tupel, sml_buffer *buf) {
+	if (tupel == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 23);
 	
 	sml_octet_string_write(tupel->server_id, buf);
@@ -370,6 +464,10 @@ sml_period_entry *sml_period_entry_init() {
 }
 
 sml_period_entry *sml_period_entry_parse(sml_buffer *buf) {
+	if (sml_buf_optional_is_skipped(buf)) {
+		return 0;
+	}
+	
 	sml_period_entry *period = sml_period_entry_init();
 	
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
@@ -398,6 +496,11 @@ error:
 }
 
 void sml_period_entry_write(sml_period_entry *period, sml_buffer *buf) {
+	if (period == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
 	
 	sml_octet_string_write(period->obj_name, buf);
@@ -418,14 +521,6 @@ void sml_period_entry_free(sml_period_entry *period) {
 		free(period);
 	}
 }
-
-
-
-
-
-
-
-
 
 
 

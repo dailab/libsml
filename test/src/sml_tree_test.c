@@ -38,9 +38,45 @@ TEST(sml_tree, init) {
 	TEST_ASSERT_NOT_NULL(t);
 }
 
+TEST(sml_tree, add_tree) {
+	sml_tree *t = sml_tree_init();
+	sml_tree_add_tree(t, sml_tree_init());
+	
+	TEST_ASSERT_NOT_NULL(t->child_list[0]);
+	TEST_ASSERT_EQUAL(1, t->child_list_len);
+}
+
+TEST(sml_tree, write) {
+	sml_tree *t = sml_tree_init();
+	t->parameter_name = sml_octet_string_init((unsigned char *)"Hallo", 5);
+	sml_tree_write(t, buf);
+	expected_buf(buf, "730648616C6C6F0101", 9);
+}
+
+TEST(sml_tree, parse_with_child) {
+	hex2binary("730648616C6C6F0171730648616C6C6F0101", sml_buf_get_current_buf(buf));
+	sml_tree *t = sml_tree_parse(buf);
+	
+	TEST_ASSERT_NOT_NULL(t);
+	TEST_ASSERT_NOT_NULL(t->child_list[0]);
+	TEST_ASSERT_EQUAL(1, t->child_list_len);
+}
+
+TEST(sml_tree, parse_with_error_child) {
+	hex2binary("730648616C6C6F0171720648616C6C6F0101", sml_buf_get_current_buf(buf));
+	sml_tree *t = sml_tree_parse(buf);
+	
+	TEST_ASSERT_NULL(t);
+}
+
 TEST_GROUP_RUNNER(sml_tree) {
 	RUN_TEST_CASE(sml_tree, init);
+	RUN_TEST_CASE(sml_tree, add_tree);
+	RUN_TEST_CASE(sml_tree, write);
+	RUN_TEST_CASE(sml_tree, parse_with_child);
+	RUN_TEST_CASE(sml_tree, parse_with_error_child);
 }
+
 
 
 TEST_GROUP(sml_tree_path);
