@@ -31,6 +31,7 @@ static void runAllTests() {
 	RUN_TEST_GROUP(sml_tree_path);
 	RUN_TEST_GROUP(sml_proc_par_value);
 	RUN_TEST_GROUP(sml_open_request);
+	RUN_TEST_GROUP(sml_get_profile_pack_request);
 	RUN_TEST_GROUP(sml_message);
 	RUN_TEST_GROUP(sml_file);
 }

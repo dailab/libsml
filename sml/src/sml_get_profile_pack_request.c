@@ -23,18 +23,15 @@
 #include <sml/sml_time.h>
 #include <stdio.h>
 
-
-
 sml_get_profile_pack_request *sml_get_profile_pack_request_init(){
 	  sml_get_profile_pack_request *msg = (sml_get_profile_pack_request *) malloc(sizeof(sml_get_profile_pack_request));
 	  memset(msg, 0, sizeof(sml_get_profile_pack_request));
-	  msg->parameter_tree_path = sml_tree_path_init();
 	  return msg;
 }
 
 void sml_get_profile_pack_request_write(sml_get_profile_pack_request *msg, sml_buffer *buf) {
-    
-	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 9);
+    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 9);
+	
 	sml_octet_string_write(msg->server_id, buf);
 	sml_octet_string_write(msg->username, buf);
 	sml_octet_string_write(msg->password, buf);
@@ -43,16 +40,28 @@ void sml_get_profile_pack_request_write(sml_get_profile_pack_request *msg, sml_b
 	sml_time_write(msg->end_time, buf);
 	sml_tree_path_write(msg->parameter_tree_path, buf);
 	
-	printf("TODO: %s - some struct members aren't written", __FUNCTION__);
-	sml_buf_optional_write(buf); // object_list
-    sml_buf_optional_write(buf); // das_details
+	if (msg->object_list) {
+		int len = 1;
+		sml_obj_req_entry_list *l = msg->object_list;
+		for (l = msg->object_list; l->next; l = l->next) {
+			len++;
+		}
+		sml_buf_set_type_and_length(buf, SML_TYPE_LIST, len);
+		for (l = msg->object_list; l->next; l = l->next) {
+			sml_obj_req_entry_write(l->object_list_entry, buf);
+		}
+	}
+	else {
+		sml_buf_optional_write(buf);
+	}
+
+    sml_tree_write(msg->das_details, buf);
 }
 
 
 sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf) {
 	
-	sml_get_profile_pack_request *msg = (sml_get_profile_pack_request *) malloc(sizeof(sml_get_profile_pack_request));
-	memset(msg, 0, sizeof(sml_get_profile_pack_request));
+	sml_get_profile_pack_request *msg = sml_get_profile_pack_request_init();
 	
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
@@ -64,39 +73,70 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf
 		goto error;
 	}
 	
-	printf("TODO:sml_get_profile_pack_request_parse -> not implemented yet");
-
-/*	msg->client_id = sml_octet_string_parse(buf);
-	if (sml_buf_has_errors(buf)) goto error;
-	
 	msg->server_id = sml_octet_string_parse(buf);
-	if (sml_buf_has_errors(buf)) goto error;
+	msg->username = sml_octet_string_parse(buf);
+	msg->password = sml_octet_string_parse(buf);
+	msg->with_rawdata = sml_boolean_parse(buf);
+	msg->begin_time = sml_time_parse(buf);
+	msg->end_time = sml_time_parse(buf);
+	msg->parameter_tree_path = sml_tree_path_parse(buf);
+
+	if (!sml_buf_optional_is_skipped(buf)) {
+		if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+			buf->error = 1;
+			goto error;
+		}
+		int i, len = sml_buf_get_next_length(buf);
+		sml_obj_req_entry_list *last = 0, *n = 0;
+		for (i = len; i > 0; i--) {
+			n = (sml_obj_req_entry_list *) malloc(sizeof(sml_obj_req_entry_list));
+			memset(n, 0, sizeof(sml_obj_req_entry_list));
+			n->object_list_entry = sml_obj_req_entry_parse(buf);
+			if (sml_buf_has_errors(buf)) goto error;
+			
+			if (msg->object_list == 0) {
+				msg->object_list = n;
+				last = msg->object_list;
+			}
+			else {
+				last->next = n;
+				last = n;
+			}
+		}
+	}
 	
-	msg->list_name = sml_octet_string_parse(buf);
-	if (sml_buf_has_errors(buf)) goto error;
-	*/
-	/*msg->act_sensor_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
-	if (sml_buf_has_errors(buf)) goto error;
-    
-	msg->val_list = sml_list_parse(buf);
-	if (sml_buf_has_errors(buf)) goto error;
+	msg->das_details = sml_tree_parse(buf);
 	
-	msg->list_signature = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-    
-	msg->act_gateway_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
-	if (sml_buf_has_errors(buf)) goto error;
-	*/
+
 	return msg;
-	
-  error:
+error:
 	sml_get_profile_pack_request_free(msg);
 	return 0;
-    
 }
 
 void sml_get_profile_pack_request_free(sml_get_profile_pack_request *msg){
-	 printf("NYI: %s\n", __FUNCTION__);
+	 if (msg) {
+		sml_octet_string_free(msg->server_id);
+		sml_octet_string_free(msg->username);
+		sml_octet_string_free(msg->password);
+		sml_boolean_free(msg->with_rawdata);
+		sml_time_free(msg->begin_time);
+		sml_time_free(msg->end_time);
+		sml_tree_path_free(msg->parameter_tree_path);
+	
+		if (msg->object_list) {
+			sml_obj_req_entry_list *n = 0, *d = msg->object_list;
+			do {
+				n = d->next;
+				sml_obj_req_entry_free(d->object_list_entry);
+				free(d);
+				d = n;
+			} while (d);
+		}
+		sml_tree_free(msg->das_details);
+		free(msg);
+	}
 }
 
 

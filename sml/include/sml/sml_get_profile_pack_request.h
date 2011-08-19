@@ -29,6 +29,17 @@
 extern "C" {
 #endif
 
+typedef octet_string sml_obj_req_entry;
+#define sml_obj_req_entry_parse(buf) sml_octet_string_parse(buf)
+#define sml_obj_req_entry_write(p, buf) sml_octet_string_write(p, buf)
+#define sml_obj_req_entry_free(p) sml_octet_string_free(p)
+
+typedef struct sml_obj_req_entry_list_entry {
+	sml_obj_req_entry *object_list_entry;
+	
+	// list specific
+	struct sml_obj_req_entry_list_entry *next;
+} sml_obj_req_entry_list;
 
 typedef struct {
 	octet_string *server_id;	// optional
@@ -38,19 +49,15 @@ typedef struct {
 	sml_time *begin_time;		// optional
 	sml_time *end_time;			// optional
 	sml_tree_path *parameter_tree_path;
-	void *object_list; // sml_object_list * object_list; // optional		sml_object_list not implemented yet
+	sml_obj_req_entry_list *object_list; // optional
 	sml_tree *das_details;		// optional
 } sml_get_profile_pack_request;
 
 
 sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf);
-
 sml_get_profile_pack_request *sml_get_profile_pack_request_init();
-
 void sml_get_profile_pack_request_write(sml_get_profile_pack_request *msg, sml_buffer *buf);
-
 void sml_get_profile_pack_request_free(sml_get_profile_pack_request *msg);
-
 
 #ifdef __cplusplus
 }
