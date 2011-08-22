@@ -42,8 +42,9 @@ typedef struct {
 
 } sml_get_profile_pack_response;
 
+sml_get_profile_pack_response *sml_get_profile_pack_response_init();
 sml_get_profile_pack_response *sml_get_profile_pack_response_parse(sml_buffer *buf);
-
+void sml_get_profile_pack_response_write(sml_get_profile_pack_response *msg, sml_buffer *buf);
 void sml_get_profile_pack_response_free(sml_get_profile_pack_response *msg);
 
 #ifdef __cplusplus
