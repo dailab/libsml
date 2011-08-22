@@ -39,14 +39,9 @@ typedef struct {
 
 } sml_get_list_request;
 
-
-
-sml_get_list_request *sml_get_list_request_parse(sml_buffer *buf);
-
 sml_get_list_request* sml_get_list_request_init();
-
+sml_get_list_request *sml_get_list_request_parse(sml_buffer *buf);
 void sml_get_list_request_write(sml_get_list_request *msg, sml_buffer *buf);
-
 void sml_get_list_request_free(sml_get_list_request *msg);
 
 #ifdef __cplusplus

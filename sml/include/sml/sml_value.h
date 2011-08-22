@@ -45,9 +45,9 @@ typedef struct {
     } data;
 } sml_value;
 
+sml_value *sml_value_init();
 sml_value *sml_value_parse(sml_buffer *buf);
 void sml_value_write(sml_value *value, sml_buffer *buf);
-sml_value *sml_value_init();
 void sml_value_free(sml_value *value);
 
 #ifdef __cplusplus
