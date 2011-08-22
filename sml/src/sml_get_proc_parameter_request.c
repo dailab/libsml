@@ -49,7 +49,7 @@ sml_get_proc_parameter_request *sml_get_proc_parameter_request_parse(sml_buffer 
 	if (sml_buf_has_errors(buf)) goto error;
 	msg->parameter_tree_path = sml_tree_path_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	msg->parameter_tree = sml_tree_parse(buf);
+	msg->attribute = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	return msg;
@@ -65,7 +65,7 @@ void sml_get_proc_parameter_request_write(sml_get_proc_parameter_request *msg, s
 	sml_octet_string_write(msg->username, buf);
 	sml_octet_string_write(msg->password, buf);
 	sml_tree_path_write(msg->parameter_tree_path, buf);
-	sml_tree_write(msg->parameter_tree, buf);
+	sml_octet_string_write(msg->attribute, buf);
 }
 
 void sml_get_proc_parameter_request_free(sml_get_proc_parameter_request *msg) {
@@ -74,7 +74,7 @@ void sml_get_proc_parameter_request_free(sml_get_proc_parameter_request *msg) {
 	   sml_octet_string_free(msg->username);
 	   sml_octet_string_free(msg->password);
 	   sml_tree_path_free(msg->parameter_tree_path);
-	   sml_tree_free(msg->parameter_tree);
+	   sml_octet_string_free(msg->attribute);
 	   free(msg);
    }
 }

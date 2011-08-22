@@ -33,7 +33,7 @@ typedef struct {
     octet_string *username; // optional 
     octet_string *password; // optional
     sml_tree_path *parameter_tree_path; 
-    sml_tree *parameter_tree;
+    octet_string *attribute; // optional
 } sml_get_proc_parameter_request;
 
 sml_get_proc_parameter_request *sml_get_proc_parameter_request_init();
