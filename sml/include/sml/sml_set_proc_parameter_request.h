@@ -37,9 +37,8 @@ typedef struct {
 } sml_set_proc_parameter_request;
 
 sml_set_proc_parameter_request *sml_set_proc_parameter_request_init();
-
+sml_set_proc_parameter_request *sml_set_proc_parameter_request_parse(sml_buffer *buf);
 void sml_set_proc_parameter_request_write(sml_set_proc_parameter_request *msg, sml_buffer *buf);
-
 void sml_set_proc_parameter_request_free(sml_set_proc_parameter_request *msg);
 
 #ifdef __cplusplus

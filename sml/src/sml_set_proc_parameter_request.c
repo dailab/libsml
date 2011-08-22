@@ -25,6 +25,36 @@ sml_set_proc_parameter_request *sml_set_proc_parameter_request_init() {
     return msg;
 }
 
+sml_set_proc_parameter_request *sml_set_proc_parameter_request_parse(sml_buffer *buf) {
+	sml_set_proc_parameter_request *msg = sml_set_proc_parameter_request_init();
+	
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	if (sml_buf_get_next_length(buf) != 5) {
+		buf->error = 1;
+		goto error;
+	}
+	
+	msg->server_id = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	msg->username = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	msg->password = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	msg->parameter_tree_path = sml_tree_path_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	msg->parameter_tree = sml_tree_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
+	return msg;
+error:
+	sml_set_proc_parameter_request_free(msg);
+	return 0;
+}
+
 void sml_set_proc_parameter_request_write(sml_set_proc_parameter_request *msg, sml_buffer *buf) {
     sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
     sml_octet_string_write(msg->server_id, buf);
