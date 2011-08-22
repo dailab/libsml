@@ -24,12 +24,6 @@
 #include <sml/sml_list.h>
 #include <sml/sml_time.h>
 #include <sml/sml_crc16.h>
-#include <sml/sml_get_proc_parameter_request.h>
-#include <sml/sml_set_proc_parameter_request.h>
-#include <sml/sml_get_profile_pack_request.h>
-#include <sml/sml_get_list_request.h>
-#include <sml/sml_get_list_response.h>
-#include <sml/sml_attention_response.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> 

@@ -28,10 +28,19 @@
 
 #include "sml_open_request.h"
 #include "sml_open_response.h"
-#include "sml_get_list_response.h"
 #include "sml_close_request.h"
 #include "sml_close_response.h"
+#include "sml_get_profile_pack_request.h"
+#include "sml_get_profile_pack_response.h"
+#include "sml_get_profile_list_request.h"
+#include "sml_get_profile_list_response.h"
+#include "sml_get_proc_parameter_request.h"
+#include "sml_get_proc_parameter_response.h"
 #include "sml_set_proc_parameter_request.h"
+#include "sml_set_proc_parameter_response.h"
+#include "sml_get_list_request.h"
+#include "sml_get_list_response.h"
+#include "sml_attention_response.h"
 
 #define SML_MESSAGE_OPEN_REQUEST					0x00000100
 #define SML_MESSAGE_OPEN_RESPONSE					0x00000101
