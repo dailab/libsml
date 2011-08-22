@@ -32,6 +32,7 @@ OBJS = \
 	src/sml_close_response.o \
 	src/sml_set_proc_parameter_request.o \
 	src/sml_get_proc_parameter_request.o \
+	src/sml_get_proc_parameter_response.o \
 	src/sml_get_profile_pack_request.o \
 	src/sml_get_profile_pack_response.o \
 
