@@ -20,11 +20,14 @@
 #include <sml/sml_get_list_response.h>
 
 
-sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
-	
-
+sml_get_list_response *sml_get_list_response_init() {
 	sml_get_list_response *msg = (sml_get_list_response *) malloc(sizeof(sml_get_list_response));
 	memset(msg, 0, sizeof(sml_get_list_response));
+	return msg;
+}
+
+sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
+	sml_get_list_response *msg = sml_get_list_response_init();
 	
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
@@ -45,7 +48,7 @@ sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
 	msg->list_name = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
-	msg->act_sensor_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
+	msg->act_sensor_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->val_list = sml_list_parse(buf);
@@ -54,7 +57,7 @@ sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
 	msg->list_signature = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
-	msg->act_gateway_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
+	msg->act_gateway_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
 	return msg;
@@ -63,6 +66,18 @@ error:
 	sml_get_list_response_free(msg);
 	return 0;
     
+}
+
+void sml_get_list_response_write(sml_get_list_response *msg, sml_buffer *buf) {
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 7);
+	
+	sml_octet_string_write(msg->client_id, buf);
+	sml_octet_string_write(msg->server_id, buf);
+	sml_octet_string_write(msg->list_name, buf);
+	sml_time_write(msg->act_sensor_time, buf);
+	sml_list_write(msg->val_list, buf);
+	sml_octet_string_write(msg->list_signature, buf);
+	sml_time_write(msg->act_gateway_time, buf);
 }
 
 void sml_get_list_response_free(sml_get_list_response *msg) {
