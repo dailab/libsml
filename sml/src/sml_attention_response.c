@@ -41,13 +41,10 @@ sml_attention_response *sml_attention_response_parse(sml_buffer *buf){
 
 	msg->server_id = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
 	msg->attention_number = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
 	msg->attention_message = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
 	msg->attention_details = sml_tree_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	

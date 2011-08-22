@@ -74,12 +74,19 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf
 	}
 	
 	msg->server_id = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	msg->username = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	msg->password = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	msg->with_rawdata = sml_boolean_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	msg->begin_time = sml_time_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	msg->end_time = sml_time_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	msg->parameter_tree_path = sml_tree_path_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 
 	if (!sml_buf_optional_is_skipped(buf)) {
 		if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
@@ -106,7 +113,6 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf
 	}
 	
 	msg->das_details = sml_tree_parse(buf);
-	
 	if (sml_buf_has_errors(buf)) goto error;
 
 	return msg;
