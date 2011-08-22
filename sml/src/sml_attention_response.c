@@ -20,9 +20,14 @@
 #include <sml/sml_attention_response.h>
 #include <sml/sml_tree.h>
 
-sml_attention_response *sml_attention_response_parse(sml_buffer *buf){
+sml_attention_response *sml_attention_response_init() {
 	sml_attention_response *msg = (sml_attention_response *) malloc(sizeof(sml_attention_response));
 	memset(msg, 0, sizeof(sml_attention_response));
+	return msg;
+}
+
+sml_attention_response *sml_attention_response_parse(sml_buffer *buf){
+	sml_attention_response *msg = sml_attention_response_init();
 
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
@@ -43,15 +48,23 @@ sml_attention_response *sml_attention_response_parse(sml_buffer *buf){
 	msg->attention_message = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
-	msg->attention_details = SML_SKIP_OPTIONAL sml_tree_parse(buf);
+	msg->attention_details = sml_tree_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	return msg;
 	
 	error:
 		sml_attention_response_free(msg);
-		return 0;
+		return 0;	
+}
+
+void sml_attention_response_write(sml_attention_response *msg, sml_buffer *buf) {
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 4);
 	
+	sml_octet_string_write(msg->server_id, buf);
+	sml_octet_string_write(msg->attention_number, buf);
+	sml_octet_string_write(msg->attention_message, buf);
+	sml_tree_write(msg->attention_details, buf);
 }
 
 void sml_attention_response_free(sml_attention_response *msg){

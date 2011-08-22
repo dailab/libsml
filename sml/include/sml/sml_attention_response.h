@@ -37,8 +37,9 @@ typedef struct {
 	sml_tree *attention_details;	 // optional
 } sml_attention_response;
 
+sml_attention_response *sml_attention_response_init();
 sml_attention_response *sml_attention_response_parse(sml_buffer *buf);
-
+void sml_attention_response_write(sml_attention_response *msg, sml_buffer *buf);
 void sml_attention_response_free(sml_attention_response *msg);
 
 #ifdef __cplusplus
