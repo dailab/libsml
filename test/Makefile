@@ -1,10 +1,10 @@
 UNAME := $(shell uname)
 CFLAGS += -I../sml/include/ -Wall
+LIBSML = ../sml/lib/libsml.a
+
 ifeq ($(UNAME), Linux)
 LIBS = -luuid
 endif
-LIBSML = ../sml/lib/libsml.a
-
 
 UNITY = \
 	unity/unity.o \
@@ -30,23 +30,18 @@ test_run: libsml test
 	@./test
 
 test : $(UNITY) $(OBJS) $(LIBSML)
-	$(CC) $(CFLAGS) $(LIBS) $(LIBSML) $^ test_main.c -o test
+	$(CC) $(CFLAGS) $(LIBS) $^ test_main.c -o test
 
 .PHONY: code
 libsml : 
 	@$(MAKE) -C ../sml
 
 %.o : %.c
-	$(CC) $(CFLAGS) $(LIBS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 .PHONY: clean
 clean :
 	@rm -f unity/*.o
 	@rm -f src/*.o
 	@rm -f test
-
-
-
-
-
 
