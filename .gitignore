@@ -1,3 +1,7 @@
+# Binaries
+/test/test
+/examples/sml_server
+
 # Compiled Object files
 *.slo
 *.lo
