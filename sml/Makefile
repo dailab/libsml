@@ -5,13 +5,17 @@ CFLAGS += -I./include/ -fPIC -g -Wall
 # _NO_UUID_LIB - compile without uuid lib
 
 ifeq ($(UNAME), Linux)
-LIBS = -luuid
+LIBS=-luuid
 endif
 
+NAME=libsml
+SOVERSION=1
+SONAME=$(NAME).so.$(SOVERSION)
+
 LIB_DIR=./lib
-OBJ_LIB=$(LIB_DIR)/libsml.o
-DYN_LIB=$(LIB_DIR)/libsml.so
-ST_LIB=$(LIB_DIR)/libsml.a
+OBJ_LIB=$(LIB_DIR)/$(NAME).o
+DYN_LIB=$(LIB_DIR)/$(SONAME)
+ST_LIB=$(LIB_DIR)/$(NAME).a
 
 OBJS = \
 	src/sml_file.o \
@@ -49,7 +53,7 @@ libsml: $(ST_LIB) $(OBJ_LIB)
 endif
 
 $(DYN_LIB): $(OBJS)
-	$(LD) $(LIBS) -shared -o $@ $^
+	$(LD) $(LIBS) -shared -soname $(SONAME) -o $@ $^
 
 $(OBJ_LIB): $(OBJS)
 	$(LD) -r -o $@ $^
@@ -60,5 +64,5 @@ $(ST_LIB): $(OBJS)
 .PHONY: clean
 clean:
 	@rm -f src/*.o
-	@rm -f $(LIB_DIR)/*.so $(LIB_DIR)/*.a $(LIB_DIR)/*.o
+	@rm -f $(DYN_LIB) $(OBJ_LIB) $(ST_LIB)
 
