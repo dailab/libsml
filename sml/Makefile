@@ -4,6 +4,10 @@ CFLAGS += -I./include/ -fPIC -g -Wall
 # Available Flags:
 # _NO_UUID_LIB - compile without uuid lib
 
+ifeq ($(UNAME), Linux)
+LIBS = -luuid
+endif
+
 LIB_DIR=./lib
 OBJ_LIB=$(LIB_DIR)/libsml.o
 DYN_LIB=$(LIB_DIR)/libsml.so
@@ -45,7 +49,7 @@ libsml: $(ST_LIB) $(OBJ_LIB)
 endif
 
 $(DYN_LIB): $(OBJS)
-	$(LD) -shared -o $@ $^
+	$(LD) $(LIBS) -shared -o $@ $^
 
 $(OBJ_LIB): $(OBJS)
 	$(LD) -r -o $@ $^
