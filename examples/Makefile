@@ -1,17 +1,17 @@
 UNAME := $(shell uname)
 CFLAGS += -I../sml/include/ -g -Wall
 OBJS = sml_server.o
+LIBSML = ../sml/lib/libsml.a
 
 ifeq ($(UNAME), Linux)
-LIBS = -L../sml/lib/ ../sml/lib/libsml.o -luuid
-endif
-ifeq ($(UNAME), Darwin)
-LIBS = -L../sml/lib/ ../sml/lib/libsml.o
+LIBS = -luuid
 endif
 
+sml_server : $(OBJS) $(LIBSML)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(LIBSML) -o sml_server
 
-sml_server : $(OBJS)
-	$(CC) $(CFLAGS) $(LIBS) -o sml_server $(OBJS)
+%.o : %.c
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 .PHONY: clean
 clean:
