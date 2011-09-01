@@ -1,0 +1,66 @@
+Description: Upstream changes introduced in version 0.1-3~wip
+ This patch has been created by dpkg-source during the package build.
+ Here's the last changelog entry, hopefully it gives details on why
+ those changes were made:
+ .
+ libsml (0.1-3~wip) unstable; urgency=low
+ .
+   * fixed invalid destination for libs
+   * added SONAME to shared library
+ .
+ The person named in the Author field signed this changelog entry.
+Author: Steffen Vogel <info@steffenvogel.de>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- libsml-0.1.orig/sml/Makefile
++++ libsml-0.1/sml/Makefile
+@@ -5,13 +5,17 @@ CFLAGS += -I./include/ -fPIC -g -Wall
+ # _NO_UUID_LIB - compile without uuid lib
+ 
+ ifeq ($(UNAME), Linux)
+-LIBS = -luuid
++LIBS=-luuid
+ endif
+ 
++NAME=libsml
++SOVERSION=1
++SONAME=$(NAME).so.$(SOVERSION)
++
+ LIB_DIR=./lib
+-OBJ_LIB=$(LIB_DIR)/libsml.o
+-DYN_LIB=$(LIB_DIR)/libsml.so
+-ST_LIB=$(LIB_DIR)/libsml.a
++OBJ_LIB=$(LIB_DIR)/$(NAME).o
++DYN_LIB=$(LIB_DIR)/$(SONAME)
++ST_LIB=$(LIB_DIR)/$(NAME).a
+ 
+ OBJS = \
+ 	src/sml_file.o \
+@@ -49,7 +53,7 @@ libsml: $(ST_LIB) $(OBJ_LIB)
+ endif
+ 
+ $(DYN_LIB): $(OBJS)
+-	$(LD) $(LIBS) -shared -o $@ $^
++	$(LD) $(LIBS) -shared -soname $(SONAME) -o $@ $^
+ 
+ $(OBJ_LIB): $(OBJS)
+ 	$(LD) -r -o $@ $^
+@@ -60,5 +64,5 @@ $(ST_LIB): $(OBJS)
+ .PHONY: clean
+ clean:
+ 	@rm -f src/*.o
+-	@rm -f $(LIB_DIR)/*.so $(LIB_DIR)/*.a $(LIB_DIR)/*.o
++	@rm -f $(DYN_LIB) $(OBJ_LIB) $(ST_LIB)
+ 
