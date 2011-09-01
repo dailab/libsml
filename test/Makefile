@@ -43,6 +43,7 @@ libsml :
 clean :
 	@rm -f unity/*.o
 	@rm -f src/*.o
+	@rm -f test
 
 
 
