@@ -60,7 +60,7 @@ sml_list *sml_list_entry_parse(sml_buffer *buf) {
 	l->status = sml_status_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
-	l->val_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
+	l->val_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	l->unit = sml_u8_parse(buf);
