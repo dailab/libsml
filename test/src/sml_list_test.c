@@ -88,3 +88,50 @@ TEST_GROUP_RUNNER(sml_list) {
 	RUN_TEST_CASE(sml_list, write_one_entry);
 	RUN_TEST_CASE(sml_list, write_optional);
 }
+
+
+
+TEST_GROUP(sml_sequence);
+
+sml_buffer *buf;
+
+TEST_SETUP(sml_sequence) {
+	buf = sml_buffer_init(512);
+}
+
+TEST_TEAR_DOWN(sml_sequence) {
+	sml_buffer_free(buf);
+}
+
+TEST(sml_sequence, init) {
+	sml_sequence *seq = sml_sequence_init(&free);
+	TEST_ASSERT_NOT_NULL(seq);
+}
+
+TEST(sml_sequence, parse_octet_string) {
+	hex2binary("720648616C6C6F0648616C6C6F",  sml_buf_get_current_buf(buf));
+	
+	sml_sequence *seq = sml_sequence_parse(buf, &sml_octet_string_parse, &sml_octet_string_free);
+	TEST_ASSERT_NOT_NULL(seq);
+	TEST_ASSERT_EQUAL(2, seq->elems_len);
+}
+
+TEST(sml_sequence, write_octet_string) {
+	sml_sequence *seq = sml_sequence_init(&sml_octet_string_free);
+	sml_sequence_add(seq, sml_octet_string_init((unsigned char *)"Hallo", 5));
+	sml_sequence_add(seq, sml_octet_string_init((unsigned char *)"Hallo", 5));
+	
+	sml_sequence_write(seq, buf, &sml_octet_string_write);
+	expected_buf(buf, "720648616C6C6F0648616C6C6F", 13);
+}
+
+TEST_GROUP_RUNNER(sml_sequence) {
+	RUN_TEST_CASE(sml_sequence, init);
+	RUN_TEST_CASE(sml_sequence, parse_octet_string);
+	RUN_TEST_CASE(sml_sequence, write_octet_string);
+}
+
+
+
+
+
