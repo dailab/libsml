@@ -71,7 +71,16 @@ void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (
 }
 
 void sml_sequence_free(sml_sequence *seq) {
-	
+	if (seq) {
+		int i; 
+		for (i = 0; i < seq->elems_len; i++) {
+			seq->elem_free((seq->elems)[i]);
+		}
+		if (seq->elems != 0) {
+			free(seq->elems);
+		}
+		free(seq);
+	}
 }
 
 void sml_sequence_add(sml_sequence *seq, void *new_entry) {

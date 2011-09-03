@@ -125,10 +125,17 @@ TEST(sml_sequence, write_octet_string) {
 	expected_buf(buf, "720648616C6C6F0648616C6C6F", 13);
 }
 
+TEST(sml_sequence, free_octet_string) {
+	sml_sequence *seq = sml_sequence_init(&sml_octet_string_free);
+	sml_sequence_add(seq, sml_octet_string_init((unsigned char *)"Hallo", 5));
+	sml_sequence_free(seq);
+}
+
 TEST_GROUP_RUNNER(sml_sequence) {
 	RUN_TEST_CASE(sml_sequence, init);
 	RUN_TEST_CASE(sml_sequence, parse_octet_string);
 	RUN_TEST_CASE(sml_sequence, write_octet_string);
+	RUN_TEST_CASE(sml_sequence, free_octet_string);
 }
 
 
