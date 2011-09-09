@@ -29,17 +29,17 @@
 
 #define MC_SML_BUFFER_LEN 8096
 
-void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len)) {
+size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
 
 	fd_set readfds;
 	FD_ZERO(&readfds);
 	FD_SET(fd, &readfds);
 	
 	unsigned char byte;
-	unsigned char buf[MC_SML_BUFFER_LEN];
-	int esc = 0, start = 0, i, end = 0, r;
+	unsigned char buf[max_len];
+	int esc = 0, start = 0, i = 0, end = 0, r;
 	
-	for (i = 0; i < MC_SML_BUFFER_LEN;) {
+	while (i < max_len) {
 		select(fd + 1, &readfds, 0, 0, 0);
 		if (FD_ISSET(fd, &readfds)) {
             
@@ -79,13 +79,8 @@ void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *
 					if (end) {
 						end++;
 						if (end == 5) {
-							char *sml_file = (char *) malloc(i);
-							memcpy(sml_file, &(buf[0]), i);
-							sml_transport_receiver((unsigned char *)(sml_file), i);
-							free(sml_file);
-							i = -1;
-							esc = 0;
-							end = 0;
+							memcpy(buffer, &(buf[0]), i);
+							return i;
 						}
 					}
 					else {
@@ -111,7 +106,21 @@ void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *
 			}
 		}
 	}
-	printf("error: no end sequence found, buffer full.");
+	
+	return -1;
+}
+
+void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len)) {
+	unsigned char buffer[MC_SML_BUFFER_LEN];
+	size_t bytes;
+	
+	while (1) {
+		bytes = sml_transport_read(fd, buffer, MC_SML_BUFFER_LEN);
+		
+		if (bytes > 0) {
+			sml_transport_receiver(buffer, bytes);
+		}
+	}
 }
 
 int sml_transport_write(int fd, sml_file *file) {

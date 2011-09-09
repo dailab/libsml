@@ -26,12 +26,14 @@
 extern "C" {
 #endif
 
-// sml_transport_listen reads continously bytes from fd and scans 
+// sml_transport_read reads continously bytes from fd and scans 
 // for the SML transport protocol escape sequences. If a SML file
-// is detected, the sml_transporter_receiver is called with the 
-// complete bytes, including the escape sequences.
-// The buffer is free'd after the sml_transport_receiver comes 
-// back.
+// is detected it will be copied into the buffer. The total amount of bytes read
+// will be returned. If the SML file exceeds the len of the buffer, -1 will be returned
+size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len);
+
+// sml_transport_listen is an endless loop which reads continously
+// via sml_transport_read and calls the sml_transporter_receiver
 void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len));
 
 // sml_transport_writes adds the SML transport protocol escape 
