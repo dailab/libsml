@@ -53,7 +53,7 @@ sml_sequence *sml_sequence_parse(sml_buffer *buf,
 	
 error:
 	buf->error = 1;
-	sml_sequence_free(seq->elem_free);
+	sml_sequence_free(seq);
 	return 0;
 }
 void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (void *elem, sml_buffer *buf)) {
@@ -72,6 +72,7 @@ void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (
 
 void sml_sequence_free(sml_sequence *seq) {
 	if (seq) {
+		
 		int i; 
 		for (i = 0; i < seq->elems_len; i++) {
 			seq->elem_free((seq->elems)[i]);

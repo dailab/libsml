@@ -44,7 +44,6 @@ void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (
 void sml_sequence_free(sml_sequence *seq);
 void sml_sequence_add(sml_sequence *list, void *new_entry);
 
-
 typedef struct sml_list_entry {
 	octet_string *obj_name;
 	sml_status *status; // optional
