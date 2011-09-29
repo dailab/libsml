@@ -37,7 +37,6 @@
 #include "sml_get_proc_parameter_request.h"
 #include "sml_get_proc_parameter_response.h"
 #include "sml_set_proc_parameter_request.h"
-#include "sml_set_proc_parameter_response.h"
 #include "sml_get_list_request.h"
 #include "sml_get_list_response.h"
 #include "sml_attention_response.h"
