@@ -42,17 +42,33 @@ sml_get_profile_pack_response *sml_get_profile_pack_response_parse(sml_buffer *b
 	}
 	
 	msg->server_id = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->act_time = sml_time_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->reg_period = sml_u32_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->parameter_tree_path = sml_tree_path_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->header_list = sml_sequence_parse(buf, (void *) &sml_prof_obj_header_entry_parse, (void (*)(void *)) &sml_prof_obj_header_entry_free);
+	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->period_list = sml_sequence_parse(buf, (void *) &sml_prof_obj_period_entry_parse, (void (*)(void *)) &sml_prof_obj_period_entry_free);
+	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->rawdata = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->profile_signature = sml_signature_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	return msg;
 	
 error:
+	buf->error = 1;
 	sml_get_profile_pack_response_free(msg);
 	return 0;
 }

@@ -42,20 +42,28 @@ sml_get_profile_list_response *sml_get_profile_list_response_parse(sml_buffer *b
 
 	msg->server_id = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->act_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->reg_period = sml_u32_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->parameter_tree_path = sml_tree_path_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->val_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->status = sml_u64_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->period_list = sml_sequence_parse(buf, (void *) &sml_period_entry_parse, (void (*)(void *)) &sml_period_entry_free);
 	if (sml_buf_has_errors(buf)) goto error;	
+	
 	msg->rawdata = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->period_signature = sml_signature_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	

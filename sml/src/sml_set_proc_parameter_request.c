@@ -40,12 +40,16 @@ sml_set_proc_parameter_request *sml_set_proc_parameter_request_parse(sml_buffer 
 	
 	msg->server_id = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->username = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->password = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->parameter_tree_path = sml_tree_path_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->parameter_tree = sml_tree_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	

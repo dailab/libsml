@@ -123,7 +123,10 @@ sml_tree *sml_tree_parse(sml_buffer *buf){
 	}
 	
 	tree->parameter_name = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
+	
 	tree->parameter_value = sml_proc_par_value_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	if (!sml_buf_optional_is_skipped(buf)) {
 		if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
@@ -334,37 +337,58 @@ sml_tupel_entry *sml_tupel_entry_parse(sml_buffer *buf) {
 	}
 	
 	tupel->server_id = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->sec_index = sml_time_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->status = sml_u64_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tupel->unit_pA = sml_unit_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->scaler_pA = sml_i8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->value_pA = sml_i64_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tupel->unit_R1 = sml_unit_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->scaler_R1 = sml_i8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->value_R1 = sml_i64_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tupel->unit_R4 = sml_unit_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->scaler_R4 = sml_i8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->value_R4 = sml_i64_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tupel->signature_pA_R1_R4 = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tupel->unit_mA = sml_unit_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->scaler_mA = sml_i8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->value_mA = sml_i64_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tupel->unit_R2 = sml_unit_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->scaler_R2 = sml_i8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->value_R2 = sml_i64_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tupel->unit_R3 = sml_unit_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->scaler_R3 = sml_i8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	tupel->value_R3 = sml_i64_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	
 	tupel->signature_mA_R2_R3 = sml_octet_string_parse(buf);
-	
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	return tupel;
@@ -483,12 +507,16 @@ sml_period_entry *sml_period_entry_parse(sml_buffer *buf) {
 	
 	period->obj_name = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	period->unit = sml_unit_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	period->scaler = sml_i8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	period->value = sml_value_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	period->value_signature = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
