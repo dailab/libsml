@@ -121,31 +121,52 @@ sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 	
 	msg_body->tag = sml_u16_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	switch (*(msg_body->tag)) {
-        case SML_MESSAGE_OPEN_REQUEST:
-            msg_body->data = sml_open_request_parse(buf);
-            break;
-        case SML_MESSAGE_OPEN_RESPONSE:
+		case SML_MESSAGE_OPEN_REQUEST:
+			msg_body->data = sml_open_request_parse(buf);
+			break;
+		case SML_MESSAGE_OPEN_RESPONSE:
 			msg_body->data = sml_open_response_parse(buf);
 			break;
-        case SML_MESSAGE_CLOSE_REQUEST:
-            msg_body->data = sml_close_request_parse(buf);
-            break;
-        case SML_MESSAGE_CLOSE_RESPONSE:
-            msg_body->data = sml_close_response_parse(buf);
-            break;
-		case SML_MESSAGE_GET_LIST_RESPONSE:
-			msg_body->data = sml_get_list_response_parse(buf);
+		case SML_MESSAGE_CLOSE_REQUEST:
+			msg_body->data = sml_close_request_parse(buf);
+			break;
+		case SML_MESSAGE_CLOSE_RESPONSE:
+			msg_body->data = sml_close_response_parse(buf);
+			break;
+		case SML_MESSAGE_GET_PROFILE_PACK_REQUEST:
+			msg_body->data = sml_get_profile_pack_request_parse(buf);
+			break;
+		case SML_MESSAGE_GET_PROFILE_PACK_RESPONSE:
+			msg_body->data = sml_get_profile_pack_response_parse(buf);
+			break;
+		case SML_MESSAGE_GET_PROFILE_LIST_REQUEST:
+			msg_body->data = sml_get_profile_list_request_parse(buf);
+			break;
+		case SML_MESSAGE_GET_PROFILE_LIST_RESPONSE:
+			msg_body->data = sml_get_profile_list_response_parse(buf);
+			break;
+		case SML_MESSAGE_GET_PROC_PARAMETER_REQUEST:
+			msg_body->data = sml_get_proc_parameter_request_parse(buf);
+			break;
+		case SML_MESSAGE_GET_PROC_PARAMETER_RESPONSE:
+			msg_body->data = sml_get_proc_parameter_response_parse(buf);
+			break;
+		case SML_MESSAGE_SET_PROC_PARAMETER_REQUEST:
+			msg_body->data = sml_set_proc_parameter_request_parse(buf);
 			break;
 		case SML_MESSAGE_GET_LIST_REQUEST:
 			msg_body->data = sml_get_list_request_parse(buf);
 			break;
+		case SML_MESSAGE_GET_LIST_RESPONSE:
+			msg_body->data = sml_get_list_response_parse(buf);
+			break;
 		case SML_MESSAGE_ATTENTION_RESPONSE:
 			msg_body->data = sml_attention_response_parse(buf);
 			break;
-        default:
-            printf("error: message type %04X not yet implemented\n", *(msg_body->tag));
+		default:
+			printf("error: message type %04X not yet implemented\n", *(msg_body->tag));
 			break;
 	}
 	
@@ -165,66 +186,111 @@ sml_message_body *sml_message_body_init(u16 tag, void *data) {
 }
 
 void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
 	sml_u16_write(message_body->tag, buf);
-    
-    switch (*(message_body->tag)) {
-        case SML_MESSAGE_OPEN_REQUEST:
-            sml_open_request_write((sml_open_request *) message_body->data, buf);
+
+	switch (*(message_body->tag)) {
+		case SML_MESSAGE_OPEN_REQUEST:
+			sml_open_request_write((sml_open_request *) message_body->data, buf);
 			break;
-        case SML_MESSAGE_CLOSE_REQUEST:
-            sml_close_request_write((sml_close_request *) message_body->data, buf);
-            break;
-        case SML_MESSAGE_SET_PROC_PARAMETER_REQUEST:
-            sml_set_proc_parameter_request_write((sml_set_proc_parameter_request *) message_body->data, buf);
-            break;
-        case SML_MESSAGE_GET_PROC_PARAMETER_REQUEST:
-            sml_get_proc_parameter_request_write((sml_get_proc_parameter_request *) message_body->data, buf);
-            break;
-        case SML_MESSAGE_GET_LIST_REQUEST:
-        	sml_get_list_request_write((sml_get_list_request *)message_body->data, buf);
-        	break;
-        case SML_MESSAGE_GET_PROFILE_PACK_REQUEST:
-           	sml_get_profile_pack_request_write((sml_get_profile_pack_request *)message_body->data, buf);
-           	break;
+		case SML_MESSAGE_OPEN_RESPONSE:
+			sml_open_response_write((sml_open_response *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_CLOSE_REQUEST:
+			sml_close_request_write((sml_close_request *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_CLOSE_RESPONSE:
+			sml_close_response_write((sml_close_response *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_GET_PROFILE_PACK_REQUEST:
+			sml_get_profile_pack_request_write((sml_get_profile_pack_request *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_GET_PROFILE_PACK_RESPONSE:
+			sml_get_profile_pack_response_write((sml_get_profile_pack_response *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_GET_PROFILE_LIST_REQUEST:
+			sml_get_profile_list_request_write((sml_get_profile_list_request *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_GET_PROFILE_LIST_RESPONSE:
+			sml_get_profile_list_response_write((sml_get_profile_list_response *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_GET_PROC_PARAMETER_REQUEST:
+			sml_get_proc_parameter_request_write((sml_get_proc_parameter_request *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_GET_PROC_PARAMETER_RESPONSE:
+			sml_get_proc_parameter_response_write((sml_get_proc_parameter_response *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_SET_PROC_PARAMETER_REQUEST:
+			sml_set_proc_parameter_request_write((sml_set_proc_parameter_request *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_GET_LIST_REQUEST:
+			sml_get_list_request_write((sml_get_list_request *)message_body->data, buf);
+			break;	
+		case SML_MESSAGE_GET_LIST_RESPONSE:
+			sml_get_list_response_write((sml_get_list_response *) message_body->data, buf);
+			break;
+		case SML_MESSAGE_ATTENTION_RESPONSE:
+			sml_attention_response_write((sml_attention_response *) message_body->data, buf);
+			break;
 		default:
-            printf("error: message type %04X not yet implemented\n", *(message_body->tag));
+			printf("error: message type %04X not yet implemented\n", *(message_body->tag));
 			break;
     }
 }
 
 void sml_message_body_free(sml_message_body *message_body) {
-    if (message_body) {
+	if (message_body) {
 		sml_number_free(message_body->tag);
-		
-        switch (*(message_body->tag)) {
-            case SML_MESSAGE_OPEN_REQUEST:
-                sml_open_request_free((sml_open_request *) message_body->data);
-                break;
-            case SML_MESSAGE_OPEN_RESPONSE:
-                sml_open_response_free((sml_open_response *) message_body->data);
-                break;
-            case SML_MESSAGE_CLOSE_REQUEST:
-                sml_close_request_free((sml_close_request *) message_body->data);
-                break;
-            case SML_MESSAGE_CLOSE_RESPONSE:
-                sml_close_response_free((sml_close_response *) message_body->data);
-                break;
-            case SML_MESSAGE_SET_PROC_PARAMETER_REQUEST:
-                sml_set_proc_parameter_request_free((sml_set_proc_parameter_request *) message_body->data);
-                break;
-            case SML_MESSAGE_GET_LIST_REQUEST:
-                sml_get_list_request_free((sml_get_list_request *) message_body->data);
-                break;
-            case SML_MESSAGE_GET_LIST_RESPONSE:
-                sml_get_list_response_free((sml_get_list_response *) message_body->data);
-                break;
-            default:
-                printf("NYI: %s for message type %04X\n", __FUNCTION__, *(message_body->tag));
-                break;
-        }
-        
-        free(message_body);
-    }
+
+		switch (*(message_body->tag)) {
+			case SML_MESSAGE_OPEN_REQUEST:
+				sml_open_request_free((sml_open_request *) message_body->data);
+				break;
+			case SML_MESSAGE_OPEN_RESPONSE:
+				sml_open_response_free((sml_open_response *) message_body->data);
+				break;
+			case SML_MESSAGE_CLOSE_REQUEST:
+				sml_close_request_free((sml_close_request *) message_body->data);
+				break;
+			case SML_MESSAGE_CLOSE_RESPONSE:
+				sml_close_response_free((sml_close_response *) message_body->data);
+				break;
+			case SML_MESSAGE_GET_PROFILE_PACK_REQUEST:
+				sml_get_profile_pack_request_free((sml_get_profile_pack_request *) message_body->data);
+				break;
+			case SML_MESSAGE_GET_PROFILE_PACK_RESPONSE:
+				sml_get_profile_pack_response_free((sml_get_profile_pack_response *) message_body->data);
+				break;
+			case SML_MESSAGE_GET_PROFILE_LIST_REQUEST:
+				sml_get_profile_list_request_free((sml_get_profile_list_request *) message_body->data);
+				break;
+			case SML_MESSAGE_GET_PROFILE_LIST_RESPONSE:
+				sml_get_profile_list_response_free((sml_get_profile_list_response *) message_body->data);
+				break;
+			case SML_MESSAGE_GET_PROC_PARAMETER_REQUEST:
+				sml_get_proc_parameter_request_free((sml_get_proc_parameter_request *) message_body->data);
+				break;
+			case SML_MESSAGE_GET_PROC_PARAMETER_RESPONSE:
+				sml_get_proc_parameter_response_free((sml_get_proc_parameter_response *) message_body->data);
+				break;
+			case SML_MESSAGE_SET_PROC_PARAMETER_REQUEST:
+				sml_set_proc_parameter_request_free((sml_set_proc_parameter_request *) message_body->data);
+				break;
+			case SML_MESSAGE_GET_LIST_REQUEST:
+				sml_get_list_request_free((sml_get_list_request *) message_body->data);
+				break;
+			case SML_MESSAGE_GET_LIST_RESPONSE:
+				sml_get_list_response_free((sml_get_list_response *) message_body->data);
+				break;
+			case SML_MESSAGE_ATTENTION_RESPONSE:
+				sml_attention_response_free((sml_attention_response *) message_body->data);
+				break;
+			default:
+				printf("NYI: %s for message type %04X\n", __FUNCTION__, *(message_body->tag));
+				break;
+		}
+
+		free(message_body);
+	}
 }
 
