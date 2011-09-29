@@ -455,6 +455,7 @@ void sml_tupel_entry_free(sml_tupel_entry *tupel) {
 }
 
 
+
 // SML_PERIOD_ENTRY
 
 sml_period_entry *sml_period_entry_init() {
@@ -481,11 +482,14 @@ sml_period_entry *sml_period_entry_parse(sml_buffer *buf) {
 	}
 	
 	period->obj_name = sml_octet_string_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	period->unit = sml_unit_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	period->scaler = sml_i8_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	period->value = sml_value_parse(buf);
+	if (sml_buf_has_errors(buf)) goto error;
 	period->value_signature = sml_octet_string_parse(buf);
-	
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	return period;
