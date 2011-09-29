@@ -101,8 +101,6 @@ void sml_list_add(sml_list *list, sml_list *new_entry) {
 	list->next = new_entry;
 }
 
-// This function doesn't free the allocated memory in error cases,
-// this is done in sml_list_parse.
 sml_list *sml_list_entry_parse(sml_buffer *buf) {
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
@@ -117,19 +115,19 @@ sml_list *sml_list_entry_parse(sml_buffer *buf) {
 
 	l->obj_name = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
+	
 	l->status = sml_status_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
-	l->val_time = SML_SKIP_OPTIONAL sml_time_parse(buf);
+	
+	l->val_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	l->unit = sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
+	
 	l->scaler = sml_i8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
+	
 	l->value = sml_value_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
@@ -138,10 +136,11 @@ sml_list *sml_list_entry_parse(sml_buffer *buf) {
 
 	return l;
 	
-	error:
-		printf("error\n");
-		buf->error = 1;
-		return 0;
+error:
+// This function doesn't free the allocated memory in error cases,
+// this is done in sml_list_parse.
+	buf->error = 1;
+	return 0;
 }
 
 sml_list *sml_list_parse(sml_buffer *buf) {
