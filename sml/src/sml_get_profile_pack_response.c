@@ -75,7 +75,7 @@ void sml_get_profile_pack_response_free(sml_get_profile_pack_response *msg){
 		sml_octet_string_free(msg->server_id);
 		sml_time_free(msg->act_time);
 		sml_number_free(msg->reg_period);
-		sml_tree_path_parse(msg->parameter_tree_path);
+		sml_tree_path_free(msg->parameter_tree_path);
 		sml_sequence_free(msg->header_list);
 		sml_sequence_free(msg->period_list);
 		sml_octet_string_free(msg->rawdata);
@@ -84,8 +84,6 @@ void sml_get_profile_pack_response_free(sml_get_profile_pack_response *msg){
 		free(msg);
 	}
 }
-
-
 
 
 
