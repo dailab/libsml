@@ -106,3 +106,19 @@ void sml_value_free(sml_value *value) {
 	}
 }
 
+double sml_value_to_double(sml_value *value) {
+	switch (value->type) {
+		case 0x51: return *value->data.int8;   break;
+		case 0x52: return *value->data.int16;  break;
+		case 0x54: return *value->data.int32;  break;
+		case 0x58: return *value->data.int64;  break;
+		case 0x61: return *value->data.uint8;  break;
+		case 0x62: return *value->data.uint16; break;
+		case 0x64: return *value->data.uint32; break;
+		case 0x68: return *value->data.uint64; break;
+
+		default:
+			printf("error: unknown type in %s\n", __FUNCTION__);
+			return 0;
+	}
+}

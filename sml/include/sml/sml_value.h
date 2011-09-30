@@ -50,6 +50,14 @@ sml_value *sml_value_parse(sml_buffer *buf);
 void sml_value_write(sml_value *value, sml_buffer *buf);
 void sml_value_free(sml_value *value);
 
+/**
+ * Cast arbitrary sized sml_value to double
+ *
+ * @param value the sml_value which should be casted
+ * @return double value representation of sml_value, 0 if an error occured
+ */
+double sml_value_to_double(sml_value *value);
+
 #ifdef __cplusplus
 }
 #endif
