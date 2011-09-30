@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -59,12 +59,12 @@ typedef int64_t i64;
 
 // This sml_buffer is used in two different use-cases.
 //
-// Parsing: the raw data is in the buffer field, 
-//          the buffer_len is the number of raw bytes received, 
+// Parsing: the raw data is in the buffer field,
+//          the buffer_len is the number of raw bytes received,
 //          the cursor points to the current position during parsing
 //
 // Writing: At the beginning the buffer field is malloced and zeroed with
-//          a default length, this default length is stored in buffer_len 
+//          a default length, this default length is stored in buffer_len
 //          (i.e. the maximum bytes one can write to this buffer)
 //          cursor points to the position, where on can write during the
 //          writing process. If a file is completely written to the buffer,
@@ -81,7 +81,7 @@ sml_buffer *sml_buffer_init(size_t length);
 
 void sml_buffer_free(sml_buffer *buf);
 
-// Returns the length of the following data structure. Sets the cursor position to 
+// Returns the length of the following data structure. Sets the cursor position to
 // the value field.
 int sml_buf_get_next_length(sml_buffer *buf);
 

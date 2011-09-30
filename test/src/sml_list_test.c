@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -50,7 +50,7 @@ TEST(sml_list, add) {
 TEST(sml_list, parse_two_entries) {
 	hex2binary("727702610101010142000177026101010101420001",  sml_buf_get_current_buf(buf));
 	sml_list *l = sml_list_parse(buf);
-	
+
 	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
 	TEST_ASSERT_NOT_NULL(l);
 	TEST_ASSERT_NOT_NULL(l->next);
@@ -70,7 +70,7 @@ TEST(sml_list, write_one_entry) {
 	l->value = sml_value_init();
 	l->value->type = SML_TYPE_OCTET_STRING;
 	l->value->data.bytes = sml_octet_string_init((unsigned char *)"Hallo", 5);
-	
+
 	sml_list_write(l, buf);
 	expected_buf(buf, "71770648616C6C6F010101010648616C6C6F01", 19);
 }
@@ -110,7 +110,7 @@ TEST(sml_sequence, init) {
 
 TEST(sml_sequence, parse_octet_string) {
 	hex2binary("720648616C6C6F0648616C6C6F", sml_buf_get_current_buf(buf));
-	
+
 	sml_sequence *seq = sml_sequence_parse(buf, (void *) &sml_octet_string_parse, (void (*)(void *))&sml_octet_string_free);
 	TEST_ASSERT_NOT_NULL(seq);
 	TEST_ASSERT_EQUAL(2, seq->elems_len);
@@ -120,7 +120,7 @@ TEST(sml_sequence, write_octet_string) {
 	sml_sequence *seq = sml_sequence_init((void (*)(void *))&sml_octet_string_free);
 	sml_sequence_add(seq, sml_octet_string_init((unsigned char *)"Hallo", 5));
 	sml_sequence_add(seq, sml_octet_string_init((unsigned char *)"Hallo", 5));
-	
+
 	sml_sequence_write(seq, buf, (void (*)(void *, sml_buffer *))&sml_octet_string_write);
 	expected_buf(buf, "720648616C6C6F0648616C6C6F", 13);
 }

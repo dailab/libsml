@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -23,7 +23,7 @@
 
 uint8_t test_helper_ctoi(uint8_t c){
     uint8_t ret = 0;
-    
+
     if((c >= '0') && (c <= '9')){
         ret = c - '0';
     } else if((c >= 'a') && (c <= 'f')){
@@ -31,7 +31,7 @@ uint8_t test_helper_ctoi(uint8_t c){
     } else if((c >= 'A') && (c <= 'F')){
         ret = c - 'A' + 10;
     }
-    
+
     return ret;
 }
 

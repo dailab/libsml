@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -30,32 +30,32 @@ sml_get_proc_parameter_request *sml_get_proc_parameter_request_init() {
 
 sml_get_proc_parameter_request *sml_get_proc_parameter_request_parse(sml_buffer *buf) {
 	sml_get_proc_parameter_request *msg = sml_get_proc_parameter_request_init();
-	
+
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}
-	
+
 	if (sml_buf_get_next_length(buf) != 5) {
 		buf->error = 1;
 		goto error;
 	}
-	
+
 	msg->server_id = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	msg->username = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	msg->password = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	msg->parameter_tree_path = sml_tree_path_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	msg->attribute = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	return msg;
 error:
 	sml_get_proc_parameter_request_free(msg);

@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -65,19 +65,19 @@ octet_string *sml_octet_string_parse(sml_buffer *buf) {
 	if (sml_buf_optional_is_skipped(buf)) {
 		return 0;
 	}
-	
+
     int l;
 	if (sml_buf_get_next_type(buf) != SML_TYPE_OCTET_STRING) {
 		buf->error = 1;
 		return 0;
 	}
-	
+
 	l = sml_buf_get_next_length(buf);
 	if (l < 0) {
 		buf->error = 1;
 		return 0;
 	}
-	
+
     octet_string *str = sml_octet_string_init(sml_buf_get_current_buf(buf), l);
 	sml_buf_update_bytes_read(buf, l);
 	return str;
@@ -88,7 +88,7 @@ void sml_octet_string_write(octet_string *str, sml_buffer *buf) {
 		sml_buf_optional_write(buf);
 		return;
 	}
-	
+
     sml_buf_set_type_and_length(buf, SML_TYPE_OCTET_STRING, (unsigned int) str->len);
     memcpy(sml_buf_get_current_buf(buf), str->str, str->len);
     buf->cursor += str->len;
@@ -129,10 +129,10 @@ uint8_t ctoi(uint8_t c){
 
     if((c >= '0') && (c <= '9')) {
 		ret = c - '0';
-    } 
+    }
 	else if((c >= 'a') && (c <= 'f')) {
 		ret = c - 'a' + 10;
-    } 
+    }
 	else if((c >= 'A') && (c <= 'F')) {
 		ret = c - 'A' + 10;
 	}

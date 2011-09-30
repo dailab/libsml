@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -39,33 +39,33 @@ typedef struct {
 	octet_string *server_id;
 	sml_time *sec_index;
 	u64 *status;
-	
+
 	sml_unit *unit_pA;
 	i8 *scaler_pA;
 	i64 *value_pA;
-	
+
 	sml_unit *unit_R1;
 	i8 *scaler_R1;
 	i64 *value_R1;
-	
+
 	sml_unit *unit_R4;
 	i8 *scaler_R4;
 	i64 *value_R4;
-	
+
 	octet_string *signature_pA_R1_R4;
-	
+
 	sml_unit *unit_mA;
 	i8 *scaler_mA;
 	i64 *value_mA;
-	
+
 	sml_unit *unit_R2;
 	i8 *scaler_R2;
 	i64 *value_R2;
-	
+
 	sml_unit *unit_R3;
 	i8 *scaler_R3;
 	i64 *value_R3;
-	
+
 	octet_string *signature_mA_R2_R3;
 } sml_tupel_entry;
 
@@ -88,11 +88,11 @@ typedef struct {
 } sml_proc_par_value;
 
 typedef struct s_tree{
-	octet_string *parameter_name; 
+	octet_string *parameter_name;
 	sml_proc_par_value *parameter_value; // optional
 	struct s_tree **child_list; // optional
-	
-	int child_list_len; 
+
+	int child_list_len;
 } sml_tree;
 
 typedef struct {

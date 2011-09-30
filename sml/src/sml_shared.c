@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -25,12 +25,12 @@ int sml_buf_get_next_length(sml_buffer *buf) {
 	int length = 0;
 	unsigned char byte = sml_buf_get_current_byte(buf);
 	int list = ((byte & SML_TYPE_FIELD) == SML_TYPE_LIST) ? 0 : -1;
-	
+
 	for (;buf->cursor < buf->buffer_len;) {
 		byte = sml_buf_get_current_byte(buf);
 		length <<= 4;
 		length |= (byte & SML_LENGTH_FIELD);
-		
+
 		if ((byte & SML_ANOTHER_TL) != SML_ANOTHER_TL) {
 			break;
 		}
@@ -46,24 +46,24 @@ int sml_buf_get_next_length(sml_buffer *buf) {
 void sml_buf_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned int l) {
     // set the type
     buf->buffer[buf->cursor] |= type;
-    
+
     if (type != SML_TYPE_LIST) {
         l++;
     }
-    
+
     if (l > SML_LENGTH_FIELD) {
         // how much shifts are necessary
-        int mask_pos = (sizeof(unsigned int) * 2) - 1;  
-        
+        int mask_pos = (sizeof(unsigned int) * 2) - 1;
+
         // the 4 most significant bits of l
         unsigned int mask = 0xF0 << (8 * (sizeof(unsigned int) - 1));
-        
+
         // select the 4 most significant bits with a bit set
         while (!(mask & l)) {
             mask >>= 4;
             mask_pos--;
         }
-        
+
         // copy the bits to the buffer
         while (mask > SML_LENGTH_FIELD) {
             buf->buffer[buf->cursor] |= SML_ANOTHER_TL;

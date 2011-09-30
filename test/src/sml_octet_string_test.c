@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -40,14 +40,14 @@ TEST(sml_octet_string, init) {
 
 TEST(sml_octet_string, parse) {
 	hex2binary("0648616C6C6F", sml_buf_get_current_buf(buf));
-	
+
 	octet_string *str = sml_octet_string_parse(buf);
 	expected_octet_string(str, "Hallo", 5);
 }
 
 TEST(sml_octet_string, parse_multiple_tl_fields) {
 	hex2binary("8102616161616F6161616161616161616161", sml_buf_get_current_buf(buf));
-	
+
 	octet_string *str = sml_octet_string_parse(buf);
 	expected_octet_string(str, "aaaaoaaaaaaaaaaa", 16);
 }
@@ -55,7 +55,7 @@ TEST(sml_octet_string, parse_multiple_tl_fields) {
 TEST(sml_octet_string, parse_optional) {
 	hex2binary("01", sml_buf_get_current_buf(buf));
 	octet_string *str = sml_octet_string_parse(buf);
-	
+
 	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
 	TEST_ASSERT_NULL(str);
 	TEST_ASSERT_EQUAL(1, buf->cursor);
@@ -76,7 +76,7 @@ TEST(sml_octet_string, cmp) {
 	octet_string *s1 = sml_octet_string_init((unsigned char *)"Hallo", 5);
 	octet_string *s2 = sml_octet_string_init((unsigned char *)"Hi", 2);
 	octet_string *s3 = sml_octet_string_init((unsigned char *)"Hallo", 5);
-	
+
 	TEST_ASSERT_TRUE(sml_octet_string_cmp(s1, s2) != 0);
 	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp(s1, s3));
 }

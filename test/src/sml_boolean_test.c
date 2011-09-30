@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -82,7 +82,7 @@ TEST_GROUP_RUNNER(sml_boolean) {
 	RUN_TEST_CASE(sml_boolean, init);
 	RUN_TEST_CASE(sml_boolean, parse_true);
 	RUN_TEST_CASE(sml_boolean, parse_false);
-	RUN_TEST_CASE(sml_boolean, parse_optional);	
+	RUN_TEST_CASE(sml_boolean, parse_optional);
 	RUN_TEST_CASE(sml_boolean, write_true);
 	RUN_TEST_CASE(sml_boolean, write_false);
 	RUN_TEST_CASE(sml_boolean, write_optional);

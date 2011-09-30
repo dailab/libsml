@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -32,16 +32,16 @@ sml_sequence *sml_sequence_init(void (*elem_free) (void *elem)) {
 	return seq;
 }
 
-sml_sequence *sml_sequence_parse(sml_buffer *buf, 
-		void *(*elem_parse) (sml_buffer *buf), 
+sml_sequence *sml_sequence_parse(sml_buffer *buf,
+		void *(*elem_parse) (sml_buffer *buf),
 		void (*elem_free) (void *elem)) {
-	
+
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}
 
-	sml_sequence *seq = sml_sequence_init(elem_free);	
+	sml_sequence *seq = sml_sequence_init(elem_free);
 	int i, len = sml_buf_get_next_length(buf);
 	void *p;
 	for (i = 0; i < len; i++) {
@@ -50,7 +50,7 @@ sml_sequence *sml_sequence_parse(sml_buffer *buf,
 		sml_sequence_add(seq, p);
 	}
 	return seq;
-	
+
 error:
 	buf->error = 1;
 	sml_sequence_free(seq);
@@ -61,9 +61,9 @@ void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (
 		sml_buf_optional_write(buf);
 		return;
 	}
-	
+
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, seq->elems_len);
-	
+
 	int i;
 	for (i = 0; i < seq->elems_len; i++) {
 		elem_write((seq->elems)[i], buf);
@@ -72,8 +72,8 @@ void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (
 
 void sml_sequence_free(sml_sequence *seq) {
 	if (seq) {
-		
-		int i; 
+
+		int i;
 		for (i = 0; i < seq->elems_len; i++) {
 			seq->elem_free((seq->elems)[i]);
 		}
@@ -106,36 +106,36 @@ sml_list *sml_list_entry_parse(sml_buffer *buf) {
 		buf->error = 1;
 		goto error;
 	}
-	
+
 	if (sml_buf_get_next_length(buf) != 7) {
 		buf->error = 1;
 		goto error;
 	}
-	sml_list *l = sml_list_init();	
+	sml_list *l = sml_list_init();
 
 	l->obj_name = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	l->status = sml_status_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	l->val_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	l->unit = sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	l->scaler = sml_i8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	l->value = sml_value_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	l->value_signature = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
 	return l;
-	
+
 error:
 // This function doesn't free the allocated memory in error cases,
 // this is done in sml_list_parse.
@@ -147,16 +147,16 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 	if (sml_buf_optional_is_skipped(buf)) {
 		return 0;
 	}
-	
+
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		return 0;
 	}
-	
+
 	sml_list *first = 0;
 	sml_list *last = 0;
 	int elems;
-	
+
 	elems = sml_buf_get_next_length(buf);
 
 	if (elems > 0) {
@@ -165,16 +165,16 @@ sml_list *sml_list_parse(sml_buffer *buf) {
 		last = first;
 		elems--;
 	}
-	
+
 	while(elems > 0) {
 		last->next = sml_list_entry_parse(buf);
 		if (sml_buf_has_errors(buf)) goto error;
 		last = last->next;
 		elems--;
 	}
-	
+
 	return first;
-	
+
 error:
 	buf->error = 1;
 	sml_list_free(first);
@@ -198,22 +198,22 @@ void sml_list_write(sml_list *list, sml_buffer *buf){
 		sml_buf_optional_write(buf);
 		return;
 	}
-	
+
 	sml_list *i = list;
 	int len = 0;
 	while(i) {
 		i = i->next;
 		len++;
 	}
-	
+
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, len);
-	
+
 	i = list;
 	while(i) {
 		sml_list_entry_write(i, buf);
 		i = i->next;
 	}
-	
+
 }
 
 void sml_list_entry_free(sml_list *list) {
@@ -233,7 +233,7 @@ void sml_list_free(sml_list *list) {
     if (list) {
         sml_list *f = list;
         sml_list *n = list->next;
-        
+
         while(f) {
             sml_list_entry_free(f);
             f = n;

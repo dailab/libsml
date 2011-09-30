@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -41,7 +41,7 @@ TEST(sml_tree, init) {
 TEST(sml_tree, add_tree) {
 	sml_tree *t = sml_tree_init();
 	sml_tree_add_tree(t, sml_tree_init());
-	
+
 	TEST_ASSERT_NOT_NULL(t->child_list[0]);
 	TEST_ASSERT_EQUAL(1, t->child_list_len);
 }
@@ -56,7 +56,7 @@ TEST(sml_tree, write) {
 TEST(sml_tree, parse_with_child) {
 	hex2binary("730648616C6C6F0171730648616C6C6F0101", sml_buf_get_current_buf(buf));
 	sml_tree *t = sml_tree_parse(buf);
-	
+
 	TEST_ASSERT_NOT_NULL(t);
 	TEST_ASSERT_NOT_NULL(t->child_list[0]);
 	TEST_ASSERT_EQUAL(1, t->child_list_len);
@@ -65,7 +65,7 @@ TEST(sml_tree, parse_with_child) {
 TEST(sml_tree, parse_with_error_child) {
 	hex2binary("730648616C6C6F0171720648616C6C6F0101", sml_buf_get_current_buf(buf));
 	sml_tree *t = sml_tree_parse(buf);
-	
+
 	TEST_ASSERT_NULL(t);
 }
 

@@ -1,18 +1,18 @@
-// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed 
+// Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed
 // DAI-Labor, TU-Berlin
-// 
+//
 // This file is part of libSML.
-// 
+//
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // libSML is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -26,44 +26,44 @@
 #include <sml/sml_crc16.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h> 
+#include <unistd.h>
 
 // SML MESSAGE
 
 sml_message *sml_message_parse(sml_buffer *buf) {
 	sml_message *msg = (sml_message *) malloc(sizeof(sml_message));
 	memset(msg, 0, sizeof(sml_message));
-	
+
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}
-	
+
 	if (sml_buf_get_next_length(buf) != 6) {
 		buf->error = 1;
 		goto error;
 	}
-	
+
 	msg->transaction_id = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	msg->group_id = sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	msg->abort_on_error = sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	msg->message_body = sml_message_body_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-    
+
 	msg->crc = sml_u16_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-	
+
 	if (sml_buf_get_current_byte(buf) == SML_MESSAGE_END) {
 		sml_buf_update_bytes_read(buf, 1);
 	}
 	return msg;
-    
+
 error:
 	sml_message_free(msg);
 	return 0;
@@ -94,10 +94,10 @@ void sml_message_write(sml_message *msg, sml_buffer *buf) {
 	sml_u8_write(msg->group_id, buf);
 	sml_u8_write(msg->abort_on_error, buf);
     sml_message_body_write(msg->message_body, buf);
-    
+
 	msg->crc = sml_u16_init(sml_crc16_calculate(&(buf->buffer[msg_start]), buf->cursor - msg_start));
 	sml_u16_write(msg->crc, buf);
-    
+
     // end of message
     buf->buffer[buf->cursor] = 0x0;
     buf->cursor++;
@@ -108,17 +108,17 @@ void sml_message_write(sml_message *msg, sml_buffer *buf) {
 sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 	sml_message_body *msg_body = (sml_message_body *) malloc(sizeof(sml_message_body));
 	memset(msg_body, 0, sizeof(sml_message_body));
-	
+
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}
-	
+
 	if (sml_buf_get_next_length(buf) != 2) {
 		buf->error = 1;
 		goto error;
 	}
-	
+
 	msg_body->tag = sml_u16_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
@@ -169,9 +169,9 @@ sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 			printf("error: message type %04X not yet implemented\n", *(msg_body->tag));
 			break;
 	}
-	
+
 	return msg_body;
-    
+
 error:
 	free(msg_body);
 	return 0;
@@ -225,7 +225,7 @@ void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
 			break;
 		case SML_MESSAGE_GET_LIST_REQUEST:
 			sml_get_list_request_write((sml_get_list_request *)message_body->data, buf);
-			break;	
+			break;
 		case SML_MESSAGE_GET_LIST_RESPONSE:
 			sml_get_list_response_write((sml_get_list_response *) message_body->data, buf);
 			break;
