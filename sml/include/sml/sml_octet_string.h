@@ -32,24 +32,21 @@ typedef struct {
 	int len;
 } octet_string;
 
-// sml signature
-typedef octet_string sml_signature;
-
 octet_string *sml_octet_string_init(unsigned char *str, int length);
-
 octet_string *sml_octet_string_init_from_hex(char *str);
-
-void sml_octet_string_free(octet_string *str);
-
 // Parses a octet string, updates the buffer accordingly, memory must be free'd elsewhere.
 octet_string *sml_octet_string_parse(sml_buffer *buf);
-
+octet_string *sml_octet_string_generate_uuid();
 void sml_octet_string_write(octet_string *str, sml_buffer *buf);
-
+void sml_octet_string_free(octet_string *str);
 int sml_octet_string_cmp(octet_string *s1, octet_string *s2);
 int sml_octet_string_cmp_with_hex(octet_string *str, char *hex);
 
-octet_string *sml_octet_string_generate_uuid();
+// sml signature
+typedef octet_string sml_signature;
+#define sml_signature_parse(buf) sml_octet_string_parse(buf)
+#define sml_signature_write(s, buf) sml_octet_string_write(s, buf)
+#define sml_signature_free(s) sml_octet_string_free(s)
 
 #ifdef __cplusplus
 }

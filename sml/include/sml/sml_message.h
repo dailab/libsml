@@ -37,7 +37,6 @@
 #include "sml_get_proc_parameter_request.h"
 #include "sml_get_proc_parameter_response.h"
 #include "sml_set_proc_parameter_request.h"
-#include "sml_set_proc_parameter_response.h"
 #include "sml_get_list_request.h"
 #include "sml_get_list_response.h"
 #include "sml_attention_response.h"
@@ -53,7 +52,7 @@
 #define SML_MESSAGE_GET_PROC_PARAMETER_REQUEST		0x00000500
 #define SML_MESSAGE_GET_PROC_PARAMETER_RESPONSE		0x00000501
 #define SML_MESSAGE_SET_PROC_PARAMETER_REQUEST		0x00000600
-#define SML_MESSAGE_SET_PROC_PARAMETER_RESPONSE		0x00000601 
+#define SML_MESSAGE_SET_PROC_PARAMETER_RESPONSE		0x00000601 // This doesn't exist in the spec
 #define SML_MESSAGE_GET_LIST_REQUEST				0x00000700
 #define SML_MESSAGE_GET_LIST_RESPONSE				0x00000701
 #define SML_MESSAGE_ATTENTION_RESPONSE				0x0000FF01

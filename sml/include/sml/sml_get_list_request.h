@@ -35,8 +35,6 @@ typedef struct {
 	octet_string *username;		// optional
 	octet_string *password;		// optional
 	octet_string *list_name; 	// optional
-
-
 } sml_get_list_request;
 
 sml_get_list_request* sml_get_list_request_init();

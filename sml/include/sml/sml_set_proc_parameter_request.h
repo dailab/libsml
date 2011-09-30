@@ -27,7 +27,6 @@
 extern "C" {
 #endif
 
-
 typedef struct {
     octet_string *server_id; // optional
     octet_string *username; // optional 

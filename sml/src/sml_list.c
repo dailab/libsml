@@ -25,23 +25,82 @@
 #include <sml/sml_value.h>
 #include <stdio.h>
 
-void sml_list_entry_free(sml_list *list) ;
-sml_list *sml_list_entry_parse(sml_buffer *buf);
-void sml_list_entry_write(sml_list *list, sml_buffer *buf);
+sml_sequence *sml_sequence_init(void (*elem_free) (void *elem)) {
+	sml_sequence *seq = (sml_sequence *) malloc(sizeof(sml_sequence));
+	memset(seq, 0, sizeof(sml_sequence));
+	seq->elem_free = elem_free;
+	return seq;
+}
+
+sml_sequence *sml_sequence_parse(sml_buffer *buf, 
+		void *(*elem_parse) (sml_buffer *buf), 
+		void (*elem_free) (void *elem)) {
+	
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+		buf->error = 1;
+		goto error;
+	}
+
+	sml_sequence *seq = sml_sequence_init(elem_free);	
+	int i, len = sml_buf_get_next_length(buf);
+	void *p;
+	for (i = 0; i < len; i++) {
+		p = elem_parse(buf);
+		if (sml_buf_has_errors(buf)) goto error;
+		sml_sequence_add(seq, p);
+	}
+	return seq;
+	
+error:
+	buf->error = 1;
+	sml_sequence_free(seq);
+	return 0;
+}
+void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (void *elem, sml_buffer *buf)) {
+	if (seq == 0) {
+		sml_buf_optional_write(buf);
+		return;
+	}
+	
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, seq->elems_len);
+	
+	int i;
+	for (i = 0; i < seq->elems_len; i++) {
+		elem_write((seq->elems)[i], buf);
+	}
+}
+
+void sml_sequence_free(sml_sequence *seq) {
+	if (seq) {
+		
+		int i; 
+		for (i = 0; i < seq->elems_len; i++) {
+			seq->elem_free((seq->elems)[i]);
+		}
+		if (seq->elems != 0) {
+			free(seq->elems);
+		}
+		free(seq);
+	}
+}
+
+void sml_sequence_add(sml_sequence *seq, void *new_entry) {
+	seq->elems_len++;
+	seq->elems = (void **) realloc(seq->elems, sizeof(void *) * seq->elems_len);
+	seq->elems[seq->elems_len - 1] = new_entry;
+}
+
 
 sml_list *sml_list_init(){
 	 sml_list *s = (sml_list *)malloc(sizeof(sml_list));
 	 memset(s, 0, sizeof(sml_list));
-
-	 return s;
+	return s;
 }
 
 void sml_list_add(sml_list *list, sml_list *new_entry) {
 	list->next = new_entry;
 }
 
-// This function doesn't free the allocated memory in error cases,
-// this is done in sml_list_parse.
 sml_list *sml_list_entry_parse(sml_buffer *buf) {
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
@@ -56,19 +115,19 @@ sml_list *sml_list_entry_parse(sml_buffer *buf) {
 
 	l->obj_name = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
+	
 	l->status = sml_status_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
+	
 	l->val_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
 	l->unit = sml_u8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
+	
 	l->scaler = sml_i8_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
-
+	
 	l->value = sml_value_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 	
@@ -77,10 +136,11 @@ sml_list *sml_list_entry_parse(sml_buffer *buf) {
 
 	return l;
 	
-	error:
-		printf("error\n");
-		buf->error = 1;
-		return 0;
+error:
+// This function doesn't free the allocated memory in error cases,
+// this is done in sml_list_parse.
+	buf->error = 1;
+	return 0;
 }
 
 sml_list *sml_list_parse(sml_buffer *buf) {
@@ -120,6 +180,7 @@ error:
 	sml_list_free(first);
 	return 0;
 }
+
 
 void sml_list_entry_write(sml_list *list, sml_buffer *buf) {
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 7);

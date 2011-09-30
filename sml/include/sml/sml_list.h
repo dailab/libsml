@@ -31,6 +31,18 @@
 extern "C" {
 #endif
 
+typedef struct {
+	void **elems;
+	int elems_len;
+
+	void (*elem_free) (void *elem);
+} sml_sequence;
+
+sml_sequence *sml_sequence_init(void (*elem_free) (void *elem));
+sml_sequence *sml_sequence_parse(sml_buffer *buf, void *(*elem_parse) (sml_buffer *buf), void (*elem_free) (void *elem));
+void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (void *elem, sml_buffer *buf));
+void sml_sequence_free(sml_sequence *seq);
+void sml_sequence_add(sml_sequence *list, void *new_entry);
 
 typedef struct sml_list_entry {
 	octet_string *obj_name;
@@ -46,12 +58,9 @@ typedef struct sml_list_entry {
 } sml_list;
 
 sml_list *sml_list_init();
-
+sml_list *sml_list_parse(sml_buffer *buf);
 void sml_list_write(sml_list *list, sml_buffer *buf);
 void sml_list_add(sml_list *list, sml_list *new_entry);
-
-sml_list *sml_list_parse(sml_buffer *buf);
-
 void sml_list_free(sml_list *list);
 
 #ifdef __cplusplus

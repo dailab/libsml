@@ -41,16 +41,22 @@ sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
 
 	msg->client_id = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->server_id = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->list_name = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->act_sensor_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->val_list = sml_list_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->list_signature = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
+	
 	msg->act_gateway_time = sml_time_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
