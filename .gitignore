@@ -1,3 +1,6 @@
+# Debian Packaging
+/.pc/
+
 # Binaries
 /test/test
 /examples/sml_server
@@ -8,6 +11,7 @@
 *.o
 
 # Compiled Dynamic libraries
+*.so.*
 *.so
 
 # Compiled Static libraries

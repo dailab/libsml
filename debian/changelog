@@ -1,3 +1,12 @@
+libsml (0.1.1-1~wip) unstable; urgency=low
+
+  * Added sml_value_to_double()
+  * Implemented sml_octet_string_generate_uuid() when not linking against libuuid
+  * Removed trailing whitespaces & unified codestyle
+  * implemented sml profile stuff
+
+ -- Steffen Vogel <info@steffenvogel.de>  Fri, 30 Sep 2011 19:16:59 +0200
+
 libsml (0.1-5~wip) unstable; urgency=low
 
   * Adapted sml_transport_ for vzlogger

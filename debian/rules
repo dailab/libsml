@@ -10,4 +10,27 @@
 #export DH_VERBOSE=1
 
 %:
-	dh $@ 
+	dh $@
+
+# Skip some commands
+override_dh_pysupport:
+override_dh_installwm:
+override_dh_installxfonts:
+override_dh_installgsettings:
+override_dh_installmenu:
+override_dh_icons:
+override_dh_gconf:
+override_dh_installcron:
+override_dh_installdebconf:
+override_dh_installemacsen:
+override_dh_installifupdown:
+override_dh_installinit:
+override_dh_installmime:
+override_dh_installmodules:
+override_dh_installlogcheck:
+override_dh_installlogrotate:
+override_dh_installpam:
+override_dh_installppp:
+override_dh_installudev:
+override_dh_perl:
+
