@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SML_OCTET_STRING_H
-#define	_SML_OCTET_STRING_H
+#ifndef _SML_OCTET_STRING_H_
+#define	_SML_OCTET_STRING_H_
 
 #include <string.h>
 #include "sml_shared.h"
@@ -25,7 +25,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 typedef struct {
 	unsigned char *str;
@@ -53,5 +52,5 @@ typedef octet_string sml_signature;
 #endif
 
 
-#endif
+#endif /* _SML_OCTET_STRING_H_ */
 

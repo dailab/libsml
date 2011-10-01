@@ -23,6 +23,7 @@
 sml_open_response *sml_open_response_init() {
 	sml_open_response *msg = (sml_open_response *) malloc(sizeof(sml_open_response));
 	memset(msg, 0, sizeof(sml_open_response));
+
 	return msg;
 }
 
@@ -75,13 +76,15 @@ void sml_open_response_write(sml_open_response *msg, sml_buffer *buf) {
 }
 
 void sml_open_response_free(sml_open_response *msg) {
-    if (msg) {
-        sml_octet_string_free(msg->codepage);
-        sml_octet_string_free(msg->client_id);
-        sml_octet_string_free(msg->req_file_id);
-        sml_octet_string_free(msg->server_id);
-        sml_time_free(msg->ref_time);
+	if (msg) {
+		sml_octet_string_free(msg->codepage);
+		sml_octet_string_free(msg->client_id);
+		sml_octet_string_free(msg->req_file_id);
+		sml_octet_string_free(msg->server_id);
+		sml_time_free(msg->ref_time);
 		sml_number_free(msg->sml_version);
-        free(msg);
-    }
+
+		free(msg);
+	}
 }
+

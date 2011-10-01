@@ -21,13 +21,13 @@
 #include <sml/sml_value.h>
 #include <stdio.h>
 
-
-// SML_TREE_PATH
+// sml_tree_path;
 
 sml_tree_path *sml_tree_path_init() {
-    sml_tree_path *tree_path = (sml_tree_path *) malloc(sizeof(sml_tree_path));
-    memset(tree_path, 0, sizeof(sml_tree_path));
-    return tree_path;
+	sml_tree_path *tree_path = (sml_tree_path *) malloc(sizeof(sml_tree_path));
+	memset(tree_path, 0, sizeof(sml_tree_path));
+
+	return tree_path;
 }
 
 sml_tree_path *sml_tree_path_parse(sml_buffer *buf) {
@@ -61,11 +61,11 @@ error:
 }
 
 void sml_tree_path_add_path_entry(sml_tree_path *tree_path, octet_string *entry) {
-    tree_path->path_entries_len++;
-    tree_path->path_entries = (octet_string **) realloc(tree_path->path_entries,
+	tree_path->path_entries_len++;
+	tree_path->path_entries = (octet_string **) realloc(tree_path->path_entries,
 		sizeof(octet_string *) * tree_path->path_entries_len);
-    tree_path->path_entries[tree_path->path_entries_len - 1] = entry;
 
+	tree_path->path_entries[tree_path->path_entries_len - 1] = entry;
 }
 
 void sml_tree_path_write(sml_tree_path *tree_path, sml_buffer *buf) {
@@ -74,38 +74,42 @@ void sml_tree_path_write(sml_tree_path *tree_path, sml_buffer *buf) {
 		return;
 	}
 
-    int i;
-    if (tree_path->path_entries && tree_path->path_entries_len > 0) {
-        sml_buf_set_type_and_length(buf, SML_TYPE_LIST, tree_path->path_entries_len);
-        for (i = 0; i < tree_path->path_entries_len; i++) {
-            sml_octet_string_write(tree_path->path_entries[i], buf);
-        }
-    }
+	if (tree_path->path_entries && tree_path->path_entries_len > 0) {
+		sml_buf_set_type_and_length(buf, SML_TYPE_LIST, tree_path->path_entries_len);
+		
+		int i;
+		for (i = 0; i < tree_path->path_entries_len; i++) {
+			sml_octet_string_write(tree_path->path_entries[i], buf);
+		}
+	}
 }
 
-void sml_tree_path_free(sml_tree_path *tree_path){
-	int i;
+void sml_tree_path_free(sml_tree_path *tree_path) {
 	if (tree_path) {
 		if (tree_path->path_entries && tree_path->path_entries_len > 0) {
+			int i;
 			for (i = 0; i < tree_path->path_entries_len; i++) {
 				sml_octet_string_free(tree_path->path_entries[i]);
 			}
+
 			free(tree_path->path_entries);
 		}
+
 		free(tree_path);
 	}
 }
 
 
-// SML_TREE
+// sml_tree;
 
 sml_tree *sml_tree_init() {
-    sml_tree *tree = (sml_tree *) malloc(sizeof(sml_tree));
-    memset(tree, 0, sizeof(sml_tree));
-    return tree;
+	sml_tree *tree = (sml_tree *) malloc(sizeof(sml_tree));
+	memset(tree, 0, sizeof(sml_tree));
+
+	return tree;
 }
 
-sml_tree *sml_tree_parse(sml_buffer *buf){
+sml_tree *sml_tree_parse(sml_buffer *buf) {
 	if (sml_buf_optional_is_skipped(buf)) {
 		return 0;
 	}
@@ -146,6 +150,7 @@ sml_tree *sml_tree_parse(sml_buffer *buf){
 	}
 
 	return tree;
+
 error:
 	sml_tree_free(tree);
 	return 0;
@@ -158,7 +163,7 @@ void sml_tree_add_tree(sml_tree *base_tree, sml_tree *tree) {
 	base_tree->child_list[base_tree->child_list_len - 1] = tree;
 }
 
-void sml_tree_free(sml_tree *tree){
+void sml_tree_free(sml_tree *tree) {
 	if (tree) {
 		sml_octet_string_free(tree->parameter_name);
 		sml_proc_par_value_free(tree->parameter_value);
@@ -177,7 +182,6 @@ void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
 		return;
 	}
 
-	int i;
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 3);
 
 	sml_octet_string_write(tree->parameter_name, buf);
@@ -186,6 +190,7 @@ void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
 	if (tree->child_list && tree->child_list_len > 0) {
 		sml_buf_set_type_and_length(buf, SML_TYPE_LIST, tree->child_list_len);
 
+		int i;
 		for (i = 0; i < tree->child_list_len; i++) {
 			sml_tree_write(tree->child_list[i], buf);
 		}
@@ -196,7 +201,7 @@ void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
 }
 
 
-// SML_PROC_PAR_VALUE
+// sml_proc_par_value;
 
 sml_proc_par_value *sml_proc_par_value_init() {
 	sml_proc_par_value *value = (sml_proc_par_value *) malloc(sizeof(sml_proc_par_value));
@@ -276,9 +281,8 @@ void sml_proc_par_value_write(sml_proc_par_value *value, sml_buffer *buf) {
 	}
 }
 
-void sml_proc_par_value_free(sml_proc_par_value *ppv){
+void sml_proc_par_value_free(sml_proc_par_value *ppv) {
 	if (ppv) {
-
 		if (ppv->tag) {
 			switch (*(ppv->tag)) {
 				case SML_PROC_PAR_VALUE_TAG_VALUE:
@@ -306,16 +310,18 @@ void sml_proc_par_value_free(sml_proc_par_value *ppv){
 				free(ppv->data.value);
 			}
 		}
+
 		free(ppv);
 	}
 }
 
 
-// SML_TUPEL_ENTRY
+// sml_tuple_entry;
 
 sml_tupel_entry *sml_tupel_entry_init() {
 	sml_tupel_entry *tupel = (sml_tupel_entry *) malloc(sizeof(sml_tupel_entry));
 	memset(tupel, 0, sizeof(sml_tupel_entry));
+
 	return tupel;
 }
 
@@ -437,7 +443,6 @@ void sml_tupel_entry_write(sml_tupel_entry *tupel, sml_buffer *buf) {
 	sml_i64_write(tupel->value_R3, buf);
 
 	sml_octet_string_write(tupel->signature_mA_R2_R3, buf);
-
 }
 
 void sml_tupel_entry_free(sml_tupel_entry *tupel) {
@@ -480,11 +485,12 @@ void sml_tupel_entry_free(sml_tupel_entry *tupel) {
 
 
 
-// SML_PERIOD_ENTRY
+// sml_period_entry;
 
 sml_period_entry *sml_period_entry_init() {
 	sml_period_entry *period = (sml_period_entry *) malloc(sizeof(sml_period_entry));
 	memset(period, 0, sizeof(sml_period_entry));
+
 	return period;
 }
 
@@ -553,6 +559,4 @@ void sml_period_entry_free(sml_period_entry *period) {
 		free(period);
 	}
 }
-
-
 

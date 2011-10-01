@@ -20,11 +20,12 @@
 #include <sml/sml_get_profile_pack_response.h>
 #include <stdio.h>
 
-// sml_get_profile_pack_response
+// sml_get_profile_pack_response;
 
 sml_get_profile_pack_response *sml_get_profile_pack_response_init() {
 	sml_get_profile_pack_response *msg = (sml_get_profile_pack_response *) malloc(sizeof(sml_get_profile_pack_response));
 	memset(msg, 0, sizeof(sml_get_profile_pack_response));
+	
 	return msg;
 }
 
@@ -102,7 +103,6 @@ void sml_get_profile_pack_response_free(sml_get_profile_pack_response *msg){
 }
 
 
-
 // sml_prof_obj_header_entry;
 
 sml_prof_obj_header_entry *sml_prof_obj_header_entry_init() {
@@ -157,9 +157,7 @@ void sml_prof_obj_header_entry_free(sml_prof_obj_header_entry *entry) {
 }
 
 
-
 // sml_prof_obj_period_entry;
-
 
 sml_prof_obj_period_entry *sml_prof_obj_period_entry_init() {
 	sml_prof_obj_period_entry *entry = (sml_prof_obj_period_entry *) malloc(sizeof(sml_prof_obj_period_entry));
@@ -218,12 +216,12 @@ void sml_prof_obj_period_entry_free(sml_prof_obj_period_entry *entry) {
 }
 
 
-
 // sml_value_entry;
 
 sml_value_entry *sml_value_entry_init() {
 	sml_value_entry *entry = (sml_value_entry *) malloc(sizeof(sml_value_entry));
 	memset(entry, 0, sizeof(sml_value_entry));
+
 	return entry;
 }
 
@@ -246,6 +244,7 @@ sml_value_entry *sml_value_entry_parse(sml_buffer *buf) {
 	if (sml_buf_has_errors(buf)) goto error;
 
 	return entry;
+
 error:
 	buf->error = 1;
 	sml_value_entry_free(entry);
@@ -266,5 +265,4 @@ void sml_value_entry_free(sml_value_entry *entry) {
 		free(entry);
 	}
 }
-
 

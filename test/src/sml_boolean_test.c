@@ -87,3 +87,4 @@ TEST_GROUP_RUNNER(sml_boolean) {
 	RUN_TEST_CASE(sml_boolean, write_false);
 	RUN_TEST_CASE(sml_boolean, write_optional);
 }
+

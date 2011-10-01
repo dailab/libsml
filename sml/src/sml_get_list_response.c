@@ -19,10 +19,10 @@
 
 #include <sml/sml_get_list_response.h>
 
-
 sml_get_list_response *sml_get_list_response_init() {
 	sml_get_list_response *msg = (sml_get_list_response *) malloc(sizeof(sml_get_list_response));
 	memset(msg, 0, sizeof(sml_get_list_response));
+	
 	return msg;
 }
 
@@ -65,7 +65,6 @@ sml_get_list_response *sml_get_list_response_parse(sml_buffer *buf) {
 error:
 	sml_get_list_response_free(msg);
 	return 0;
-
 }
 
 void sml_get_list_response_write(sml_get_list_response *msg, sml_buffer *buf) {
@@ -81,14 +80,16 @@ void sml_get_list_response_write(sml_get_list_response *msg, sml_buffer *buf) {
 }
 
 void sml_get_list_response_free(sml_get_list_response *msg) {
-    if (msg) {
-        sml_octet_string_free(msg->client_id);
-        sml_octet_string_free(msg->server_id);
-        sml_octet_string_free(msg->list_name);
-        sml_time_free(msg->act_sensor_time);
-        sml_list_free(msg->val_list);
-        sml_octet_string_free(msg->list_signature);
-        sml_time_free(msg->act_gateway_time);
-        free(msg);
-    }
+	if (msg) {
+		sml_octet_string_free(msg->client_id);
+		sml_octet_string_free(msg->server_id);
+		sml_octet_string_free(msg->list_name);
+		sml_time_free(msg->act_sensor_time);
+		sml_list_free(msg->val_list);
+		sml_octet_string_free(msg->list_signature);
+		sml_time_free(msg->act_gateway_time);
+
+		free(msg);
+	}
 }
+

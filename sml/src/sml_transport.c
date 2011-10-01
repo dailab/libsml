@@ -18,19 +18,17 @@
 
 
 #include <sml/sml_transport.h>
-
+#include <sml/sml_shared.h>
+#include <sml/sml_crc16.h>
 #include <stdio.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <string.h>
 #include <unistd.h>
-#include <sml/sml_shared.h>
-#include <sml/sml_crc16.h>
 
 #define MC_SML_BUFFER_LEN 8096
 
 size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
-
 	fd_set readfds;
 	FD_ZERO(&readfds);
 	FD_SET(fd, &readfds);
@@ -124,7 +122,6 @@ void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *
 }
 
 int sml_transport_write(int fd, sml_file *file) {
-
 	unsigned char start_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x01, 0x01, 0x01, 0x01};
 	unsigned char end_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x1a};
 	sml_buffer *buf = file->buf;
@@ -161,6 +158,7 @@ int sml_transport_write(int fd, sml_file *file) {
 	if (wr == buf->cursor) {
 		return wr;
 	}
+
 	return 0;
 }
 

@@ -22,6 +22,7 @@
 sml_status *sml_status_init() {
 	sml_status *status = (sml_status *) malloc(sizeof(sml_status));
 	memset(status, 0, sizeof(sml_status));
+
 	return status;
 }
 
@@ -58,14 +59,14 @@ sml_status *sml_status_parse(sml_buffer *buf) {
 	return status;
 }
 
-void sml_status_write(sml_status *status, sml_buffer *buf){
+void sml_status_write(sml_status *status, sml_buffer *buf) {
 	if (status == 0) {
 		sml_buf_optional_write(buf);
 		return;
 	}
 	sml_number_write(status->data.status8, (status->type & SML_TYPE_FIELD),
 				(status->type & SML_LENGTH_FIELD), buf);
-};
+}
 
 void sml_status_free(sml_status *status) {
 	if (status) {
@@ -73,3 +74,4 @@ void sml_status_free(sml_status *status) {
 		free(status);
 	}
 }
+

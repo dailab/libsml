@@ -22,6 +22,7 @@
 sml_get_proc_parameter_response *sml_get_proc_parameter_response_init() {
 	sml_get_proc_parameter_response *msg = (sml_get_proc_parameter_response *)malloc(sizeof(sml_get_proc_parameter_response));
 	memset(msg, 0, sizeof(sml_get_proc_parameter_response));
+
 	return msg;
 }
 
@@ -48,6 +49,7 @@ sml_get_proc_parameter_response *sml_get_proc_parameter_response_parse(sml_buffe
 	if (sml_buf_has_errors(buf)) goto error;
 
 	return msg;
+
 error:
 	sml_get_proc_parameter_response_free(msg);
 	return 0;
@@ -69,5 +71,4 @@ void sml_get_proc_parameter_response_free(sml_get_proc_parameter_response *msg) 
 		free(msg);
 	}
 }
-
 

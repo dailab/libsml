@@ -23,6 +23,7 @@
 sml_close_response *sml_close_response_init() {
 	sml_close_response *msg = (sml_close_response *) malloc(sizeof(sml_close_response));
 	memset(msg, 0, sizeof(sml_close_response));
+
 	return msg;
 }
 
@@ -50,13 +51,15 @@ error:
 }
 
 void sml_close_response_write(sml_close_response *msg, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 1);
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 1);
 	sml_octet_string_write(msg->global_signature,buf);
 }
 
 void sml_close_response_free(sml_close_response *msg) {
 	if (msg) {
 		sml_octet_string_free(msg->global_signature);
+
 		free(msg);
 	}
 }
+

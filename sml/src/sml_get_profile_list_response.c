@@ -104,3 +104,4 @@ void sml_get_profile_list_response_free(sml_get_profile_list_response *msg) {
 		free(msg);
 	}
 }
+

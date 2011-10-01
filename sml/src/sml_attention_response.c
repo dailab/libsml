@@ -23,6 +23,7 @@
 sml_attention_response *sml_attention_response_init() {
 	sml_attention_response *msg = (sml_attention_response *) malloc(sizeof(sml_attention_response));
 	memset(msg, 0, sizeof(sml_attention_response));
+
 	return msg;
 }
 
@@ -69,10 +70,12 @@ void sml_attention_response_write(sml_attention_response *msg, sml_buffer *buf) 
 
 void sml_attention_response_free(sml_attention_response *msg){
 	if (msg) {
-	   sml_octet_string_free(msg->server_id);
-	   sml_octet_string_free(msg->attention_number);
-	   sml_octet_string_free(msg->attention_message);
-	   sml_tree_free(msg->attention_details);
-	   free(msg);
-	 }
+		sml_octet_string_free(msg->server_id);
+		sml_octet_string_free(msg->attention_number);
+		sml_octet_string_free(msg->attention_message);
+		sml_tree_free(msg->attention_details);
+
+		free(msg);
+	}
 }
+

@@ -17,15 +17,15 @@
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 #include <sml/sml_get_proc_parameter_request.h>
 #include <sml/sml_tree.h>
 #include <stdio.h>
 
 sml_get_proc_parameter_request *sml_get_proc_parameter_request_init() {
-    sml_get_proc_parameter_request *msg = (sml_get_proc_parameter_request *) malloc(sizeof (sml_get_proc_parameter_request));
-    memset(msg, 0, sizeof(sml_get_proc_parameter_request));
-    return msg;
+	sml_get_proc_parameter_request *msg = (sml_get_proc_parameter_request *) malloc(sizeof (sml_get_proc_parameter_request));
+	memset(msg, 0, sizeof(sml_get_proc_parameter_request));
+
+	return msg;
 }
 
 sml_get_proc_parameter_request *sml_get_proc_parameter_request_parse(sml_buffer *buf) {
@@ -57,13 +57,14 @@ sml_get_proc_parameter_request *sml_get_proc_parameter_request_parse(sml_buffer 
 	if (sml_buf_has_errors(buf)) goto error;
 
 	return msg;
+
 error:
 	sml_get_proc_parameter_request_free(msg);
 	return 0;
 }
 
 void sml_get_proc_parameter_request_write(sml_get_proc_parameter_request *msg, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
 
 	sml_octet_string_write(msg->server_id, buf);
 	sml_octet_string_write(msg->username, buf);
@@ -73,12 +74,14 @@ void sml_get_proc_parameter_request_write(sml_get_proc_parameter_request *msg, s
 }
 
 void sml_get_proc_parameter_request_free(sml_get_proc_parameter_request *msg) {
-   if (msg){
-	   sml_octet_string_free(msg->server_id);
-	   sml_octet_string_free(msg->username);
-	   sml_octet_string_free(msg->password);
-	   sml_tree_path_free(msg->parameter_tree_path);
-	   sml_octet_string_free(msg->attribute);
-	   free(msg);
-   }
+	if (msg) {
+		sml_octet_string_free(msg->server_id);
+		sml_octet_string_free(msg->username);
+		sml_octet_string_free(msg->password);
+		sml_tree_path_free(msg->parameter_tree_path);
+		sml_octet_string_free(msg->attribute);
+
+		free(msg);
+	}
 }
+

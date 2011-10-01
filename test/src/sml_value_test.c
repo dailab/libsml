@@ -136,3 +136,4 @@ TEST_GROUP_RUNNER(sml_value) {
 	RUN_TEST_CASE(sml_value, write_integer16);
 	RUN_TEST_CASE(sml_value, write_optional);
 }
+

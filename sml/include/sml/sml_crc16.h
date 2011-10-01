@@ -16,15 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SML_CRC16_H_
-#define SML_CRC16_H_
+#ifndef _SML_CRC16_H_
+#define _SML_CRC16_H_
 
 #include "sml_shared.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 // CRC16 FSC implementation based on DIN 62056-46
 u16 sml_crc16_calculate(unsigned char *cp, int len) ;
@@ -34,7 +33,5 @@ u16 sml_crc16_calculate(unsigned char *cp, int len) ;
 #endif
 
 
-#endif /* SML_CRC16_H_ */
-
-
+#endif /* _SML_CRC16_H_ */
 

@@ -62,7 +62,6 @@ int serial_port_open(const char* device) {
 }
 
 void transport_receiver(unsigned char *buffer, size_t buffer_len) {
-
 	// the buffer contains the whole message, with transport escape sequences.
 	// these escape sequences are stripped here.
 	sml_file *file = sml_file_parse(buffer + 8, buffer_len - 16);
@@ -91,3 +90,4 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
+

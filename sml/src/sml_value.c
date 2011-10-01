@@ -18,7 +18,6 @@
 
 
 #include <sml/sml_value.h>
-
 #include <stdio.h>
 
 sml_value *sml_value_parse(sml_buffer *buf) {
@@ -86,6 +85,7 @@ void sml_value_write(sml_value *value, sml_buffer *buf) {
 sml_value *sml_value_init() {
 	sml_value *value = (sml_value *) malloc(sizeof(sml_value));
 	memset(value, 0, sizeof(value));
+
 	return value;
 }
 
@@ -122,3 +122,4 @@ double sml_value_to_double(sml_value *value) {
 			return 0;
 	}
 }
+

@@ -46,6 +46,3 @@ TEST_GROUP_RUNNER(sml_buffer) {
 	RUN_TEST_CASE(sml_buffer, init_defaults);
 }
 
-
-
-

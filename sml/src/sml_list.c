@@ -25,17 +25,17 @@
 #include <sml/sml_value.h>
 #include <stdio.h>
 
+// sml_sequence;
+
 sml_sequence *sml_sequence_init(void (*elem_free) (void *elem)) {
 	sml_sequence *seq = (sml_sequence *) malloc(sizeof(sml_sequence));
 	memset(seq, 0, sizeof(sml_sequence));
 	seq->elem_free = elem_free;
+
 	return seq;
 }
 
-sml_sequence *sml_sequence_parse(sml_buffer *buf,
-		void *(*elem_parse) (sml_buffer *buf),
-		void (*elem_free) (void *elem)) {
-
+sml_sequence *sml_sequence_parse(sml_buffer *buf, void *(*elem_parse) (sml_buffer *buf), void (*elem_free) (void *elem)) {
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
@@ -49,6 +49,7 @@ sml_sequence *sml_sequence_parse(sml_buffer *buf,
 		if (sml_buf_has_errors(buf)) goto error;
 		sml_sequence_add(seq, p);
 	}
+
 	return seq;
 
 error:
@@ -56,6 +57,7 @@ error:
 	sml_sequence_free(seq);
 	return 0;
 }
+
 void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (void *elem, sml_buffer *buf)) {
 	if (seq == 0) {
 		sml_buf_optional_write(buf);
@@ -72,14 +74,15 @@ void sml_sequence_write(sml_sequence *seq, sml_buffer *buf, void (*elem_write) (
 
 void sml_sequence_free(sml_sequence *seq) {
 	if (seq) {
-
 		int i;
 		for (i = 0; i < seq->elems_len; i++) {
 			seq->elem_free((seq->elems)[i]);
 		}
+		
 		if (seq->elems != 0) {
 			free(seq->elems);
 		}
+		
 		free(seq);
 	}
 }
@@ -90,6 +93,8 @@ void sml_sequence_add(sml_sequence *seq, void *new_entry) {
 	seq->elems[seq->elems_len - 1] = new_entry;
 }
 
+
+// sml_list;
 
 sml_list *sml_list_init(){
 	 sml_list *s = (sml_list *)malloc(sizeof(sml_list));
@@ -136,9 +141,9 @@ sml_list *sml_list_entry_parse(sml_buffer *buf) {
 
 	return l;
 
-error:
 // This function doesn't free the allocated memory in error cases,
 // this is done in sml_list_parse.
+error:
 	buf->error = 1;
 	return 0;
 }
@@ -213,33 +218,34 @@ void sml_list_write(sml_list *list, sml_buffer *buf){
 		sml_list_entry_write(i, buf);
 		i = i->next;
 	}
-
 }
 
 void sml_list_entry_free(sml_list *list) {
-    if (list) {
-        sml_octet_string_free(list->obj_name);
-        sml_status_free(list->status);
-        sml_time_free(list->val_time);
+	if (list) {
+		sml_octet_string_free(list->obj_name);
+		sml_status_free(list->status);
+		sml_time_free(list->val_time);
 		sml_number_free(list->unit);
 		sml_number_free(list->scaler);
-        sml_value_free(list->value);
-        sml_octet_string_free(list->value_signature);
-        free(list);
-    }
+		sml_value_free(list->value);
+		sml_octet_string_free(list->value_signature);
+		
+		free(list);
+	}
 }
 
 void sml_list_free(sml_list *list) {
-    if (list) {
-        sml_list *f = list;
-        sml_list *n = list->next;
+	if (list) {
+		sml_list *f = list;
+		sml_list *n = list->next;
 
-        while(f) {
-            sml_list_entry_free(f);
-            f = n;
-            if (f) {
-                n = f->next;
-            }
-        }
-    }
+		while(f) {
+			sml_list_entry_free(f);
+			f = n;
+			if (f) {
+				n = f->next;
+			}
+		}
+	}
 }
+

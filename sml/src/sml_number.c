@@ -99,6 +99,7 @@ void sml_number_byte_swap(unsigned char *bytes, int bytes_len) {
 	int i;
 	unsigned char ob[bytes_len];
 	memcpy(&ob, bytes, bytes_len);
+	
 	for (i = 0; i < bytes_len; i++) {
 		bytes[i] = ob[bytes_len - (i + 1)];
 	}

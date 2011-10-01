@@ -20,8 +20,5 @@
 
 // this file is just there for symmetry
 
-
 void sml_get_profile_list_request_noop() {}
-
-
 

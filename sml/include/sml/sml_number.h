@@ -17,15 +17,14 @@
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef _SML_NUMBER_H
-#define	_SML_NUMBER_H
+#ifndef _SML_NUMBER_H_
+#define	_SML_NUMBER_H_
 
 #include "sml_shared.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 void *sml_number_init(u64 number, unsigned char type, int size);
 
@@ -76,4 +75,5 @@ typedef u8 sml_unit;
 #endif
 
 
-#endif
+#endif /* _SML_NUMBER_H_ */
+

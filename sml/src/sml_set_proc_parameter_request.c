@@ -20,9 +20,10 @@
 #include <sml/sml_set_proc_parameter_request.h>
 
 sml_set_proc_parameter_request *sml_set_proc_parameter_request_init() {
-    sml_set_proc_parameter_request *msg = (sml_set_proc_parameter_request *) malloc(sizeof (sml_set_proc_parameter_request));
-    memset(msg, 0, sizeof(sml_set_proc_parameter_request));
-    return msg;
+	sml_set_proc_parameter_request *msg = (sml_set_proc_parameter_request *) malloc(sizeof (sml_set_proc_parameter_request));
+	memset(msg, 0, sizeof(sml_set_proc_parameter_request));
+
+	return msg;
 }
 
 sml_set_proc_parameter_request *sml_set_proc_parameter_request_parse(sml_buffer *buf) {
@@ -54,18 +55,19 @@ sml_set_proc_parameter_request *sml_set_proc_parameter_request_parse(sml_buffer 
 	if (sml_buf_has_errors(buf)) goto error;
 
 	return msg;
+
 error:
 	sml_set_proc_parameter_request_free(msg);
 	return 0;
 }
 
 void sml_set_proc_parameter_request_write(sml_set_proc_parameter_request *msg, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
-    sml_octet_string_write(msg->server_id, buf);
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
+	sml_octet_string_write(msg->server_id, buf);
 	sml_octet_string_write(msg->username, buf);
-    sml_octet_string_write(msg->password, buf);
-    sml_tree_path_write(msg->parameter_tree_path, buf);
-    sml_tree_write(msg->parameter_tree, buf);
+	sml_octet_string_write(msg->password, buf);
+	sml_tree_path_write(msg->parameter_tree_path, buf);
+	sml_tree_write(msg->parameter_tree, buf);
 }
 
 void sml_set_proc_parameter_request_free(sml_set_proc_parameter_request *msg) {
@@ -75,9 +77,8 @@ void sml_set_proc_parameter_request_free(sml_set_proc_parameter_request *msg) {
 		sml_octet_string_free(msg->password);
 		sml_tree_path_free(msg->parameter_tree_path);
 		sml_tree_free(msg->parameter_tree);
+
 		free(msg);
 	}
 }
-
-
 

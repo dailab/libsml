@@ -77,3 +77,4 @@ TEST_GROUP_RUNNER(sml_status) {
 	RUN_TEST_CASE(sml_status, write_status32);
 	RUN_TEST_CASE(sml_status, write_optional);
 }
+

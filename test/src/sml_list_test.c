@@ -138,7 +138,3 @@ TEST_GROUP_RUNNER(sml_sequence) {
 	RUN_TEST_CASE(sml_sequence, free_octet_string);
 }
 
-
-
-
-

@@ -18,19 +18,19 @@
 
 
 #include <sml/sml_close_request.h>
-
 #include <stdio.h>
 
 sml_close_request *sml_close_request_init() {
-    sml_close_request *close_request = (sml_close_request *) malloc(sizeof(sml_close_request));
-    memset(close_request, 0, sizeof(sml_close_request));
-    return close_request;
+	sml_close_request *close_request = (sml_close_request *) malloc(sizeof(sml_close_request));
+	memset(close_request, 0, sizeof(sml_close_request));
+
+	return close_request;
 }
 
 sml_close_request * sml_close_request_parse(sml_buffer *buf) {
 	sml_close_request *msg = sml_close_request_init();
 
-    if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
+	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;
 		goto error;
 	}
@@ -40,10 +40,10 @@ sml_close_request * sml_close_request_parse(sml_buffer *buf) {
 		goto error;
 	}
 
-    msg->global_signature = sml_octet_string_parse(buf);
+	msg->global_signature = sml_octet_string_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
-    return msg;
+	return msg;
 
 error:
 	sml_close_request_free(msg);
@@ -61,5 +61,4 @@ void sml_close_request_free(sml_close_request *msg) {
 		free(msg);
 	}
 }
-
 

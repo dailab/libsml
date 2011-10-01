@@ -17,8 +17,8 @@
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef _SML_TIME_H
-#define	_SML_TIME_H
+#ifndef _SML_TIME_H_
+#define	_SML_TIME_H_
 
 #include "sml_shared.h"
 #include "sml_number.h"
@@ -47,4 +47,6 @@ void sml_time_free(sml_time *time);
 }
 #endif
 
-#endif
+
+#endif /* _SML_TIME_H_ */
+

@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SML_SHARED_H
-#define	_SML_SHARED_H
+#ifndef _SML_SHARED_H_
+#define	_SML_SHARED_H_
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -55,7 +55,6 @@ typedef int64_t i64;
 #define SML_TYPE_NUMBER_16			sizeof(u16)
 #define SML_TYPE_NUMBER_32			sizeof(u32)
 #define SML_TYPE_NUMBER_64			sizeof(u64)
-
 
 // This sml_buffer is used in two different use-cases.
 //
@@ -114,4 +113,6 @@ void hexdump(unsigned char *buffer, size_t buffer_len);
 }
 #endif
 
-#endif
+
+#endif /* _SML_SHARED_H_ */
+

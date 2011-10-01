@@ -45,6 +45,3 @@ TEST_GROUP_RUNNER(sml_file) {
 	RUN_TEST_CASE(sml_file, init);
 }
 
-
-
-

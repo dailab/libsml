@@ -97,6 +97,3 @@ TEST_GROUP_RUNNER(sml_octet_string) {
 	RUN_TEST_CASE(sml_octet_string, cmp_with_hex);
 }
 
-
-
-

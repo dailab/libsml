@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SML_GET_PROC_PARAMETER_REQUEST_H
-#define _SML_GET_PROC_PARAMETER_REQUEST_H
+#ifndef _SML_GET_PROC_PARAMETER_REQUEST_H_
+#define _SML_GET_PROC_PARAMETER_REQUEST_H_
 
 #include "sml_shared.h"
 #include "sml_octet_string.h"
@@ -26,7 +26,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 typedef struct {
     octet_string *server_id; // optional
@@ -46,4 +45,5 @@ void sml_get_proc_parameter_request_free(sml_get_proc_parameter_request *msg);
 #endif
 
 
-#endif
+#endif /* _SML_GET_PROC_PARAMETER_REQUEST_H_ */
+

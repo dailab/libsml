@@ -17,13 +17,12 @@
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef _SML_ATTENTION_RESPONSE_H
-#define	_SML_ATTENTION_RESPONSE_H
+#ifndef _SML_ATTENTION_RESPONSE_H_
+#define	_SML_ATTENTION_RESPONSE_H_
 
 #include "sml_shared.h"
 #include "sml_octet_string.h"
 #include "sml_tree.h"
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,4 +46,5 @@ void sml_attention_response_free(sml_attention_response *msg);
 #endif
 
 
-#endif
+#endif /* _SML_ATTENTION_RESPONSE_H_ */
+

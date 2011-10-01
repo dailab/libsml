@@ -17,8 +17,8 @@
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef _SML_MESSAGE_H
-#define	_SML_MESSAGE_H
+#ifndef _SML_MESSAGE_H_
+#define	_SML_MESSAGE_H_
 
 #include <stdlib.h>
 #include "sml_octet_string.h"
@@ -41,10 +41,10 @@
 #include "sml_get_list_response.h"
 #include "sml_attention_response.h"
 
-#define SML_MESSAGE_OPEN_REQUEST					0x00000100
-#define SML_MESSAGE_OPEN_RESPONSE					0x00000101
-#define SML_MESSAGE_CLOSE_REQUEST					0x00000200
-#define SML_MESSAGE_CLOSE_RESPONSE					0x00000201
+#define SML_MESSAGE_OPEN_REQUEST			0x00000100
+#define SML_MESSAGE_OPEN_RESPONSE			0x00000101
+#define SML_MESSAGE_CLOSE_REQUEST			0x00000200
+#define SML_MESSAGE_CLOSE_RESPONSE			0x00000201
 #define SML_MESSAGE_GET_PROFILE_PACK_REQUEST		0x00000300
 #define SML_MESSAGE_GET_PROFILE_PACK_RESPONSE		0x00000301
 #define SML_MESSAGE_GET_PROFILE_LIST_REQUEST		0x00000400
@@ -53,14 +53,13 @@
 #define SML_MESSAGE_GET_PROC_PARAMETER_RESPONSE		0x00000501
 #define SML_MESSAGE_SET_PROC_PARAMETER_REQUEST		0x00000600
 #define SML_MESSAGE_SET_PROC_PARAMETER_RESPONSE		0x00000601 // This doesn't exist in the spec
-#define SML_MESSAGE_GET_LIST_REQUEST				0x00000700
-#define SML_MESSAGE_GET_LIST_RESPONSE				0x00000701
-#define SML_MESSAGE_ATTENTION_RESPONSE				0x0000FF01
+#define SML_MESSAGE_GET_LIST_REQUEST			0x00000700
+#define SML_MESSAGE_GET_LIST_RESPONSE			0x00000701
+#define SML_MESSAGE_ATTENTION_RESPONSE			0x0000FF01
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 typedef struct {
 	u16 *tag;
@@ -93,4 +92,5 @@ void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf);
 #endif
 
 
-#endif
+#endif /* _SML_MESSAGE_H_ */
+

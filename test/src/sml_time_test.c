@@ -85,3 +85,4 @@ TEST_GROUP_RUNNER(sml_time) {
 	RUN_TEST_CASE(sml_time, write_sec_index);
 	RUN_TEST_CASE(sml_time, write_optional);
 }
+

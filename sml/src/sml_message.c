@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-// SML MESSAGE
+// sml_message;
 
 sml_message *sml_message_parse(sml_buffer *buf) {
 	sml_message *msg = (sml_message *) malloc(sizeof(sml_message));
@@ -62,6 +62,7 @@ sml_message *sml_message_parse(sml_buffer *buf) {
 	if (sml_buf_get_current_byte(buf) == SML_MESSAGE_END) {
 		sml_buf_update_bytes_read(buf, 1);
 	}
+	
 	return msg;
 
 error:
@@ -70,40 +71,41 @@ error:
 }
 
 sml_message *sml_message_init() {
-    sml_message *msg = (sml_message *) malloc(sizeof(sml_message));
-    memset(msg, 0, sizeof(sml_message));
+	sml_message *msg = (sml_message *) malloc(sizeof(sml_message));
+	memset(msg, 0, sizeof(sml_message));
 	msg->transaction_id = sml_octet_string_generate_uuid();
-    return msg;
+	return msg;
 }
 
 void sml_message_free(sml_message *msg) {
-    if (msg) {
+	if (msg) {
 		sml_octet_string_free(msg->transaction_id);
 		sml_number_free(msg->group_id);
 		sml_number_free(msg->abort_on_error);
 		sml_message_body_free(msg->message_body);
 		sml_number_free(msg->crc);
-        free(msg);
-    }
+		free(msg);
+	}
 }
 
 void sml_message_write(sml_message *msg, sml_buffer *buf) {
-    int msg_start = buf->cursor;
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 6);
-    sml_octet_string_write(msg->transaction_id, buf);
+	int msg_start = buf->cursor;
+	
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 6);
+	sml_octet_string_write(msg->transaction_id, buf);
 	sml_u8_write(msg->group_id, buf);
 	sml_u8_write(msg->abort_on_error, buf);
-    sml_message_body_write(msg->message_body, buf);
+	sml_message_body_write(msg->message_body, buf);
 
 	msg->crc = sml_u16_init(sml_crc16_calculate(&(buf->buffer[msg_start]), buf->cursor - msg_start));
 	sml_u16_write(msg->crc, buf);
 
-    // end of message
-    buf->buffer[buf->cursor] = 0x0;
-    buf->cursor++;
+	// end of message
+	buf->buffer[buf->cursor] = 0x0;
+	buf->cursor++;
 }
 
-// SML MESSAGE BODY
+// sml_message_body;
 
 sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 	sml_message_body *msg_body = (sml_message_body *) malloc(sizeof(sml_message_body));
@@ -178,11 +180,11 @@ error:
 }
 
 sml_message_body *sml_message_body_init(u16 tag, void *data) {
-    sml_message_body *message_body = (sml_message_body *) malloc(sizeof(sml_message_body));
-    memset(message_body, 0, sizeof(sml_message_body));
-    message_body->tag = sml_u16_init(tag);
-    message_body->data = data;
-    return message_body;
+	sml_message_body *message_body = (sml_message_body *) malloc(sizeof(sml_message_body));
+	memset(message_body, 0, sizeof(sml_message_body));
+	message_body->tag = sml_u16_init(tag);
+	message_body->data = data;
+	return message_body;
 }
 
 void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
@@ -235,7 +237,7 @@ void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
 		default:
 			printf("error: message type %04X not yet implemented\n", *(message_body->tag));
 			break;
-    }
+	}
 }
 
 void sml_message_body_free(sml_message_body *message_body) {

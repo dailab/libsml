@@ -56,6 +56,3 @@ TEST_GROUP_RUNNER(sml_message) {
 	RUN_TEST_CASE(sml_message, parse);
 }
 
-
-
-

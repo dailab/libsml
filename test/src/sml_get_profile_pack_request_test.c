@@ -51,3 +51,4 @@ TEST_GROUP_RUNNER(sml_get_profile_pack_request) {
 	RUN_TEST_CASE(sml_get_profile_pack_request, init);
 	RUN_TEST_CASE(sml_get_profile_pack_request, parse);
 }
+

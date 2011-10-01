@@ -158,6 +158,3 @@ TEST_GROUP_RUNNER(sml_number) {
 	RUN_TEST_CASE(sml_number, write_integer8_optional);
 }
 
-
-
-

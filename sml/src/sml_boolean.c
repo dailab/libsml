@@ -23,6 +23,7 @@
 sml_boolean *sml_boolean_init(u8 b) {
 	sml_boolean *boolean = malloc(sizeof(u8));
 	*boolean = b;
+
 	return boolean;
 }
 
@@ -31,13 +32,12 @@ sml_boolean *sml_boolean_parse(sml_buffer *buf) {
 		return 0;
 	}
 
-	int l;
 	if (sml_buf_get_next_type(buf) != SML_TYPE_BOOLEAN) {
 		buf->error = 1;
 		return 0;
 	}
 
-	l = sml_buf_get_next_length(buf);
+	int l = sml_buf_get_next_length(buf);
 	if (l != 1) {
 		buf->error = 1;
 		return 0;
@@ -51,7 +51,6 @@ sml_boolean *sml_boolean_parse(sml_buffer *buf) {
 		sml_buf_update_bytes_read(buf, 1);
 		return sml_boolean_init(SML_BOOLEAN_FALSE);
 	}
-
 }
 
 void sml_boolean_write(sml_boolean *boolean, sml_buffer *buf) {
@@ -60,14 +59,14 @@ void sml_boolean_write(sml_boolean *boolean, sml_buffer *buf) {
 		return;
 	}
 
-    sml_buf_set_type_and_length(buf, SML_TYPE_BOOLEAN, 1);
-    if (*boolean == SML_BOOLEAN_FALSE) {
-        buf->buffer[buf->cursor] = SML_BOOLEAN_FALSE;
-    }
-    else {
-        buf->buffer[buf->cursor] = SML_BOOLEAN_TRUE;
-    }
-    buf->cursor++;
+	sml_buf_set_type_and_length(buf, SML_TYPE_BOOLEAN, 1);
+	if (*boolean == SML_BOOLEAN_FALSE) {
+		buf->buffer[buf->cursor] = SML_BOOLEAN_FALSE;
+	}
+	else {
+		buf->buffer[buf->cursor] = SML_BOOLEAN_TRUE;
+	}
+	buf->cursor++;
 }
 
 void sml_boolean_free(sml_boolean *b) {
@@ -75,6 +74,4 @@ void sml_boolean_free(sml_boolean *b) {
 		free(b);
 	}
 }
-
-
 

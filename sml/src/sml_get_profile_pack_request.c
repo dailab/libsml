@@ -24,13 +24,14 @@
 #include <stdio.h>
 
 sml_get_profile_pack_request *sml_get_profile_pack_request_init(){
-	  sml_get_profile_pack_request *msg = (sml_get_profile_pack_request *) malloc(sizeof(sml_get_profile_pack_request));
-	  memset(msg, 0, sizeof(sml_get_profile_pack_request));
-	  return msg;
+	sml_get_profile_pack_request *msg = (sml_get_profile_pack_request *) malloc(sizeof(sml_get_profile_pack_request));
+	memset(msg, 0, sizeof(sml_get_profile_pack_request));
+
+	return msg;
 }
 
 void sml_get_profile_pack_request_write(sml_get_profile_pack_request *msg, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 9);
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 9);
 
 	sml_octet_string_write(msg->server_id, buf);
 	sml_octet_string_write(msg->username, buf);
@@ -55,12 +56,10 @@ void sml_get_profile_pack_request_write(sml_get_profile_pack_request *msg, sml_b
 		sml_buf_optional_write(buf);
 	}
 
-    sml_tree_write(msg->das_details, buf);
+	sml_tree_write(msg->das_details, buf);
 }
 
-
 sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf) {
-
 	sml_get_profile_pack_request *msg = sml_get_profile_pack_request_init();
 
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
@@ -122,6 +121,7 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf
 	if (sml_buf_has_errors(buf)) goto error;
 
 	return msg;
+
 error:
 	sml_get_profile_pack_request_free(msg);
 	return 0;
@@ -146,9 +146,9 @@ void sml_get_profile_pack_request_free(sml_get_profile_pack_request *msg){
 				d = n;
 			} while (d);
 		}
+		
 		sml_tree_free(msg->das_details);
 		free(msg);
 	}
 }
-
 

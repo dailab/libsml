@@ -20,7 +20,7 @@
 #include <sml/sml_get_list_request.h>
 #include <stdio.h>
 
-sml_get_list_request* sml_get_list_request_init(){
+sml_get_list_request* sml_get_list_request_init() {
 	  sml_get_list_request *msg = (sml_get_list_request *) malloc(sizeof(sml_get_list_request));
 	  memset(msg, 0, sizeof(sml_get_list_request));
 
@@ -28,9 +28,9 @@ sml_get_list_request* sml_get_list_request_init(){
 }
 
 void sml_get_list_request_write(sml_get_list_request *msg, sml_buffer *buf) {
-    sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 5);
 
-    sml_octet_string_write(msg->client_id, buf);
+	sml_octet_string_write(msg->client_id, buf);
 	sml_octet_string_write(msg->server_id, buf);
 	sml_octet_string_write(msg->username, buf);
 	sml_octet_string_write(msg->password, buf);
@@ -39,7 +39,6 @@ void sml_get_list_request_write(sml_get_list_request *msg, sml_buffer *buf) {
 
 
 sml_get_list_request *sml_get_list_request_parse(sml_buffer *buf) {
-
 	sml_get_list_request *msg = (sml_get_list_request *) malloc(sizeof(sml_get_list_request));
 	memset(msg, 0, sizeof(sml_get_list_request));
 
@@ -73,17 +72,17 @@ sml_get_list_request *sml_get_list_request_parse(sml_buffer *buf) {
 error:
 	sml_get_list_request_free(msg);
 	return 0;
-
 }
 
 
 void sml_get_list_request_free(sml_get_list_request *msg) {
-    if (msg) {
-        sml_octet_string_free(msg->client_id);
-        sml_octet_string_free(msg->server_id);
-        sml_octet_string_free(msg->list_name);
-        sml_octet_string_free(msg->username);
-        sml_octet_string_free(msg->password);
-        free(msg);
-    }
+	if (msg) {
+		sml_octet_string_free(msg->client_id);
+		sml_octet_string_free(msg->server_id);
+		sml_octet_string_free(msg->list_name);
+		sml_octet_string_free(msg->username);
+		sml_octet_string_free(msg->password);
+		free(msg);
+	}
 }
+

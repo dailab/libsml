@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SML_STATUS_H
-#define	_SML_STATUS_H
+#ifndef _SML_STATUS_H_
+#define	_SML_STATUS_H_
 
 #include "sml_number.h"
 #include "sml_shared.h"
@@ -25,7 +25,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 typedef struct {
 	u8 type;
@@ -46,5 +45,6 @@ void sml_status_free(sml_status *status);
 }
 #endif
 
-#endif
+
+#endif /* _SML_STATUS_H_ */
 

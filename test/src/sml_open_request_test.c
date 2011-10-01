@@ -40,3 +40,4 @@ TEST(sml_open_request, init) {
 TEST_GROUP_RUNNER(sml_open_request) {
 	RUN_TEST_CASE(sml_open_request, init);
 }
+
