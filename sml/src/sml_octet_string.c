@@ -18,11 +18,12 @@
 
 
 #include <sml/sml_octet_string.h>
-
 #include <stdio.h>
 
 #ifndef _NO_UUID_LIB
 #include <uuid/uuid.h>
+#else
+#include <stdlib.h> // for rand()
 #endif
 
 uint8_t ctoi(uint8_t c);
@@ -30,30 +31,31 @@ uint8_t c2toi(uint8_t c1, uint8_t c2);
 uint8_t c2ptoi(char* c);
 
 octet_string *sml_octet_string_init(unsigned char *str, int length) {
-    octet_string *s = (octet_string *)malloc(sizeof(octet_string));
-    memset(s, 0, sizeof(octet_string));
-    if (length > 0) {
-        s->str = (unsigned char *)malloc(length);
-        memcpy(s->str, str, length);
-        s->len = length;
-    }
+	octet_string *s = (octet_string *)malloc(sizeof(octet_string));
+	memset(s, 0, sizeof(octet_string));
+	if (length > 0) {
+		s->str = (unsigned char *)malloc(length);
+		memcpy(s->str, str, length);
+		s->len = length;
+	}
+
 	return s;
 }
 
 octet_string *sml_octet_string_init_from_hex(char *str) {
-    int i, len = strlen(str);
-    if (len % 2 != 0) {
-        return 0;
-    }
-    unsigned char bytes[len / 2];
-    for (i = 0; i < (len / 2); i++) {
-        bytes[i] = c2ptoi(&(str[i * 2]));
-    }
-    return sml_octet_string_init(bytes, len / 2);
+	int i, len = strlen(str);
+	if (len % 2 != 0) {
+		return 0;
+	}
+	unsigned char bytes[len / 2];
+	for (i = 0; i < (len / 2); i++) {
+		bytes[i] = c2ptoi(&(str[i * 2]));
+	}
+	return sml_octet_string_init(bytes, len / 2);
 }
 
 void sml_octet_string_free(octet_string *str) {
-    if (str) {
+	if (str) {
 		if (str->str) {
 			free(str->str);
 		}
@@ -66,7 +68,7 @@ octet_string *sml_octet_string_parse(sml_buffer *buf) {
 		return 0;
 	}
 
-    int l;
+	int l;
 	if (sml_buf_get_next_type(buf) != SML_TYPE_OCTET_STRING) {
 		buf->error = 1;
 		return 0;
@@ -78,7 +80,7 @@ octet_string *sml_octet_string_parse(sml_buffer *buf) {
 		return 0;
 	}
 
-    octet_string *str = sml_octet_string_init(sml_buf_get_current_buf(buf), l);
+	octet_string *str = sml_octet_string_init(sml_buf_get_current_buf(buf), l);
 	sml_buf_update_bytes_read(buf, l);
 	return str;
 }
@@ -89,20 +91,34 @@ void sml_octet_string_write(octet_string *str, sml_buffer *buf) {
 		return;
 	}
 
-    sml_buf_set_type_and_length(buf, SML_TYPE_OCTET_STRING, (unsigned int) str->len);
-    memcpy(sml_buf_get_current_buf(buf), str->str, str->len);
-    buf->cursor += str->len;
+	sml_buf_set_type_and_length(buf, SML_TYPE_OCTET_STRING, (unsigned int) str->len);
+	memcpy(sml_buf_get_current_buf(buf), str->str, str->len);
+	buf->cursor += str->len;
 }
 
 octet_string *sml_octet_string_generate_uuid() {
 #ifndef _NO_UUID_LIB
-    uuid_t uuid;
-    uuid_generate(uuid);
-    return sml_octet_string_init(uuid, 16);
+	uuid_t uuid;
+	uuid_generate(uuid);
 #else
-    printf("TODO %s\n", __FUNCTION__);
-    return sml_octet_string_init((unsigned char*)"RANDOM", 6);
-#endif
+	char uuid[16];
+
+// TODO add support for WIN32 systems
+#ifdef __linux__
+	int fd = open("/dev/random", O_RDONLY);
+	read(fd, uuid, 16);
+#else
+	int i;
+	for(i = 0; i < 16; i++) {
+		uuid[i] = rand() % 0xFF;
+	}
+#endif /* __linux__ */
+	
+	uuid[6] = (out[6] & 0x0F) | 0x40; // set version
+	uuid[8] = (out[8] & 0x3F) | 0x80; // set reserved bits
+#endif /* _NO_UUID_LIB */
+
+	return sml_octet_string_init(uuid, 16);
 }
 
 int sml_octet_string_cmp(octet_string *s1, octet_string *s2)  {
@@ -112,27 +128,26 @@ int sml_octet_string_cmp(octet_string *s1, octet_string *s2)  {
 	return memcmp(s1->str, s2->str, s1->len);
 }
 
-
 int sml_octet_string_cmp_with_hex(octet_string *str, char *hex) {
-    octet_string *hstr = sml_octet_string_init_from_hex(hex);
-    if (str->len != hstr->len) {
-        sml_octet_string_free(hstr);
-        return -1;
-    }
-    int result = memcmp(str->str, hstr->str, str->len);
-    sml_octet_string_free(hstr);
-    return result;
+	octet_string *hstr = sml_octet_string_init_from_hex(hex);
+	if (str->len != hstr->len) {
+		sml_octet_string_free(hstr);
+		return -1;
+	}
+	int result = memcmp(str->str, hstr->str, str->len);
+	sml_octet_string_free(hstr);
+	return result;
 }
 
 uint8_t ctoi(uint8_t c){
 	uint8_t ret = 0;
 
-    if((c >= '0') && (c <= '9')) {
+	if((c >= '0') && (c <= '9')) {
 		ret = c - '0';
-    }
+	}
 	else if((c >= 'a') && (c <= 'f')) {
 		ret = c - 'a' + 10;
-    }
+	}
 	else if((c >= 'A') && (c <= 'F')) {
 		ret = c - 'A' + 10;
 	}
@@ -146,6 +161,4 @@ uint8_t c2toi(uint8_t c1, uint8_t c2) {
 uint8_t c2ptoi(char* c) {
 	return ctoi((uint8_t)c[0]) << 4 | ctoi((uint8_t)c[1]);
 }
-
-
 
