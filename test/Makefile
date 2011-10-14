@@ -1,7 +1,6 @@
 UNAME := $(shell uname)
 CFLAGS += -I../sml/include/ -Wall
 LIBSML = ../sml/lib/libsml.a
-LIBS = -luuid
 
 ifeq ($(UNAME), Linux)
 LIBS = -luuid
