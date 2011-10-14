@@ -242,8 +242,6 @@ void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
 
 void sml_message_body_free(sml_message_body *message_body) {
 	if (message_body) {
-		sml_number_free(message_body->tag);
-
 		switch (*(message_body->tag)) {
 			case SML_MESSAGE_OPEN_REQUEST:
 				sml_open_request_free((sml_open_request *) message_body->data);
@@ -291,7 +289,7 @@ void sml_message_body_free(sml_message_body *message_body) {
 				printf("NYI: %s for message type %04X\n", __FUNCTION__, *(message_body->tag));
 				break;
 		}
-
+		sml_number_free(message_body->tag);
 		free(message_body);
 	}
 }
