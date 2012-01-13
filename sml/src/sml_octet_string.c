@@ -19,6 +19,9 @@
 
 #include <sml/sml_octet_string.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #ifndef _NO_UUID_LIB
 #include <uuid/uuid.h>
@@ -113,11 +116,9 @@ octet_string *sml_octet_string_generate_uuid() {
 		uuid[i] = rand() % 0xFF;
 	}
 #endif /* __linux__ */
-	
-	uuid[6] = (out[6] & 0x0F) | 0x40; // set version
-	uuid[8] = (out[8] & 0x3F) | 0x80; // set reserved bits
+	uuid[6] = (uuid[6] & 0x0F) | 0x40; // set version
+	uuid[8] = (uuid[8] & 0x3F) | 0x80; // set reserved bits
 #endif /* _NO_UUID_LIB */
-
 	return sml_octet_string_init(uuid, 16);
 }
 
