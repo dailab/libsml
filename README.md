@@ -23,5 +23,8 @@ Copyright 2011 Juri Glass, Mathias Runge, Nadim El Sayed - DAI-Labor, TU-Berlin
 
 libSML is licensed with the GPL, other licenses are available.
 
+### Thanks
+Steffen Vogel, Thorben Thuermer
+
 #### Thirdparty Acknowledgements
 This product includes software developed for the Unity Project, by Mike Karlesky, Mark VanderVoord, and Greg Williams and other contributors
