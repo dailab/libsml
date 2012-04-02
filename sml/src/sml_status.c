@@ -35,7 +35,7 @@ sml_status *sml_status_parse(sml_buffer *buf) {
 	int type = sml_buf_get_next_type(buf);
 	unsigned char byte = sml_buf_get_current_byte(buf);
 
-	sml_status *status = (sml_status *) malloc(sizeof(sml_status));
+	sml_status *status = sml_status_init();
 	status->type = type;
 	switch (type) {
 		case SML_TYPE_UNSIGNED:

@@ -55,6 +55,14 @@ TEST(sml_status, parse_optional) {
 	TEST_ASSERT_EQUAL(1, buf->cursor);
 }
 
+TEST(sml_status, parse_not_unsigned) {
+	hex2binary("5001", sml_buf_get_current_buf(buf));
+	sml_status *s = sml_status_parse(buf);
+
+	TEST_ASSERT_NULL(s);
+	TEST_ASSERT_TRUE(sml_buf_has_errors(buf));
+}
+
 TEST(sml_status, write_status32) {
 	sml_status *s = sml_status_init();
 	s->type = SML_TYPE_UNSIGNED | SML_TYPE_NUMBER_32;
@@ -74,6 +82,7 @@ TEST_GROUP_RUNNER(sml_status) {
 	RUN_TEST_CASE(sml_status, init);
 	RUN_TEST_CASE(sml_status, parse_status8);
 	RUN_TEST_CASE(sml_status, parse_optional);
+	RUN_TEST_CASE(sml_status, parse_not_unsigned);
 	RUN_TEST_CASE(sml_status, write_status32);
 	RUN_TEST_CASE(sml_status, write_optional);
 }
