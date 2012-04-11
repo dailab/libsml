@@ -172,6 +172,7 @@ void sml_tree_free(sml_tree *tree) {
 			sml_tree_free(tree->child_list[i]);
 		}
 
+		free(tree->child_list);
 		free(tree);
 	}
 }
