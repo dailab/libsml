@@ -67,6 +67,15 @@ TEST(sml_octet_string, write) {
 	expected_buf(buf, "0648616C6C6F", 6);
 }
 
+TEST(sml_octet_string, write_multiple_tl_fields) {
+	octet_string *str = sml_octet_string_init((unsigned char *)"aaaaoaaaaaaaaaaa", 16);
+	sml_octet_string_write(str, buf);
+
+	printf("\n");
+	hexdump(buf->buffer, 18);
+	expected_buf(buf, "8102616161616F6161616161616161616161", 18);
+}
+
 TEST(sml_octet_string, write_optional) {
 	sml_octet_string_write(0, buf);
 	expected_buf(buf, "01", 1);
@@ -92,6 +101,7 @@ TEST_GROUP_RUNNER(sml_octet_string) {
 	RUN_TEST_CASE(sml_octet_string, parse_multiple_tl_fields);
 	RUN_TEST_CASE(sml_octet_string, parse_optional);
 	RUN_TEST_CASE(sml_octet_string, write);
+	RUN_TEST_CASE(sml_octet_string, write_multiple_tl_fields);
 	RUN_TEST_CASE(sml_octet_string, write_optional);
 	RUN_TEST_CASE(sml_octet_string, cmp);
 	RUN_TEST_CASE(sml_octet_string, cmp_with_hex);

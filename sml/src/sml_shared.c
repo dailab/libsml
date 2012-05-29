@@ -53,19 +53,30 @@ void sml_buf_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned in
 	}
 
 	if (l > SML_LENGTH_FIELD) {
+
 		// how much shifts are necessary
 		int mask_pos = (sizeof(unsigned int) * 2) - 1;
 
-		// the 4 most significant bits of l
+		// the 4 most significant bits of l (1111 0000 0000 ...)
 		unsigned int mask = 0xF0 << (8 * (sizeof(unsigned int) - 1));
 
-		// select the 4 most significant bits with a bit set
+		// select the next 4 most significant bits with a bit set until there 
+		// is something
 		while (!(mask & l)) {
 			mask >>= 4;
 			mask_pos--;
 		}
 
-		// copy the bits to the buffer
+		l += mask_pos; // for every TL-field
+
+		if ((0x0F << (4 * (mask_pos + 1))) & l) {
+			// for the rare case that the addition of the number of TL-fields
+			// result in another TL-field.
+			mask_pos++;
+			l++;
+		}
+
+		// copy 4 bits of the number to the buffer
 		while (mask > SML_LENGTH_FIELD) {
 			buf->buffer[buf->cursor] |= SML_ANOTHER_TL;
 			buf->buffer[buf->cursor] |= ((mask & l) >> (4 * mask_pos));
@@ -74,6 +85,7 @@ void sml_buf_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned in
 			buf->cursor++;
 		}
 	}
+
 	buf->buffer[buf->cursor] |= (l & SML_LENGTH_FIELD);
 	buf->cursor++;
 }
