@@ -121,7 +121,7 @@ sml_message_body *sml_message_body_parse(sml_buffer *buf) {
 		goto error;
 	}
 
-	msg_body->tag = sml_u16_parse(buf);
+	msg_body->tag = sml_u32_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
 	switch (*(msg_body->tag)) {
@@ -179,17 +179,17 @@ error:
 	return 0;
 }
 
-sml_message_body *sml_message_body_init(u16 tag, void *data) {
+sml_message_body *sml_message_body_init(u32 tag, void *data) {
 	sml_message_body *message_body = (sml_message_body *) malloc(sizeof(sml_message_body));
 	memset(message_body, 0, sizeof(sml_message_body));
-	message_body->tag = sml_u16_init(tag);
+	message_body->tag = sml_u32_init(tag);
 	message_body->data = data;
 	return message_body;
 }
 
 void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf) {
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 2);
-	sml_u16_write(message_body->tag, buf);
+	sml_u32_write(message_body->tag, buf);
 
 	switch (*(message_body->tag)) {
 		case SML_MESSAGE_OPEN_REQUEST:
