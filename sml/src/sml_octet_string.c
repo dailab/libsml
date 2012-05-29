@@ -108,7 +108,7 @@ octet_string *sml_octet_string_generate_uuid() {
 
 // TODO add support for WIN32 systems
 #ifdef __linux__
-	int fd = open("/dev/random", O_RDONLY);
+	int fd = open("/dev/urandom", O_RDONLY);
 	read(fd, uuid, 16);
 #else
 	int i;
