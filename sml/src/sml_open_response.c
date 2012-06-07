@@ -65,7 +65,7 @@ error:
 }
 
 void sml_open_response_write(sml_open_response *msg, sml_buffer *buf) {
-	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 7);
+	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 6);
 
 	sml_octet_string_write(msg->codepage, buf);
 	sml_octet_string_write(msg->client_id, buf);
