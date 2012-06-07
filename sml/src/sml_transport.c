@@ -76,9 +76,9 @@ size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
 				if (esc == 4) {
 					if (end) {
 						end++;
-						if (end == 5) {
+						if (end == 4) {
 							memcpy(buffer, &(buf[0]), i);
-							return i;
+							return i + 1;
 						}
 					}
 					else {
