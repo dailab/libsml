@@ -70,9 +70,6 @@ TEST(sml_octet_string, write) {
 TEST(sml_octet_string, write_multiple_tl_fields) {
 	octet_string *str = sml_octet_string_init((unsigned char *)"aaaaoaaaaaaaaaaa", 16);
 	sml_octet_string_write(str, buf);
-
-	printf("\n");
-	hexdump(buf->buffer, 18);
 	expected_buf(buf, "8102616161616F6161616161616161616161", 18);
 }
 
