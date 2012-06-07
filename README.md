@@ -5,7 +5,7 @@ libSML is a library which implements the Smart Message Language (SML) protocol s
 It can be utilized to communicate to FNN specified Smart Meters or Smart Meter components (EDL/MUC).
 
 ### Usage
-An expample how to use libSML is in the examples directory.
+An example how to use libSML is in the examples directory.
 
 #### Dependencies
 Ubuntu
