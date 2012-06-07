@@ -46,7 +46,7 @@ int sml_buf_get_next_length(sml_buffer *buf) {
 
 void sml_buf_set_type_and_length(sml_buffer *buf, unsigned int type, unsigned int l) {
 	// set the type
-	buf->buffer[buf->cursor] |= type;
+	buf->buffer[buf->cursor] = type;
 
 	if (type != SML_TYPE_LIST) {
 		l++;
