@@ -28,6 +28,86 @@
 
 #define MC_SML_BUFFER_LEN 8096
 
+unsigned char esc_seq[] = {0x1b, 0x1b, 0x1b, 0x1b};
+unsigned char start_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x01, 0x01, 0x01, 0x01};
+unsigned char end_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x1a};
+
+
+size_t sml_read(int fd, fd_set *set, unsigned char *buffer, size_t len) {
+	
+	size_t r, tr = 0;
+
+	while (tr < len) {
+		select(fd + 1, set, 0, 0, 0);
+		if (FD_ISSET(fd, set)) {
+			
+			r = read(fd, &(buffer[tr]), len - tr);
+			if (r < 0) continue;
+
+			tr += r;
+		}
+	}
+	return tr;
+}
+
+size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
+
+	fd_set readfds;
+	FD_ZERO(&readfds);
+	FD_SET(fd, &readfds);
+
+	unsigned char buf[max_len];
+	memset(buf, 0, max_len);
+	unsigned int len = 0;
+	
+	while (len < 8) {
+		sml_read(fd, &readfds, &(buf[len]), 1);
+
+		if ((buf[len] == 0x1b && len < 4) || (buf[len] == 0x01 && len >= 4)) {
+			len++;
+		}
+		else {
+			len = 0;
+		}
+	}
+
+	// found start sequence
+
+	while (len < max_len) {
+		
+		sml_read(fd, &readfds, &(buf[len]), 4);
+			
+		if (memcmp(&buf[len], esc_seq, 4) == 0) {
+			
+			// found esc sequence
+			len += 4;
+			sml_read(fd, &readfds, &(buf[len]), 4);
+			
+			if (buf[len] == 0x1a) {
+				
+				// found end sequence
+				len += 4;
+				memcpy(buffer, &(buf[0]), len);
+				return len;
+			}
+			else {
+				// dont read other escaped sequences yet
+				printf("error: unrecognized sequence");
+				return -1;
+			}
+		}
+		len += 4;
+
+	}
+
+	return -1;
+}
+
+
+
+/*
+
+
 size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
 	fd_set readfds;
 	FD_ZERO(&readfds);
@@ -108,6 +188,8 @@ size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
 	return -1;
 }
 
+*/
+
 void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len)) {
 	unsigned char buffer[MC_SML_BUFFER_LEN];
 	size_t bytes;
@@ -122,8 +204,6 @@ void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *
 }
 
 int sml_transport_write(int fd, sml_file *file) {
-	unsigned char start_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x01, 0x01, 0x01, 0x01};
-	unsigned char end_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x1a};
 	sml_buffer *buf = file->buf;
 	buf->cursor = 0;
 
