@@ -93,102 +93,15 @@ size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
 			else {
 				// dont read other escaped sequences yet
 				printf("error: unrecognized sequence");
-				return -1;
+				return 0;
 			}
 		}
 		len += 4;
 
 	}
 
-	return -1;
+	return 0;
 }
-
-
-
-/*
-
-
-size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
-	fd_set readfds;
-	FD_ZERO(&readfds);
-	FD_SET(fd, &readfds);
-
-	unsigned char byte;
-	unsigned char buf[max_len];
-	int esc = 0, start = 0, i = 0, end = 0, r;
-
-	while (i < max_len) {
-		select(fd + 1, &readfds, 0, 0, 0);
-		if (FD_ISSET(fd, &readfds)) {
-
-			if (!i) { // read until escaped start sequence;
-				r = read(fd, &byte, 1);
-				if (r <= 0) continue;
-
-				if (esc == 4) {
-					if (byte == 0x01) {
-						buf[esc + start++] = byte;
-						if (start == 4) {
-							i = esc + start;
-							esc = 0;
-							start = 0;
-						}
-					}
-					else {
-						// no start sequence
-						esc = 0;
-					}
-				}
-				else {
-					if (byte == 0x1b) {
-						buf[esc++] = byte;
-					}
-					else {
-						// no escape sequence
-						esc = 0;
-					}
-				}
-			}
-			else { // read the message
-				r = read(fd, (void *)(&(buf[i])), 1);
-				if (r <= 0) continue;
-
-				if (esc == 4) {
-					if (end) {
-						end++;
-						if (end == 4) {
-							memcpy(buffer, &(buf[0]), ++i);
-							return i;
-						}
-					}
-					else {
-						if (buf[i] == 0x1a) {
-							end++;
-						}
-						else {
-							// dont read other escaped sequences yet
-							printf("error: unrecognized sequence");
-							esc = 0;
-						}
-					}
-				}
-				else {
-					if (buf[i] == 0x1b) {
-						esc++;
-					}
-					else {
-						esc = 0;
-					}
-				}
-				i++;
-			}
-		}
-	}
-
-	return -1;
-}
-
-*/
 
 void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len)) {
 	unsigned char buffer[MC_SML_BUFFER_LEN];
