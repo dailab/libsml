@@ -28,84 +28,79 @@
 
 #define MC_SML_BUFFER_LEN 8096
 
+unsigned char esc_seq[] = {0x1b, 0x1b, 0x1b, 0x1b};
+unsigned char start_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x01, 0x01, 0x01, 0x01};
+unsigned char end_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x1a};
+
+
+size_t sml_read(int fd, fd_set *set, unsigned char *buffer, size_t len) {
+	
+	size_t r, tr = 0;
+
+	while (tr < len) {
+		select(fd + 1, set, 0, 0, 0);
+		if (FD_ISSET(fd, set)) {
+			
+			r = read(fd, &(buffer[tr]), len - tr);
+			if (r < 0) continue;
+
+			tr += r;
+		}
+	}
+	return tr;
+}
+
 size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
+
 	fd_set readfds;
 	FD_ZERO(&readfds);
 	FD_SET(fd, &readfds);
 
-	unsigned char byte;
 	unsigned char buf[max_len];
-	int esc = 0, start = 0, i = 0, end = 0, r;
+	memset(buf, 0, max_len);
+	unsigned int len = 0;
+	
+	while (len < 8) {
+		sml_read(fd, &readfds, &(buf[len]), 1);
 
-	while (i < max_len) {
-		select(fd + 1, &readfds, 0, 0, 0);
-		if (FD_ISSET(fd, &readfds)) {
-
-			if (!i) { // read until escaped start sequence;
-				r = read(fd, &byte, 1);
-				if (r <= 0) continue;
-
-				if (esc == 4) {
-					if (byte == 0x01) {
-						buf[esc + start++] = byte;
-						if (start == 4) {
-							i = esc + start;
-							esc = 0;
-							start = 0;
-						}
-					}
-					else {
-						// no start sequence
-						esc = 0;
-					}
-				}
-				else {
-					if (byte == 0x1b) {
-						buf[esc++] = byte;
-					}
-					else {
-						// no escape sequence
-						esc = 0;
-					}
-				}
-			}
-			else { // read the message
-				r = read(fd, (void *)(&(buf[i])), 1);
-				if (r <= 0) continue;
-
-				if (esc == 4) {
-					if (end) {
-						end++;
-						if (end == 4) {
-							memcpy(buffer, &(buf[0]), ++i);
-							return i;
-						}
-					}
-					else {
-						if (buf[i] == 0x1a) {
-							end++;
-						}
-						else {
-							// dont read other escaped sequences yet
-							printf("error: unrecognized sequence\n");
-							esc = 0;
-						}
-					}
-				}
-				else {
-					if (buf[i] == 0x1b) {
-						esc++;
-					}
-					else {
-						esc = 0;
-					}
-				}
-				i++;
-			}
+		if ((buf[len] == 0x1b && len < 4) || (buf[len] == 0x01 && len >= 4)) {
+			len++;
+		}
+		else {
+			len = 0;
 		}
 	}
 
-	return -1;
+	// found start sequence
+
+	while (len < max_len) {
+		
+		sml_read(fd, &readfds, &(buf[len]), 4);
+			
+		if (memcmp(&buf[len], esc_seq, 4) == 0) {
+			
+			// found esc sequence
+			len += 4;
+			sml_read(fd, &readfds, &(buf[len]), 4);
+			
+			if (buf[len] == 0x1a) {
+				
+				// found end sequence
+				len += 4;
+				memcpy(buffer, &(buf[0]), len);
+				return len;
+			}
+			else {
+				// dont read other escaped sequences yet
+				printf("error: unrecognized sequence");
+				return 0;
+			}
+		}
+		len += 4;
+
+	}
+
+	return 0;
 }
 
 void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *buffer, size_t buffer_len)) {
@@ -122,8 +117,6 @@ void sml_transport_listen(int fd, void (*sml_transport_receiver)(unsigned char *
 }
 
 int sml_transport_write(int fd, sml_file *file) {
-	unsigned char start_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x01, 0x01, 0x01, 0x01};
-	unsigned char end_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x1a};
 	sml_buffer *buf = file->buf;
 	buf->cursor = 0;
 
