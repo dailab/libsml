@@ -34,7 +34,7 @@ void *sml_number_init(u64 number, unsigned char type, int size) {
 	// Swap bytes of big-endian number so that
 	// memcpy copies the right part
 	if (sml_number_endian() == SML_BIG_ENDIAN) {
-		  sml_number_byte_swap(bytes, sizeof(u64));
+		  bytes += sizeof(u64) - size;
 	}
 
 	unsigned char *np = malloc(size);
