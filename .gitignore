@@ -24,3 +24,6 @@
 *.la
 *.a
 
+# Editor files
+*~
+*.swp
