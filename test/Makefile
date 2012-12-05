@@ -30,7 +30,7 @@ test_run: libsml test
 	@./test
 
 test : $(UNITY) $(OBJS) $(LIBSML)
-	$(CC) $(CFLAGS) $(LIBS) $^ test_main.c -o test
+	$(CC) $(CFLAGS) $(LIBS) $^ test_main.c -o test $(LIBS)
 
 .PHONY: code
 libsml : 

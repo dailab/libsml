@@ -8,7 +8,7 @@ LIBS = -luuid
 endif
 
 sml_server : $(OBJS) $(LIBSML)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(LIBSML) -o sml_server
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(LIBSML) -o sml_server $(LIBS)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $^ -o $@
