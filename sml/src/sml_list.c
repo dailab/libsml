@@ -37,7 +37,6 @@ sml_sequence *sml_sequence_init(void (*elem_free) (void *elem)) {
 
 sml_sequence *sml_sequence_parse(sml_buffer *buf, void *(*elem_parse) (sml_buffer *buf), void (*elem_free) (void *elem)) {
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
-		buf->error = 1;
 		goto error;
 	}
 
@@ -46,15 +45,18 @@ sml_sequence *sml_sequence_parse(sml_buffer *buf, void *(*elem_parse) (sml_buffe
 	void *p;
 	for (i = 0; i < len; i++) {
 		p = elem_parse(buf);
-		if (sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) {
+			goto haserrors;
+		}
 		sml_sequence_add(seq, p);
 	}
 
 	return seq;
 
+haserrors:
+	sml_sequence_free(seq);
 error:
 	buf->error = 1;
-	sml_sequence_free(seq);
 	return 0;
 }
 
