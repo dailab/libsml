@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SML_VALUE_H_
-#define	_SML_VALUE_H_
+#ifndef SML_VALUE_H_
+#define	SML_VALUE_H_
 
 #include "sml_shared.h"
 #include "sml_octet_string.h"
@@ -57,5 +57,5 @@ double sml_value_to_double(sml_value *value);
 #endif
 
 
-#endif /* _SML_VALUE_H_ */
+#endif /* SML_VALUE_H_ */
 

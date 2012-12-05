@@ -16,9 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-
-#ifndef _SML_NUMBER_H_
-#define	_SML_NUMBER_H_
+#ifndef SML_NUMBER_H_
+#define	SML_NUMBER_H_
 
 #include "sml_shared.h"
 
@@ -75,5 +74,5 @@ typedef u8 sml_unit;
 #endif
 
 
-#endif /* _SML_NUMBER_H_ */
+#endif /* SML_NUMBER_H_ */
 

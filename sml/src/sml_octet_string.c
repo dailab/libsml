@@ -23,7 +23,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#ifndef _NO_UUID_LIB
+#ifndef SML_NO_UUID_LIB
 #include <uuid/uuid.h>
 #else
 #include <stdlib.h> // for rand()
@@ -100,7 +100,7 @@ void sml_octet_string_write(octet_string *str, sml_buffer *buf) {
 }
 
 octet_string *sml_octet_string_generate_uuid() {
-#ifndef _NO_UUID_LIB
+#ifndef SML_NO_UUID_LIB
 	uuid_t uuid;
 	uuid_generate(uuid);
 #else
@@ -118,7 +118,7 @@ octet_string *sml_octet_string_generate_uuid() {
 #endif /* __linux__ */
 	uuid[6] = (uuid[6] & 0x0F) | 0x40; // set version
 	uuid[8] = (uuid[8] & 0x3F) | 0x80; // set reserved bits
-#endif /* _NO_UUID_LIB */
+#endif /* SML_NO_UUID_LIB */
 	return sml_octet_string_init(uuid, 16);
 }
 
