@@ -38,6 +38,7 @@ TEST(sml_file, init) {
 	TEST_ASSERT_EQUAL(0, file->messages_len);
 	TEST_ASSERT_NULL(file->messages);
 	TEST_ASSERT_NOT_NULL(file->buf);
+	sml_file_free( file );
 }
 
 

@@ -35,6 +35,7 @@ TEST_TEAR_DOWN(sml_get_profile_pack_request) {
 TEST(sml_get_profile_pack_request, init) {
 	sml_get_profile_pack_request *r = sml_get_profile_pack_request_init();
 	TEST_ASSERT_NOT_NULL(r);
+	sml_get_profile_pack_request_free( r );
 }
 
 TEST(sml_get_profile_pack_request, parse) {
@@ -45,6 +46,7 @@ TEST(sml_get_profile_pack_request, parse) {
 	TEST_ASSERT_NOT_NULL(r->object_list->next);
 	TEST_ASSERT_NOT_NULL(r->object_list->next->next);
 	TEST_ASSERT_NULL(r->object_list->next->next->next);
+	sml_get_profile_pack_request_free( r );
 }
 
 TEST_GROUP_RUNNER(sml_get_profile_pack_request) {

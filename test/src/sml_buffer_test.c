@@ -29,7 +29,7 @@ TEST_SETUP(sml_buffer) {
 }
 
 TEST_TEAR_DOWN(sml_buffer) {
-
+	sml_buffer_free( buf );
 }
 
 TEST(sml_buffer, init_defaults) {
