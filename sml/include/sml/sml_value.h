@@ -32,7 +32,7 @@ typedef struct {
 	u8 type;
 	union {
 		sml_boolean *boolean;
-		octet_string *bytes; // can has zero length
+		octet_string *bytes; // can have zero length
 		i8 *int8;
 		i16 *int16;
 		i32 *int32;
