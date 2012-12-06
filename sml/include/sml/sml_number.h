@@ -63,6 +63,15 @@ void sml_number_free(void *np);
 #define sml_i32_write(n, buf) sml_number_write(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_32, buf)
 #define sml_i64_write(n, buf) sml_number_write(n, SML_TYPE_INTEGER, SML_TYPE_NUMBER_64, buf)
 
+#define sml_u8_free( n ) sml_number_free( n )
+#define sml_u16_free( n ) sml_number_free( n )
+#define sml_u32_free( n ) sml_number_free( n )
+#define sml_u64_free( n ) sml_number_free( n )
+#define sml_i8_free( n ) sml_number_free( n )
+#define sml_i16_free( n ) sml_number_free( n )
+#define sml_i32_free( n ) sml_number_free( n )
+#define sml_i64_free( n ) sml_number_free( n )
+
 typedef u8 sml_unit;
 #define sml_unit_init(n) sml_u8_init(n)
 #define sml_unit_parse(buf) sml_u8_parse(buf)
