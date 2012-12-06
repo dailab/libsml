@@ -30,7 +30,11 @@
 
 sml_file *sml_file_parse(unsigned char *buffer, size_t buffer_len) {
 	sml_file *file = (sml_file*) malloc(sizeof(sml_file));
-	memset(file, 0, sizeof(sml_file));
+	*file = ( sml_file ) {
+		.messages = NULL,
+		.messages_len = 0,
+		.buf = NULL
+	};
 
 	sml_buffer *buf = sml_buffer_init(buffer_len);
 	memcpy(buf->buffer, buffer, buffer_len);
@@ -63,7 +67,11 @@ sml_file *sml_file_parse(unsigned char *buffer, size_t buffer_len) {
 
 sml_file *sml_file_init() {
 	sml_file *file = (sml_file*) malloc(sizeof(sml_file));
-	memset(file, 0, sizeof(sml_file));
+	*file = ( sml_file ) {
+		.messages = NULL,
+		.messages_len = 0,
+		.buf = NULL
+	};
 
 	sml_buffer *buf = sml_buffer_init(SML_FILE_BUFFER_LENGTH);
 	file->buf = buf;

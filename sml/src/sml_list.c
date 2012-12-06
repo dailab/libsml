@@ -29,8 +29,11 @@
 
 sml_sequence *sml_sequence_init(void (*elem_free) (void *elem)) {
 	sml_sequence *seq = (sml_sequence *) malloc(sizeof(sml_sequence));
-	memset(seq, 0, sizeof(sml_sequence));
-	seq->elem_free = elem_free;
+	*seq = ( sml_sequence ) {
+		.elems = NULL,
+		.elems_len = 0,
+		.elem_free = elem_free
+	};
 
 	return seq;
 }
@@ -99,8 +102,17 @@ void sml_sequence_add(sml_sequence *seq, void *new_entry) {
 // sml_list;
 
 sml_list *sml_list_init(){
-	 sml_list *s = (sml_list *)malloc(sizeof(sml_list));
-	 memset(s, 0, sizeof(sml_list));
+	sml_list *s = (sml_list *)malloc(sizeof(sml_list));
+	*s = ( sml_list ) {
+		.obj_name = NULL,
+		.status = NULL,
+		.val_time = NULL,
+		.unit = NULL,
+		.scaler = NULL,
+		.value = NULL,
+		.value_signature = NULL,
+		.next = NULL
+	};
 	return s;
 }
 

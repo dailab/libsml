@@ -25,7 +25,10 @@
 
 sml_tree_path *sml_tree_path_init() {
 	sml_tree_path *tree_path = (sml_tree_path *) malloc(sizeof(sml_tree_path));
-	memset(tree_path, 0, sizeof(sml_tree_path));
+	*tree_path = ( sml_tree_path ) {
+		.path_entries_len = 0,
+		.path_entries = NULL
+	};
 
 	return tree_path;
 }
@@ -104,7 +107,12 @@ void sml_tree_path_free(sml_tree_path *tree_path) {
 
 sml_tree *sml_tree_init() {
 	sml_tree *tree = (sml_tree *) malloc(sizeof(sml_tree));
-	memset(tree, 0, sizeof(sml_tree));
+	*tree = ( sml_tree ) {
+		.parameter_name = NULL,
+		.parameter_value = NULL,
+		.child_list = NULL,
+		.child_list_len = 0
+	};
 
 	return tree;
 }
@@ -206,7 +214,10 @@ void sml_tree_write(sml_tree *tree, sml_buffer *buf) {
 
 sml_proc_par_value *sml_proc_par_value_init() {
 	sml_proc_par_value *value = (sml_proc_par_value *) malloc(sizeof(sml_proc_par_value));
-	memset(value, 0, sizeof(sml_proc_par_value));
+	*value = ( sml_proc_par_value ) {
+		.tag = NULL,
+		.data.value = NULL
+	};
 	return value;
 }
 
@@ -321,7 +332,31 @@ void sml_proc_par_value_free(sml_proc_par_value *ppv) {
 
 sml_tupel_entry *sml_tupel_entry_init() {
 	sml_tupel_entry *tupel = (sml_tupel_entry *) malloc(sizeof(sml_tupel_entry));
-	memset(tupel, 0, sizeof(sml_tupel_entry));
+	*tupel = ( sml_tupel_entry ) {
+		.server_id = NULL,
+		.sec_index = NULL,
+		.status = NULL,
+		.unit_pA = NULL,
+		.scaler_pA = NULL,
+		.value_pA = NULL,
+		.unit_R1 = NULL,
+		.scaler_R1 = NULL,
+		.value_R1 = NULL,
+		.unit_R4 = NULL,
+		.scaler_R4 = NULL,
+		.value_R4 = NULL,
+		.signature_pA_R1_R4 = NULL,
+		.unit_mA = NULL,
+		.scaler_mA = NULL,
+		.value_mA = NULL,
+		.unit_R2 = NULL,
+		.scaler_R2 = NULL,
+		.value_R2 = NULL,
+		.unit_R3 = NULL,
+		.scaler_R3 = NULL,
+		.value_R3 = NULL,
+		.signature_mA_R2_R3 = NULL
+	};
 
 	return tupel;
 }
@@ -490,7 +525,13 @@ void sml_tupel_entry_free(sml_tupel_entry *tupel) {
 
 sml_period_entry *sml_period_entry_init() {
 	sml_period_entry *period = (sml_period_entry *) malloc(sizeof(sml_period_entry));
-	memset(period, 0, sizeof(sml_period_entry));
+	*period = ( sml_period_entry ) {
+		.obj_name = NULL,
+		.unit = NULL,
+		.scaler = NULL,
+		.value = NULL,
+		.value_signature = NULL
+	};
 
 	return period;
 }

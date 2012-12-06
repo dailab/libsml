@@ -112,7 +112,13 @@ void sml_buf_update_bytes_read(sml_buffer *buf, int bytes) {
 
 sml_buffer *sml_buffer_init(size_t length) {
 	sml_buffer *buf = (sml_buffer *) malloc(sizeof(sml_buffer));
-	memset(buf, 0, sizeof(sml_buffer));
+	*buf = ( sml_buffer ) {
+		.buffer = NULL,
+		.buffer_len = 0,
+		.cursor = 0,
+		.error = 0,
+		.error_msg = NULL
+	};
 	buf->buffer = (unsigned char *) malloc(length);
 	buf->buffer_len = length;
 	memset(buf->buffer, 0, buf->buffer_len);

@@ -35,7 +35,10 @@ uint8_t c2ptoi(char* c);
 
 octet_string *sml_octet_string_init(unsigned char *str, int length) {
 	octet_string *s = (octet_string *)malloc(sizeof(octet_string));
-	memset(s, 0, sizeof(octet_string));
+	*s = ( octet_string ) {
+		.str = NULL,
+		.len = 0
+	};
 	if (length > 0) {
 		s->str = (unsigned char *)malloc(length);
 		memcpy(s->str, str, length);

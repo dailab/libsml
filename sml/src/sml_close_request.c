@@ -22,7 +22,9 @@
 
 sml_close_request *sml_close_request_init() {
 	sml_close_request *close_request = (sml_close_request *) malloc(sizeof(sml_close_request));
-	memset(close_request, 0, sizeof(sml_close_request));
+	*close_request = ( sml_close_request ) {
+		.global_signature = NULL
+	};
 
 	return close_request;
 }

@@ -23,7 +23,17 @@
 
 sml_get_profile_list_response *sml_get_profile_list_response_init() {
 	sml_get_profile_list_response *msg = (sml_get_profile_list_response *) malloc(sizeof(sml_get_profile_list_response));
-	memset(msg, 0, sizeof(sml_get_profile_list_response));
+	*msg = ( sml_get_profile_list_response ) {
+		.server_id = NULL,
+		.act_time = NULL,
+		.reg_period = NULL,
+		.parameter_tree_path = NULL,
+		.val_time = NULL,
+		.status = NULL,
+		.period_list = NULL,
+		.rawdata = NULL,
+		.period_signature = NULL
+	};
 	return msg;
 }
 

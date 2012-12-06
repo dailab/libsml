@@ -24,7 +24,10 @@
 
 sml_time *sml_time_init() {
 	sml_time *t = (sml_time *) malloc(sizeof(sml_time));
-	memset(t, 0, sizeof(sml_time));
+	*t = ( sml_time ) {
+		.tag = NULL,
+		.data.sec_index = NULL
+	};
 	return t;
 }
 

@@ -24,7 +24,16 @@
 
 sml_get_profile_pack_response *sml_get_profile_pack_response_init() {
 	sml_get_profile_pack_response *msg = (sml_get_profile_pack_response *) malloc(sizeof(sml_get_profile_pack_response));
-	memset(msg, 0, sizeof(sml_get_profile_pack_response));
+	*msg = ( sml_get_profile_pack_response ) {
+		.server_id = NULL,
+		.act_time = NULL,
+		.reg_period = NULL,
+		.parameter_tree_path = NULL,
+		.header_list = NULL,
+		.period_list = NULL,
+		.rawdata = NULL,
+		.profile_signature = NULL
+	};
 	
 	return msg;
 }
@@ -107,7 +116,11 @@ void sml_get_profile_pack_response_free(sml_get_profile_pack_response *msg){
 
 sml_prof_obj_header_entry *sml_prof_obj_header_entry_init() {
 	sml_prof_obj_header_entry *entry = (sml_prof_obj_header_entry *) malloc(sizeof(sml_prof_obj_header_entry));
-	memset(entry, 0, sizeof(sml_prof_obj_header_entry));
+	*entry = ( sml_prof_obj_header_entry ) {
+		.obj_name = NULL,
+		.unit = NULL,
+		.scaler = NULL
+	};
 	return entry;
 }
 
@@ -161,7 +174,12 @@ void sml_prof_obj_header_entry_free(sml_prof_obj_header_entry *entry) {
 
 sml_prof_obj_period_entry *sml_prof_obj_period_entry_init() {
 	sml_prof_obj_period_entry *entry = (sml_prof_obj_period_entry *) malloc(sizeof(sml_prof_obj_period_entry));
-	memset(entry, 0, sizeof(sml_prof_obj_period_entry));
+	*entry = ( sml_prof_obj_period_entry ) {
+		.val_time = NULL,
+		.status = NULL,
+		.value_list = NULL,
+		.period_signature = NULL
+	};
 	return entry;
 }
 
@@ -220,7 +238,10 @@ void sml_prof_obj_period_entry_free(sml_prof_obj_period_entry *entry) {
 
 sml_value_entry *sml_value_entry_init() {
 	sml_value_entry *entry = (sml_value_entry *) malloc(sizeof(sml_value_entry));
-	memset(entry, 0, sizeof(sml_value_entry));
+	*entry = ( sml_value_entry ) {
+		.value = NULL,
+		.value_signature = NULL
+	};
 
 	return entry;
 }
