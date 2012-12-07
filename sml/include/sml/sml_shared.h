@@ -71,7 +71,7 @@ typedef int64_t i64;
 typedef struct {
 	unsigned char *buffer;
 	size_t buffer_len;
-	int cursor;
+	size_t cursor;
 	int error;
 	char *error_msg;
 } sml_buffer;
