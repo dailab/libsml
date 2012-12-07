@@ -159,6 +159,6 @@ void hexdump(unsigned char *buffer, size_t buffer_len) {
 			printf("\n");
 		}
 	}
-	printf("\n");
+	puts( "" );
 }
 
