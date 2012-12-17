@@ -536,7 +536,7 @@ sml_period_entry *sml_period_entry_init() {
 	return period;
 }
 
-sml_period_entry *sml_period_entry_parse(sml_buffer *buf) {
+static void * sml_period_entry_parse_(sml_buffer *buf) {
 	if (sml_buf_optional_is_skipped(buf)) {
 		return 0;
 	}
@@ -575,6 +575,10 @@ error:
 	return 0;
 }
 
+sml_period_entry * sml_period_entry_parse( sml_buffer * buf ) {
+	return sml_period_entry_parse_( buf );
+}
+
 void sml_period_entry_write(sml_period_entry *period, sml_buffer *buf) {
 	if (period == 0) {
 		sml_buf_optional_write(buf);
@@ -590,7 +594,9 @@ void sml_period_entry_write(sml_period_entry *period, sml_buffer *buf) {
 	sml_octet_string_write(period->value_signature, buf);
 }
 
-void sml_period_entry_free(sml_period_entry *period) {
+static void sml_period_entry_free_( void * p ) {
+	sml_period_entry * period = p;
+
 	if (period) {
 		sml_octet_string_free(period->obj_name);
 		sml_unit_free(period->unit);
@@ -602,3 +608,6 @@ void sml_period_entry_free(sml_period_entry *period) {
 	}
 }
 
+void sml_period_entry_free( sml_period_entry * period ) {
+	sml_period_entry_free_( period );
+}

@@ -37,6 +37,14 @@ sml_get_profile_list_response *sml_get_profile_list_response_init() {
 	return msg;
 }
 
+static void * sml_period_entry_parse_( sml_buffer * buf ) {
+	return sml_period_entry_parse( buf );
+}
+
+static void sml_period_entry_free_( void * p ) {
+	sml_period_entry_free( p );
+}
+
 sml_get_profile_list_response *sml_get_profile_list_response_parse(sml_buffer *buf) {
 	sml_get_profile_list_response *msg = sml_get_profile_list_response_init();
 
@@ -68,7 +76,7 @@ sml_get_profile_list_response *sml_get_profile_list_response_parse(sml_buffer *b
 	msg->status = sml_u64_parse(buf);
 	if (sml_buf_has_errors(buf)) goto error;
 
-	msg->period_list = sml_sequence_parse(buf, (void *) &sml_period_entry_parse, (void (*)(void *)) &sml_period_entry_free);
+	msg->period_list = sml_sequence_parse(buf, sml_period_entry_parse_, sml_period_entry_free_);
 	if (sml_buf_has_errors(buf)) goto error;
 
 	msg->rawdata = sml_octet_string_parse(buf);
@@ -85,6 +93,10 @@ error:
 	return 0;
 }
 
+static void sml_period_entry_write_( void * p, sml_buffer * buf ) {
+	sml_period_entry_write( p, buf );
+}
+
 void sml_get_profile_list_response_write(sml_get_profile_list_response *msg, sml_buffer *buf) {
 	sml_buf_set_type_and_length(buf, SML_TYPE_LIST, 9);
 
@@ -94,7 +106,7 @@ void sml_get_profile_list_response_write(sml_get_profile_list_response *msg, sml
 	sml_tree_path_write(msg->parameter_tree_path, buf);
 	sml_time_write(msg->val_time, buf);
 	sml_u64_write(msg->status, buf);
-	sml_sequence_write(msg->period_list, buf, (void (*)(void *, sml_buffer *)) &sml_period_entry_write);
+	sml_sequence_write(msg->period_list, buf, sml_period_entry_write_);
 	sml_octet_string_write(msg->rawdata, buf);
 	sml_signature_write(msg->period_signature, buf);
 }
