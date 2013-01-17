@@ -1,5 +1,5 @@
 UNAME := $(shell uname)
-CFLAGS += -I../sml/include/ -g -Wall
+CFLAGS += -I../sml/include/ -g -std=c99 -Wall -Wextra -pedantic
 OBJS = sml_server.o
 LIBSML = ../sml/lib/libsml.a
 
