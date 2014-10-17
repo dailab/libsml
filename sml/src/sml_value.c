@@ -30,6 +30,9 @@ sml_value *sml_value_parse(sml_buffer *buf) {
 	unsigned char byte = sml_buf_get_current_byte(buf);
 
 	sml_value *value = sml_value_init();
+	if (value == NULL) {
+		return 0;
+	}
 	value->type = type;
 
 	switch (type) {
