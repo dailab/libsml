@@ -35,6 +35,7 @@ TEST_TEAR_DOWN(sml_value) {
 TEST(sml_value, init) {
 	sml_value *v = sml_value_init();
 	TEST_ASSERT_NOT_NULL(v);
+	sml_value_free( v );
 }
 
 TEST(sml_value, parse_octet_string) {
@@ -44,6 +45,8 @@ TEST(sml_value, parse_octet_string) {
 	TEST_ASSERT_NOT_NULL(v);
 	TEST_ASSERT_EQUAL(SML_TYPE_OCTET_STRING, v->type);
 	expected_octet_string(v->data.bytes, "Hallo", 5);
+
+	sml_value_free( v );
 }
 
 TEST(sml_value, parse_boolean) {
@@ -53,6 +56,8 @@ TEST(sml_value, parse_boolean) {
 	TEST_ASSERT_NOT_NULL(v);
 	TEST_ASSERT_EQUAL(SML_TYPE_BOOLEAN, v->type);
 	TEST_ASSERT_FALSE(*(v->data.boolean));
+
+	sml_value_free( v );
 }
 
 TEST(sml_value, parse_unsigned32) {
@@ -64,6 +69,7 @@ TEST(sml_value, parse_unsigned32) {
 	TEST_ASSERT_EQUAL((SML_TYPE_UNSIGNED | SML_TYPE_NUMBER_32), v->type);
 	TEST_ASSERT_EQUAL(5, buf->cursor);
 
+	sml_value_free( v );
 }
 
 TEST(sml_value, parse_integer64_fewer_bytes) {
@@ -72,6 +78,8 @@ TEST(sml_value, parse_integer64_fewer_bytes) {
 
 	TEST_ASSERT_EQUAL(-241, *(v->data.int64));
 	TEST_ASSERT_EQUAL((SML_TYPE_INTEGER | SML_TYPE_NUMBER_64), v->type);
+
+	sml_value_free( v );
 }
 
 TEST(sml_value, parse_optional) {
@@ -80,6 +88,8 @@ TEST(sml_value, parse_optional) {
 
 	TEST_ASSERT_NULL(v);
 	TEST_ASSERT_EQUAL(1, buf->cursor);
+
+	sml_value_free( v );
 }
 
 TEST(sml_value, write_octet_string) {
@@ -89,6 +99,8 @@ TEST(sml_value, write_octet_string) {
 
 	sml_value_write(v, buf);
 	expected_buf(buf, "0648616C6C6F", 6);
+
+	sml_value_free( v );
 }
 
 TEST(sml_value, write_boolean) {
@@ -98,6 +110,8 @@ TEST(sml_value, write_boolean) {
 
 	sml_value_write(v, buf);
 	expected_buf(buf, "4200", 2);
+
+	sml_value_free( v );
 }
 
 TEST(sml_value, write_unsigned32) {
@@ -107,6 +121,8 @@ TEST(sml_value, write_unsigned32) {
 
 	sml_value_write(v, buf);
 	expected_buf(buf, "650000002A", 5);
+
+	sml_value_free( v );
 }
 
 TEST(sml_value, write_integer16) {
@@ -116,6 +132,8 @@ TEST(sml_value, write_integer16) {
 
 	sml_value_write(v, buf);
 	expected_buf(buf, "53FFFB", 3);
+
+	sml_value_free( v );
 }
 
 TEST(sml_value, write_optional) {

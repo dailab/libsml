@@ -84,7 +84,10 @@ void sml_value_write(sml_value *value, sml_buffer *buf) {
 
 sml_value *sml_value_init() {
 	sml_value *value = (sml_value *) malloc(sizeof(sml_value));
-	memset(value, 0, sizeof(value));
+	*value = ( sml_value ) {
+		.type = SML_TYPE_OCTET_STRING,
+		.data.bytes = NULL
+	};
 
 	return value;
 }

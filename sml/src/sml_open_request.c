@@ -23,7 +23,15 @@
 
 sml_open_request *sml_open_request_init(){
 	sml_open_request *open_request = (sml_open_request *) malloc(sizeof(sml_open_request));
-	memset(open_request, 0, sizeof(sml_open_request));
+	*open_request = ( sml_open_request ) {
+		.codepage = NULL,
+		.client_id = NULL,
+		.req_file_id = NULL,
+		.server_id = NULL,
+		.username = NULL,
+		.password = NULL,
+		.sml_version = NULL
+	};
 	return open_request;
 }
 

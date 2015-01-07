@@ -1,5 +1,5 @@
 UNAME := $(shell uname)
-CFLAGS += -I../sml/include/ -Wall
+CFLAGS += -I../sml/include/ -std=c99 -Wall -Wextra -pedantic
 LIBSML = ../sml/lib/libsml.a
 
 ifeq ($(UNAME), Linux)
@@ -30,7 +30,7 @@ test_run: libsml test
 	@./test
 
 test : $(UNITY) $(OBJS) $(LIBSML)
-	$(CC) $(CFLAGS) $(LIBS) $^ test_main.c -o test
+	$(CC) $(CFLAGS) $(LIBS) $^ test_main.c -o test $(LIBS)
 
 .PHONY: code
 libsml : 

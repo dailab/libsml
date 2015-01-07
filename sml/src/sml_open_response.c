@@ -22,7 +22,14 @@
 
 sml_open_response *sml_open_response_init() {
 	sml_open_response *msg = (sml_open_response *) malloc(sizeof(sml_open_response));
-	memset(msg, 0, sizeof(sml_open_response));
+	*msg = ( sml_open_response ) {
+		.codepage = NULL,
+		.client_id = NULL,
+		.req_file_id = NULL,
+		.server_id = NULL,
+		.ref_time = NULL,
+		.sml_version = NULL
+	};
 
 	return msg;
 }

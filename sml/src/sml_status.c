@@ -21,7 +21,10 @@
 
 sml_status *sml_status_init() {
 	sml_status *status = (sml_status *) malloc(sizeof(sml_status));
-	memset(status, 0, sizeof(sml_status));
+	*status = ( sml_status ) {
+		.type = SML_TYPE_UNSIGNED,
+		.data.status8 = NULL
+	};
 
 	return status;
 }

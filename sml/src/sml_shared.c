@@ -112,7 +112,13 @@ void sml_buf_update_bytes_read(sml_buffer *buf, int bytes) {
 
 sml_buffer *sml_buffer_init(size_t length) {
 	sml_buffer *buf = (sml_buffer *) malloc(sizeof(sml_buffer));
-	memset(buf, 0, sizeof(sml_buffer));
+	*buf = ( sml_buffer ) {
+		.buffer = NULL,
+		.buffer_len = 0,
+		.cursor = 0,
+		.error = 0,
+		.error_msg = NULL
+	};
 	buf->buffer = (unsigned char *) malloc(length);
 	buf->buffer_len = length;
 	memset(buf->buffer, 0, buf->buffer_len);
@@ -146,13 +152,12 @@ int sml_buf_optional_is_skipped(sml_buffer *buf) {
 }
 
 void hexdump(unsigned char *buffer, size_t buffer_len) {
-	int i;
-	for (i = 0; i < buffer_len; i++) {
+	for ( size_t i = 0; i < buffer_len; i++) {
 		printf("%02X ", (unsigned char) buffer[i]);
 		if ((i + 1) % 8 == 0) {
 			printf("\n");
 		}
 	}
-	printf("\n");
+	puts( "" );
 }
 

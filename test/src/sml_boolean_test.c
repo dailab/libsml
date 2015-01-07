@@ -36,6 +36,7 @@ TEST(sml_boolean, init) {
 	sml_boolean *b = sml_boolean_init(SML_BOOLEAN_TRUE);
 	TEST_ASSERT_NOT_NULL(b);
 	TEST_ASSERT_EQUAL(SML_BOOLEAN_TRUE, *b);
+	sml_boolean_free( b );
 }
 
 TEST(sml_boolean, parse_true) {
@@ -43,6 +44,7 @@ TEST(sml_boolean, parse_true) {
 	sml_boolean *b = sml_boolean_parse(buf);
 	TEST_ASSERT_NOT_NULL(b);
 	TEST_ASSERT_EQUAL(SML_BOOLEAN_TRUE, *b);
+	sml_boolean_free( b );
 }
 
 TEST(sml_boolean, parse_false) {
@@ -51,6 +53,7 @@ TEST(sml_boolean, parse_false) {
 	TEST_ASSERT_NOT_NULL(b);
 	TEST_ASSERT_EQUAL(SML_BOOLEAN_FALSE, *b);
 	TEST_ASSERT_EQUAL(2, buf->cursor);
+	sml_boolean_free( b );
 }
 
 TEST(sml_boolean, parse_optional) {
@@ -58,18 +61,21 @@ TEST(sml_boolean, parse_optional) {
 	sml_boolean *b = sml_boolean_parse(buf);
 	TEST_ASSERT_NULL(b);
 	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
+	sml_boolean_free( b );
 }
 
 TEST(sml_boolean, write_true) {
 	sml_boolean *b = sml_boolean_init(SML_BOOLEAN_TRUE);
 	sml_boolean_write(b, buf);
 	expected_buf(buf, "42FF", 2);
+	sml_boolean_free( b );
 }
 
 TEST(sml_boolean, write_false) {
 	sml_boolean *b = sml_boolean_init(SML_BOOLEAN_FALSE);
 	sml_boolean_write(b, buf);
 	expected_buf(buf, "4200", 2);
+	sml_boolean_free( b );
 }
 
 TEST(sml_boolean, write_optional) {
