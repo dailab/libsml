@@ -1,5 +1,10 @@
 # Debian Packaging
 /.pc/
+/debian/files
+/debian/libsml1/
+/debian/libsml-dev/
+/debian/*.debhelper*
+/debian/*.substvars
 
 # Binaries
 /test/test
@@ -19,3 +24,6 @@
 *.la
 *.a
 
+# Editor files
+*~
+*.swp

@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SML_SET_PROC_PARAMETER_REQUEST_H_
-#define _SML_SET_PROC_PARAMETER_REQUEST_H_
+#ifndef SML_SET_PROC_PARAMETER_REQUEST_H_
+#define SML_SET_PROC_PARAMETER_REQUEST_H_
 
 #include "sml_shared.h"
 #include "sml_octet_string.h"
@@ -45,5 +45,5 @@ void sml_set_proc_parameter_request_free(sml_set_proc_parameter_request *msg);
 #endif
 
 
-#endif /* _SML_SET_PROC_PARAMETER_REQUEST_H_ */
+#endif /* SML_SET_PROC_PARAMETER_REQUEST_H_ */
 

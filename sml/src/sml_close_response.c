@@ -22,7 +22,9 @@
 
 sml_close_response *sml_close_response_init() {
 	sml_close_response *msg = (sml_close_response *) malloc(sizeof(sml_close_response));
-	memset(msg, 0, sizeof(sml_close_response));
+	*msg = ( sml_close_response ) {
+		.global_signature = NULL
+	};
 
 	return msg;
 }

@@ -14,7 +14,7 @@
 #define UNITY_SKIP_EXECUTION  { if ((Unity.CurrentTestFailed != 0) || (Unity.CurrentTestIgnored != 0)) {return;} }
 #define UNITY_PRINT_EOL       { UNITY_OUTPUT_CHAR('\n'); }
 
-struct _Unity Unity = { 0 };
+struct _Unity Unity = { 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , { 0 } };
 
 const char* UnityStrNull     = "NULL";
 const char* UnityStrSpacer   = ". ";
@@ -22,11 +22,40 @@ const char* UnityStrExpected = " Expected ";
 const char* UnityStrWas      = " Was ";
 const char* UnityStrTo       = " To ";
 const char* UnityStrElement  = " Element ";
-const char* UnityStrMemory   = " Memory Mismatch";
+const char* UnityStrByte     = " Byte ";
+const char* UnityStrMemory   = " Memory Mismatch.";
 const char* UnityStrDelta    = " Values Not Within Delta ";
 const char* UnityStrPointless= " You Asked Me To Compare Nothing, Which Was Pointless.";
 const char* UnityStrNullPointerForExpected= " Expected pointer to be NULL";
 const char* UnityStrNullPointerForActual  = " Actual pointer was NULL";
+const char* UnityStrInf      = "Infinity";
+const char* UnityStrNegInf   = "Negative Infinity";
+const char* UnityStrNaN      = "NaN";
+
+// Dividing by these constants produces +/- infinity.
+// The rationale is given in UnityAssertFloatIsInf's body.
+static const _UF f_zero = 0.0f;
+#ifndef UNITY_EXCLUDE_DOUBLE
+static const _UD d_zero = 0.0;
+#endif
+
+// compiler-generic print formatting masks
+const _U_UINT UnitySizeMask[] = 
+{
+    255u,         // 0xFF
+    65535u,       // 0xFFFF
+    65535u,
+    4294967295u,  // 0xFFFFFFFF
+    4294967295u,
+    4294967295u,
+    4294967295u
+#ifdef UNITY_SUPPORT_64
+    ,0xFFFFFFFFFFFFFFFF
+#endif
+};
+
+void UnityPrintFail(void);
+void UnityPrintOk(void);
 
 //-----------------------------------------------
 // Pretty Printers & Test Result Output Handlers
@@ -77,7 +106,7 @@ void UnityPrintNumberByStyle(const _U_SINT number, const UNITY_DISPLAY_STYLE_T s
     }
     else if ((style & UNITY_DISPLAY_RANGE_UINT) == UNITY_DISPLAY_RANGE_UINT)
     {
-        UnityPrintNumberUnsigned((_U_UINT)number);
+        UnityPrintNumberUnsigned(  (_U_UINT)number  &  UnitySizeMask[((_U_UINT)style & (_U_UINT)0x0F) - 1]  );
     }
     else
     {
@@ -202,6 +231,18 @@ void UnityPrintFloat(_UF number)
     UnityPrint(TempBuffer);
 }
 #endif
+
+//-----------------------------------------------
+
+void UnityPrintFail(void)
+{
+    UnityPrint("FAIL");
+}
+
+void UnityPrintOk(void)
+{
+    UnityPrint("OK");
+}
 
 //-----------------------------------------------
 void UnityTestResultsBegin(const char* file, const UNITY_LINE_TYPE line)
@@ -500,12 +541,14 @@ void UnityAssertEqualFloatArray(const _UF* expected,
     while (elements--)
     {
         diff = *ptr_expected - *ptr_actual;
-        if (diff < 0.0)
-          diff = 0.0 - diff;
+        if (diff < 0.0f)
+          diff = 0.0f - diff;
         tol = UNITY_FLOAT_PRECISION * *ptr_expected;
-        if (tol < 0.0)
-            tol = 0.0 - tol;
-        if (diff > tol)
+        if (tol < 0.0f)
+            tol = 0.0f - tol;
+        
+        //This first part of this condition will catch any NaN or Infinite values
+        if ((diff * 0.0f != 0.0f) || (diff > tol))
         {
             UnityTestResultsFailBegin(lineNumber);
             UnityPrint(UnityStrElement);
@@ -538,16 +581,17 @@ void UnityAssertFloatsWithin(const _UF delta,
 
     UNITY_SKIP_EXECUTION;
   
-    if (diff < 0)
+    if (diff < 0.0f)
     {
         diff = 0.0f - diff;
     }
-    if (pos_delta < 0)
+    if (pos_delta < 0.0f)
     {
         pos_delta = 0.0f - pos_delta;
     }
 
-    if (pos_delta < diff)
+    //This first part of this condition will catch any NaN or Infinite values
+    if ((diff * 0.0f != 0.0f) || (pos_delta < diff))
     {
         UnityTestResultsFailBegin(lineNumber);
 #ifdef UNITY_FLOAT_VERBOSE
@@ -562,7 +606,251 @@ void UnityAssertFloatsWithin(const _UF delta,
         UNITY_FAIL_AND_BAIL;
     }
 }
+
+//-----------------------------------------------
+void UnityAssertFloatIsInf(const _UF actual,
+                           const char* msg,
+                           const UNITY_LINE_TYPE lineNumber)
+{
+    UNITY_SKIP_EXECUTION;
+
+    // In Microsoft Visual C++ Express Edition 2008,
+    //   if ((1.0f / f_zero) != actual)
+    // produces
+    //   error C2124: divide or mod by zero
+    // As a workaround, place 0 into a variable.
+    if ((1.0f / f_zero) != actual)
+    {
+        UnityTestResultsFailBegin(lineNumber);
+#ifdef UNITY_FLOAT_VERBOSE
+        UnityPrint(UnityStrExpected);
+        UnityPrint(UnityStrInf);
+        UnityPrint(UnityStrWas);
+        UnityPrintFloat(actual);
+#else
+        UnityPrint(UnityStrDelta);
 #endif
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
+//-----------------------------------------------
+void UnityAssertFloatIsNegInf(const _UF actual,
+                              const char* msg,
+                              const UNITY_LINE_TYPE lineNumber)
+{
+    UNITY_SKIP_EXECUTION;
+
+    // The rationale for not using 1.0f/0.0f is given in UnityAssertFloatIsInf's body.
+    if ((-1.0f / f_zero) != actual)
+    {
+        UnityTestResultsFailBegin(lineNumber);
+#ifdef UNITY_FLOAT_VERBOSE
+        UnityPrint(UnityStrExpected);
+        UnityPrint(UnityStrNegInf);
+        UnityPrint(UnityStrWas);
+        UnityPrintFloat(actual);
+#else
+        UnityPrint(UnityStrDelta);
+#endif
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
+//-----------------------------------------------
+void UnityAssertFloatIsNaN(const _UF actual,
+                           const char* msg,
+                           const UNITY_LINE_TYPE lineNumber)
+{
+    UNITY_SKIP_EXECUTION;
+
+    if (actual == actual)
+    {
+        UnityTestResultsFailBegin(lineNumber);
+#ifdef UNITY_FLOAT_VERBOSE
+        UnityPrint(UnityStrExpected);
+        UnityPrint(UnityStrNaN);
+        UnityPrint(UnityStrWas);
+        UnityPrintFloat(actual);
+#else
+        UnityPrint(UnityStrDelta);
+#endif
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
+#endif //not UNITY_EXCLUDE_FLOAT
+
+//-----------------------------------------------
+#ifndef UNITY_EXCLUDE_DOUBLE
+void UnityAssertEqualDoubleArray(const _UD* expected,
+                                 const _UD* actual,
+                                 const _UU32 num_elements,
+                                 const char* msg,
+                                 const UNITY_LINE_TYPE lineNumber)
+{
+    _UU32 elements = num_elements;
+    const _UD* ptr_expected = expected;
+    const _UD* ptr_actual = actual;
+    _UD diff, tol;
+
+    UNITY_SKIP_EXECUTION;
+  
+    if (elements == 0)
+    {
+        UnityTestResultsFailBegin(lineNumber);
+        UnityPrint(UnityStrPointless);
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+    
+    if (UnityCheckArraysForNull((void*)expected, (void*)actual, lineNumber, msg) == 1)
+        return;
+
+    while (elements--)
+    {
+        diff = *ptr_expected - *ptr_actual;
+        if (diff < 0.0)
+          diff = 0.0 - diff;
+        tol = UNITY_DOUBLE_PRECISION * *ptr_expected;
+        if (tol < 0.0)
+            tol = 0.0 - tol;
+        
+        //This first part of this condition will catch any NaN or Infinite values
+        if ((diff * 0.0 != 0.0) || (diff > tol))
+        {
+            UnityTestResultsFailBegin(lineNumber);
+            UnityPrint(UnityStrElement);
+            UnityPrintNumberByStyle((num_elements - elements - 1), UNITY_DISPLAY_STYLE_UINT);
+#ifdef UNITY_DOUBLE_VERBOSE
+            UnityPrint(UnityStrExpected);
+            UnityPrintFloat((float)(*ptr_expected));
+            UnityPrint(UnityStrWas);
+            UnityPrintFloat((float)(*ptr_actual));
+#else
+            UnityPrint(UnityStrDelta);
+#endif
+            UnityAddMsgIfSpecified(msg);
+            UNITY_FAIL_AND_BAIL;
+        }
+        ptr_expected++;
+        ptr_actual++;
+    }
+}
+
+//-----------------------------------------------
+void UnityAssertDoublesWithin(const _UD delta,
+                              const _UD expected,
+                              const _UD actual,
+                              const char* msg,
+                              const UNITY_LINE_TYPE lineNumber)
+{
+    _UD diff = actual - expected;
+    _UD pos_delta = delta;
+
+    UNITY_SKIP_EXECUTION;
+  
+    if (diff < 0.0)
+    {
+        diff = 0.0 - diff;
+    }
+    if (pos_delta < 0.0)
+    {
+        pos_delta = 0.0 - pos_delta;
+    }
+
+    //This first part of this condition will catch any NaN or Infinite values
+    if ((diff * 0.0 != 0.0) || (pos_delta < diff))
+    {
+        UnityTestResultsFailBegin(lineNumber);
+#ifdef UNITY_DOUBLE_VERBOSE
+        UnityPrint(UnityStrExpected);
+        UnityPrintFloat((float)expected);
+        UnityPrint(UnityStrWas);
+        UnityPrintFloat((float)actual);
+#else
+        UnityPrint(UnityStrDelta);
+#endif
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
+//-----------------------------------------------
+void UnityAssertDoubleIsInf(const _UD actual,
+                            const char* msg,
+                            const UNITY_LINE_TYPE lineNumber)
+{
+    UNITY_SKIP_EXECUTION;
+
+    // The rationale for not using 1.0/0.0 is given in UnityAssertFloatIsInf's body.
+    if ((1.0 / d_zero) != actual)
+    {
+        UnityTestResultsFailBegin(lineNumber);
+#ifdef UNITY_DOUBLE_VERBOSE
+        UnityPrint(UnityStrExpected);
+        UnityPrint(UnityStrInf);
+        UnityPrint(UnityStrWas);
+        UnityPrintFloat((float)actual);
+#else
+        UnityPrint(UnityStrDelta);
+#endif
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
+//-----------------------------------------------
+void UnityAssertDoubleIsNegInf(const _UD actual,
+                               const char* msg,
+                               const UNITY_LINE_TYPE lineNumber)
+{
+    UNITY_SKIP_EXECUTION;
+
+    // The rationale for not using 1.0/0.0 is given in UnityAssertFloatIsInf's body.
+    if ((-1.0 / d_zero) != actual)
+    {
+        UnityTestResultsFailBegin(lineNumber);
+#ifdef UNITY_DOUBLE_VERBOSE
+        UnityPrint(UnityStrExpected);
+        UnityPrint(UnityStrNegInf);
+        UnityPrint(UnityStrWas);
+        UnityPrintFloat((float)actual);
+#else
+        UnityPrint(UnityStrDelta);
+#endif
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
+//-----------------------------------------------
+void UnityAssertDoubleIsNaN(const _UD actual,
+                            const char* msg,
+                            const UNITY_LINE_TYPE lineNumber)
+{
+    UNITY_SKIP_EXECUTION;
+
+    if (actual == actual)
+    {
+        UnityTestResultsFailBegin(lineNumber);
+#ifdef UNITY_DOUBLE_VERBOSE
+        UnityPrint(UnityStrExpected);
+        UnityPrint(UnityStrNaN);
+        UnityPrint(UnityStrWas);
+        UnityPrintFloat((float)actual);
+#else
+        UnityPrint(UnityStrDelta);
+#endif
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
+#endif // not UNITY_EXCLUDE_DOUBLE
 
 //-----------------------------------------------
 void UnityAssertNumbersWithin( const _U_SINT delta,
@@ -705,14 +993,15 @@ void UnityAssertEqualStringArray( const char** expected,
 //-----------------------------------------------
 void UnityAssertEqualMemory( const void* expected,
                              const void* actual,
-                             _UU32 length,
-                             _UU32 num_elements,
+                             const _UU32 length,
+                             const _UU32 num_elements,
                              const char* msg,
                              const UNITY_LINE_TYPE lineNumber)
 {
-    unsigned char* expected_ptr = (unsigned char*)expected;
-    unsigned char* actual_ptr = (unsigned char*)actual;
+    unsigned char* ptr_exp = (unsigned char*)expected;
+    unsigned char* ptr_act = (unsigned char*)actual;
     _UU32 elements = num_elements;
+    _UU32 bytes;
 
     UNITY_SKIP_EXECUTION;
   
@@ -729,26 +1018,33 @@ void UnityAssertEqualMemory( const void* expected,
         
     while (elements--)
     {
-        if (memcmp((const void*)expected_ptr, (const void*)actual_ptr, length) != 0)
+        /////////////////////////////////////
+        bytes = length;
+        while (bytes--)
         {
-            Unity.CurrentTestFailed = 1;
-            break;
+            if (*ptr_exp != *ptr_act)
+            {
+                UnityTestResultsFailBegin(lineNumber);
+                UnityPrint(UnityStrMemory);
+                if (num_elements > 1)
+                {
+                    UnityPrint(UnityStrElement);
+                    UnityPrintNumberByStyle((num_elements - elements - 1), UNITY_DISPLAY_STYLE_UINT);
+                }
+                UnityPrint(UnityStrByte);
+                UnityPrintNumberByStyle((length - bytes - 1), UNITY_DISPLAY_STYLE_UINT);
+                UnityPrint(UnityStrExpected);
+                UnityPrintNumberByStyle(*ptr_exp, UNITY_DISPLAY_STYLE_HEX8);
+                UnityPrint(UnityStrWas);
+                UnityPrintNumberByStyle(*ptr_act, UNITY_DISPLAY_STYLE_HEX8);
+                UnityAddMsgIfSpecified(msg);
+                UNITY_FAIL_AND_BAIL;
+            }
+            ptr_exp += 1;
+            ptr_act += 1;
         }
-        expected_ptr += length;
-        actual_ptr += length;
-    }
-
-    if (Unity.CurrentTestFailed)
-    {
-        UnityTestResultsFailBegin(lineNumber);
-        if (num_elements > 1)
-        {
-            UnityPrint(UnityStrElement);
-            UnityPrintNumberByStyle((num_elements - elements - 1), UNITY_DISPLAY_STYLE_UINT);
-        }
-        UnityPrint(UnityStrMemory);
-        UnityAddMsgIfSpecified(msg);
-        UNITY_FAIL_AND_BAIL;
+        /////////////////////////////////////
+        
     }
 }
 
@@ -761,7 +1057,7 @@ void UnityFail(const char* msg, const UNITY_LINE_TYPE line)
     UNITY_SKIP_EXECUTION;
 
     UnityTestResultsBegin(Unity.TestFile, line);
-    UnityPrint("FAIL");
+    UnityPrintFail();
     if (msg != NULL)
     {
       UNITY_OUTPUT_CHAR(':');
@@ -814,6 +1110,10 @@ void UnityDefaultTestRun(UnityTestFunction Func, const char* FuncName, const int
 void UnityBegin(void)
 {
     Unity.NumberOfTests = 0;
+    Unity.TestFailures = 0;
+    Unity.TestIgnores = 0;
+    Unity.CurrentTestFailed = 0;
+    Unity.CurrentTestIgnored = 0;
 }
 
 //-----------------------------------------------
@@ -830,11 +1130,11 @@ int UnityEnd(void)
     UNITY_PRINT_EOL;
     if (Unity.TestFailures == 0U)
     {
-        UnityPrint("OK");
+        UnityPrintOk();
     }
     else
     {
-        UnityPrint("FAIL");
+        UnityPrintFail();
     }
     UNITY_PRINT_EOL;
     return Unity.TestFailures;

@@ -21,7 +21,11 @@
 
 sml_get_proc_parameter_response *sml_get_proc_parameter_response_init() {
 	sml_get_proc_parameter_response *msg = (sml_get_proc_parameter_response *)malloc(sizeof(sml_get_proc_parameter_response));
-	memset(msg, 0, sizeof(sml_get_proc_parameter_response));
+	*msg = ( sml_get_proc_parameter_response ) {
+		.server_id = NULL,
+		.parameter_tree_path = NULL,
+		.parameter_tree = NULL
+	};
 
 	return msg;
 }

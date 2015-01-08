@@ -30,7 +30,11 @@
 
 sml_file *sml_file_parse(unsigned char *buffer, size_t buffer_len) {
 	sml_file *file = (sml_file*) malloc(sizeof(sml_file));
-	memset(file, 0, sizeof(sml_file));
+	*file = ( sml_file ) {
+		.messages = NULL,
+		.messages_len = 0,
+		.buf = NULL
+	};
 
 	sml_buffer *buf = sml_buffer_init(buffer_len);
 	memcpy(buf->buffer, buffer, buffer_len);
@@ -63,7 +67,11 @@ sml_file *sml_file_parse(unsigned char *buffer, size_t buffer_len) {
 
 sml_file *sml_file_init() {
 	sml_file *file = (sml_file*) malloc(sizeof(sml_file));
-	memset(file, 0, sizeof(sml_file));
+	*file = ( sml_file ) {
+		.messages = NULL,
+		.messages_len = 0,
+		.buf = NULL
+	};
 
 	sml_buffer *buf = sml_buffer_init(SML_FILE_BUFFER_LENGTH);
 	file->buf = buf;
@@ -108,7 +116,7 @@ void sml_file_free(sml_file *file) {
 void sml_file_print(sml_file *file) {
 	int i;
 	
-	printf("SML file (%d SML messages, %d bytes)\n", file->messages_len, file->buf->cursor);
+	printf("SML file (%d SML messages, %zu bytes)\n", file->messages_len, file->buf->cursor);
 	for (i = 0; i < file->messages_len; i++) {
 		printf("SML message %4.X\n", *(file->messages[i]->message_body->tag));
 	}

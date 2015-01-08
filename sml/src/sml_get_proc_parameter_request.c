@@ -23,7 +23,13 @@
 
 sml_get_proc_parameter_request *sml_get_proc_parameter_request_init() {
 	sml_get_proc_parameter_request *msg = (sml_get_proc_parameter_request *) malloc(sizeof (sml_get_proc_parameter_request));
-	memset(msg, 0, sizeof(sml_get_proc_parameter_request));
+	*msg = ( sml_get_proc_parameter_request ) {
+		.server_id = NULL,
+		.username = NULL,
+		.password = NULL,
+		.parameter_tree_path = NULL,
+		.attribute = NULL
+	};
 
 	return msg;
 }

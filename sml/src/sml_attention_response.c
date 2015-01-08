@@ -22,7 +22,12 @@
 
 sml_attention_response *sml_attention_response_init() {
 	sml_attention_response *msg = (sml_attention_response *) malloc(sizeof(sml_attention_response));
-	memset(msg, 0, sizeof(sml_attention_response));
+	*msg = ( sml_attention_response ) {
+		.server_id = NULL,
+		.attention_number = NULL,
+		.attention_message = NULL,
+		.attention_details = NULL
+	};
 
 	return msg;
 }

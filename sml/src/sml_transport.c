@@ -35,7 +35,8 @@ unsigned char end_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x1a};
 
 size_t sml_read(int fd, fd_set *set, unsigned char *buffer, size_t len) {
 	
-	size_t r, tr = 0;
+	ssize_t r = 0;
+	size_t tr = 0;
 
 	while (tr < len) {
 		select(fd + 1, set, 0, 0, 0);
