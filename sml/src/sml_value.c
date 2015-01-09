@@ -121,7 +121,7 @@ double sml_value_to_double(sml_value *value) {
 		case 0x68: return *value->data.uint64; break;
 
 		default:
-			fprintf(stderr,"libsml: error: unknown type in %s\n", __FUNCTION__);
+			fprintf(stderr,"error: unknown type %d in %s\n", value->type, __FUNCTION__);
 			return 0;
 	}
 }
