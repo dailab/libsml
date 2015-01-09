@@ -27,7 +27,7 @@
 int sml_number_endian();
 void sml_number_byte_swap(unsigned char *bytes, int bytes_len);
 
-void *sml_number_init(u64 number, unsigned char type, int size) {
+void *sml_number_init(u64 number, unsigned char type __attribute__ ((unused)), int size) {
 	
 	const char * bytes = ( const char * ) &number;
 

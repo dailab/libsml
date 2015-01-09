@@ -76,7 +76,7 @@ void transport_receiver(unsigned char *buffer, size_t buffer_len) {
 	sml_file_free(file);
 }
 
-int main(int argc, char **argv) {
+int main(void) {
 	// this example assumes that a EDL21 meter sending SML messages via a
 	// serial device. Adjust as needed.
 	char *device = "/dev/cu.usbserial";
