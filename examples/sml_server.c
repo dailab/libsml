@@ -35,7 +35,7 @@ int serial_port_open(const char* device) {
 
 	int fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
 	if (fd < 0) {
-		printf("error: open(%s): %s\n", device, strerror(errno));
+		fprintf(stderr,"error: open(%s): %s\n", device, strerror(errno));
 		return -1;
 	}
 
