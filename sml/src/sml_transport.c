@@ -93,7 +93,7 @@ size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
 			}
 			else {
 				// dont read other escaped sequences yet
-				printf("error: unrecognized sequence\n");
+				fprintf(stderr,"libsml: error: unrecognized sequence\n");
 				return 0;
 			}
 		}
