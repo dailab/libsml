@@ -103,12 +103,10 @@ void transport_receiver(unsigned char *buffer, size_t buffer_len) {
 						break;
 					}
 					printf("\n");
+					// flush the stdout puffer, that pipes work without waiting
+					fflush(stdout);
 				}
 			}
-
-			// free the malloc'd memory
-			sml_file_free(file);
-			exit(0); // processed first message - exit
 		}
 	}
 
