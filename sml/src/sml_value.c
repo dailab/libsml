@@ -84,7 +84,7 @@ void sml_value_write(sml_value *value, sml_buffer *buf) {
 
 sml_value *sml_value_init() {
 	sml_value *value = (sml_value *) malloc(sizeof(sml_value));
-	memset(value, 0, sizeof(value));
+	memset(value, 0, sizeof(*value));
 
 	return value;
 }
@@ -118,7 +118,7 @@ double sml_value_to_double(sml_value *value) {
 		case 0x68: return *value->data.uint64; break;
 
 		default:
-			printf("error: unknown type in %s\n", __FUNCTION__);
+			fprintf(stderr, "error: unknown type in %s\n", __FUNCTION__);
 			return 0;
 	}
 }
