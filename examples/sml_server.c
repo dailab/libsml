@@ -2,6 +2,9 @@
 // DAI-Labor, TU-Berlin
 //
 // This file is part of libSML.
+// Thanks to Thomas Binder and Axel (tuxedo) for providing code how to
+// print OBIS data (see transport_receiver()).
+// https://community.openhab.org/t/using-a-power-meter-sml-with-openhab/21923
 //
 // libSML is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,6 +30,7 @@
 
 #include <sml/sml_file.h>
 #include <sml/sml_transport.h>
+#include <sml/sml_value.h>
 
 int serial_port_open(const char* device) {
 	int bits;
@@ -62,15 +66,49 @@ int serial_port_open(const char* device) {
 }
 
 void transport_receiver(unsigned char *buffer, size_t buffer_len) {
+	int i;
 	// the buffer contains the whole message, with transport escape sequences.
 	// these escape sequences are stripped here.
 	sml_file *file = sml_file_parse(buffer + 8, buffer_len - 16);
 	// the sml file is parsed now
 
-	// read here some values ..
-
 	// this prints some information about the file
 	sml_file_print(file);
+
+	// read here some values ...
+	printf("OBIS data\n");
+	for (i = 0; i < file->messages_len; i++) {
+		sml_message *message = file->messages[i];
+		if (*message->message_body->tag == SML_MESSAGE_GET_LIST_RESPONSE) {
+			double value;
+			sml_list *entry;
+			sml_get_list_response *body;
+			body = (sml_get_list_response *) message->message_body->data;
+			for (entry = body->val_list; entry != NULL; entry = entry->next) {
+				value = sml_value_to_double(entry->value);
+				if (value != 0) {
+					int scaler = (entry->scaler) ? *entry->scaler : 1;
+					if (scaler == -1)
+						value *= 0.1;
+					printf("%d-%d:%d.%d.%d*%d#%.1f#",
+						entry->obj_name->str[0], entry->obj_name->str[1],
+						entry->obj_name->str[2], entry->obj_name->str[3],
+						entry->obj_name->str[4], entry->obj_name->str[5], value);
+					switch (*entry->unit) {
+					case 0x1B:
+						printf("W");
+						break;
+					case 0x1E:
+						printf("Wh");
+						break;
+					}
+					printf("\n");
+					// flush the stdout puffer, that pipes work without waiting
+					fflush(stdout);
+				}
+			}
+		}
+	}
 
 	// free the malloc'd memory
 	sml_file_free(file);
@@ -79,7 +117,13 @@ void transport_receiver(unsigned char *buffer, size_t buffer_len) {
 int main(void) {
 	// this example assumes that a EDL21 meter sending SML messages via a
 	// serial device. Adjust as needed.
-	char *device = "/dev/cu.usbserial";
+	if (argc != 2) {
+		printf("Usage: %s <device>\n", argv[0]);
+		printf("device - serial device of connected power meter e.g. /dev/cu.usbserial\n");
+		exit(-1); // exit here
+	}
+
+	char *device = argv[1];
 	int fd = serial_port_open(device);
 
 	if (fd > 0) {
