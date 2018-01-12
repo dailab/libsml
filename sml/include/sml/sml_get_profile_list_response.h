@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SML_GET_PROFILE_LIST_RESPONSE_H_
-#define _SML_GET_PROFILE_LIST_RESPONSE_H_
+#ifndef SML_GET_PROFILE_LIST_RESPONSE_H_
+#define SML_GET_PROFILE_LIST_RESPONSE_H_
 
 #include "sml_shared.h"
 #include "sml_octet_string.h"
@@ -51,5 +51,5 @@ void sml_get_profile_list_response_free(sml_get_profile_list_response *msg);
 #endif
 
 
-#endif /* _SML_GET_PROFILE_LIST_RESPONSE_H_ */
+#endif /* SML_GET_PROFILE_LIST_RESPONSE_H_ */
 

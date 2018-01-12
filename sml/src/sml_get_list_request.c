@@ -21,10 +21,16 @@
 #include <stdio.h>
 
 sml_get_list_request* sml_get_list_request_init() {
-	  sml_get_list_request *msg = (sml_get_list_request *) malloc(sizeof(sml_get_list_request));
-	  memset(msg, 0, sizeof(sml_get_list_request));
+	sml_get_list_request *msg = (sml_get_list_request *) malloc(sizeof(sml_get_list_request));
+	*msg = ( sml_get_list_request ) {
+		.client_id = NULL,
+		.server_id = NULL,
+		.username = NULL,
+		.password = NULL,
+		.list_name = NULL
+	};
 
-	  return msg;
+	return msg;
 }
 
 void sml_get_list_request_write(sml_get_list_request *msg, sml_buffer *buf) {
@@ -40,7 +46,13 @@ void sml_get_list_request_write(sml_get_list_request *msg, sml_buffer *buf) {
 
 sml_get_list_request *sml_get_list_request_parse(sml_buffer *buf) {
 	sml_get_list_request *msg = (sml_get_list_request *) malloc(sizeof(sml_get_list_request));
-	memset(msg, 0, sizeof(sml_get_list_request));
+	*msg = ( sml_get_list_request ) {
+		.client_id = NULL,
+		.server_id = NULL,
+		.username = NULL,
+		.password = NULL,
+		.list_name = NULL
+	};
 
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
 		buf->error = 1;

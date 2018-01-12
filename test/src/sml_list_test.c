@@ -36,6 +36,7 @@ TEST(sml_list, init) {
 	sml_list *l = sml_list_init();
 	TEST_ASSERT_NOT_NULL(l);
 	TEST_ASSERT_NULL(l->next);
+	sml_list_free( l );
 }
 
 TEST(sml_list, add) {
@@ -45,6 +46,7 @@ TEST(sml_list, add) {
 	TEST_ASSERT_NOT_NULL(l);
 	TEST_ASSERT_NOT_NULL(l->next);
 	TEST_ASSERT_TRUE(n == l->next);
+	sml_list_free( l );
 }
 
 TEST(sml_list, parse_two_entries) {
@@ -55,6 +57,8 @@ TEST(sml_list, parse_two_entries) {
 	TEST_ASSERT_NOT_NULL(l);
 	TEST_ASSERT_NOT_NULL(l->next);
 	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp_with_hex(l->obj_name, "61"));
+
+	sml_list_free( l );
 }
 
 TEST(sml_list, parse_optional) {
@@ -62,6 +66,7 @@ TEST(sml_list, parse_optional) {
 	sml_list *l = sml_list_parse(buf);
 	TEST_ASSERT_NULL(l);
 	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
+	sml_list_free( l );
 }
 
 TEST(sml_list, write_one_entry) {
@@ -73,6 +78,8 @@ TEST(sml_list, write_one_entry) {
 
 	sml_list_write(l, buf);
 	expected_buf(buf, "71770648616C6C6F010101010648616C6C6F01", 19);
+
+	sml_list_free( l );
 }
 
 TEST(sml_list, write_optional) {
@@ -106,27 +113,43 @@ TEST_TEAR_DOWN(sml_sequence) {
 TEST(sml_sequence, init) {
 	sml_sequence *seq = sml_sequence_init(&free);
 	TEST_ASSERT_NOT_NULL(seq);
+	sml_sequence_free( seq );
+}
+
+static void * sml_octet_string_parse_( sml_buffer * buf ) {
+	return sml_octet_string_parse( buf );
+}
+
+static void sml_octet_string_free_( void * p ) {
+	sml_octet_string_free( p );
 }
 
 TEST(sml_sequence, parse_octet_string) {
 	hex2binary("720648616C6C6F0648616C6C6F", sml_buf_get_current_buf(buf));
 
-	sml_sequence *seq = sml_sequence_parse(buf, (void *) &sml_octet_string_parse, (void (*)(void *))&sml_octet_string_free);
+	sml_sequence *seq = sml_sequence_parse(buf, sml_octet_string_parse_, sml_octet_string_free_);
 	TEST_ASSERT_NOT_NULL(seq);
 	TEST_ASSERT_EQUAL(2, seq->elems_len);
+	sml_sequence_free( seq );
+}
+
+static void sml_octet_string_write_( void * p, sml_buffer * buf ) {
+	sml_octet_string_write( p, buf );
 }
 
 TEST(sml_sequence, write_octet_string) {
-	sml_sequence *seq = sml_sequence_init((void (*)(void *))&sml_octet_string_free);
+	sml_sequence *seq = sml_sequence_init( sml_octet_string_free_ );
 	sml_sequence_add(seq, sml_octet_string_init((unsigned char *)"Hallo", 5));
 	sml_sequence_add(seq, sml_octet_string_init((unsigned char *)"Hallo", 5));
 
-	sml_sequence_write(seq, buf, (void (*)(void *, sml_buffer *))&sml_octet_string_write);
+	sml_sequence_write(seq, buf, sml_octet_string_write_ );
 	expected_buf(buf, "720648616C6C6F0648616C6C6F", 13);
+
+	sml_sequence_free( seq );
 }
 
 TEST(sml_sequence, free_octet_string) {
-	sml_sequence *seq = sml_sequence_init((void (*)(void *))&sml_octet_string_free);
+	sml_sequence *seq = sml_sequence_init( sml_octet_string_free_ );
 	sml_sequence_add(seq, sml_octet_string_init((unsigned char *)"Hallo", 5));
 	sml_sequence_free(seq);
 }

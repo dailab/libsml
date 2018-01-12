@@ -35,7 +35,8 @@ unsigned char end_seq[] = {0x1b, 0x1b, 0x1b, 0x1b, 0x1a};
 
 size_t sml_read(int fd, fd_set *set, unsigned char *buffer, size_t len) {
 	
-	size_t r, tr = 0;
+	ssize_t r = 0;
+	size_t tr = 0;
 
 	while (tr < len) {
 		select(fd + 1, set, 0, 0, 0);
@@ -73,7 +74,7 @@ size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
 
 	// found start sequence
 
-	while (len < max_len) {
+	while ((len+8) < max_len) {
 		
 		sml_read(fd, &readfds, &(buf[len]), 4);
 			
@@ -92,7 +93,7 @@ size_t sml_transport_read(int fd, unsigned char *buffer, size_t max_len) {
 			}
 			else {
 				// dont read other escaped sequences yet
-				printf("error: unrecognized sequence\n");
+				fprintf(stderr,"libsml: error: unrecognized sequence\n");
 				return 0;
 			}
 		}

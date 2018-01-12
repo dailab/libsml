@@ -29,15 +29,17 @@
 
 sml_sequence *sml_sequence_init(void (*elem_free) (void *elem)) {
 	sml_sequence *seq = (sml_sequence *) malloc(sizeof(sml_sequence));
-	memset(seq, 0, sizeof(sml_sequence));
-	seq->elem_free = elem_free;
+	*seq = ( sml_sequence ) {
+		.elems = NULL,
+		.elems_len = 0,
+		.elem_free = elem_free
+	};
 
 	return seq;
 }
 
 sml_sequence *sml_sequence_parse(sml_buffer *buf, void *(*elem_parse) (sml_buffer *buf), void (*elem_free) (void *elem)) {
 	if (sml_buf_get_next_type(buf) != SML_TYPE_LIST) {
-		buf->error = 1;
 		goto error;
 	}
 
@@ -46,15 +48,18 @@ sml_sequence *sml_sequence_parse(sml_buffer *buf, void *(*elem_parse) (sml_buffe
 	void *p;
 	for (i = 0; i < len; i++) {
 		p = elem_parse(buf);
-		if (sml_buf_has_errors(buf)) goto error;
+		if (sml_buf_has_errors(buf)) {
+			goto haserrors;
+		}
 		sml_sequence_add(seq, p);
 	}
 
 	return seq;
 
+haserrors:
+	sml_sequence_free(seq);
 error:
 	buf->error = 1;
-	sml_sequence_free(seq);
 	return 0;
 }
 
@@ -97,8 +102,17 @@ void sml_sequence_add(sml_sequence *seq, void *new_entry) {
 // sml_list;
 
 sml_list *sml_list_init(){
-	 sml_list *s = (sml_list *)malloc(sizeof(sml_list));
-	 memset(s, 0, sizeof(sml_list));
+	sml_list *s = (sml_list *)malloc(sizeof(sml_list));
+	*s = ( sml_list ) {
+		.obj_name = NULL,
+		.status = NULL,
+		.val_time = NULL,
+		.unit = NULL,
+		.scaler = NULL,
+		.value = NULL,
+		.value_signature = NULL,
+		.next = NULL
+	};
 	return s;
 }
 

@@ -16,9 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-
-#ifndef _SML_MESSAGE_H_
-#define	_SML_MESSAGE_H_
+#ifndef SML_MESSAGE_H_
+#define	SML_MESSAGE_H_
 
 #include <stdlib.h>
 #include "sml_octet_string.h"
@@ -92,5 +91,5 @@ void sml_message_body_write(sml_message_body *message_body, sml_buffer *buf);
 #endif
 
 
-#endif /* _SML_MESSAGE_H_ */
+#endif /* SML_MESSAGE_H_ */
 

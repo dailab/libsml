@@ -25,7 +25,17 @@
 
 sml_get_profile_pack_request *sml_get_profile_pack_request_init(){
 	sml_get_profile_pack_request *msg = (sml_get_profile_pack_request *) malloc(sizeof(sml_get_profile_pack_request));
-	memset(msg, 0, sizeof(sml_get_profile_pack_request));
+	*msg = ( sml_get_profile_pack_request ) {
+		.server_id = NULL,
+		.username = NULL,
+		.password = NULL,
+		.with_rawdata = NULL,
+		.begin_time = NULL,
+		.end_time = NULL,
+		.parameter_tree_path = NULL,
+		.object_list = NULL,
+		.das_details = NULL
+	};
 
 	return msg;
 }
@@ -102,7 +112,10 @@ sml_get_profile_pack_request *sml_get_profile_pack_request_parse(sml_buffer *buf
 		sml_obj_req_entry_list *last = 0, *n = 0;
 		for (i = len; i > 0; i--) {
 			n = (sml_obj_req_entry_list *) malloc(sizeof(sml_obj_req_entry_list));
-			memset(n, 0, sizeof(sml_obj_req_entry_list));
+			*n = ( sml_obj_req_entry_list ) {
+				.object_list_entry = NULL,
+				.next = NULL
+			};
 			n->object_list_entry = sml_obj_req_entry_parse(buf);
 			if (sml_buf_has_errors(buf)) goto error;
 
