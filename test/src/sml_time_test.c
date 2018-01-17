@@ -35,6 +35,7 @@ TEST_TEAR_DOWN(sml_time) {
 TEST(sml_time, init) {
 	sml_time *t = sml_time_init();
 	TEST_ASSERT_NOT_NULL(t);
+	sml_time_free( t );
 }
 
 TEST(sml_time, parse_sec_index) {
@@ -44,6 +45,8 @@ TEST(sml_time, parse_sec_index) {
 	TEST_ASSERT_NOT_NULL(t);
 	TEST_ASSERT_EQUAL(SML_TIME_SEC_INDEX, *(t->tag));
 	TEST_ASSERT_EQUAL(8, buf->cursor);
+
+	sml_time_free( t );
 }
 
 TEST(sml_time, parse_timestamp) {
@@ -53,6 +56,8 @@ TEST(sml_time, parse_timestamp) {
 	TEST_ASSERT_NOT_NULL(t);
 	TEST_ASSERT_EQUAL(SML_TIME_TIMESTAMP, *(t->tag));
 	TEST_ASSERT_EQUAL(8, buf->cursor);
+
+	sml_time_free( t );
 }
 
 TEST(sml_time, parse_optional) {
@@ -61,6 +66,8 @@ TEST(sml_time, parse_optional) {
 
 	TEST_ASSERT_NULL(t);
 	TEST_ASSERT_EQUAL(1, buf->cursor);
+
+	sml_time_free( t );
 }
 
 TEST(sml_time, write_sec_index) {
@@ -70,6 +77,8 @@ TEST(sml_time, write_sec_index) {
 
 	sml_time_write(t, buf);
 	expected_buf(buf, "72620165000000FF", 8);
+
+	sml_time_free( t );
 }
 
 TEST(sml_time, write_optional) {

@@ -25,31 +25,32 @@ int UnityMain(int argc, char* argv[], void (*runAllTests)());
 
 
 #define TEST(group, name) \
-    void TEST_##group##_##name##_testBody();\
+    void TEST_##group##_##name##_();\
     void TEST_##group##_##name##_run()\
     {\
         UnityTestRunner(TEST_##group##_SETUP,\
-             TEST_##group##_##name##_testBody,\
+             TEST_##group##_##name##_,\
             TEST_##group##_TEAR_DOWN,\
             "TEST(" #group ", " #name ")",\
             #group, #name,\
             __FILE__, __LINE__);\
     }\
-    void  TEST_##group##_##name##_testBody()
+    void  TEST_##group##_##name##_()
 
 #define IGNORE_TEST(group, name) \
-    void TEST_##group##_##name##_testBody();\
+    void TEST_##group##_##name##_();\
     void TEST_##group##_##name##_run()\
     {\
+        UnityIgnoreTest("IGNORE_TEST(" #group ", " #name ")");\
     }\
-    void  TEST_##group##_##name##_testBody()
+    void  TEST_##group##_##name##_()
 
 #define DECLARE_TEST_CASE(group, name) \
     void TEST_##group##_##name##_run()
 
 #define RUN_TEST_CASE(group, name) \
-        DECLARE_TEST_CASE(group, name);\
-    TEST_##group##_##name##_run();
+    { DECLARE_TEST_CASE(group, name);\
+      TEST_##group##_##name##_run(); }
 
 //This goes at the bottom of each test file or in a separate c file
 #define TEST_GROUP_RUNNER(group)\
@@ -62,8 +63,8 @@ int UnityMain(int argc, char* argv[], void (*runAllTests)());
 
 //Call this from main
 #define RUN_TEST_GROUP(group)\
-    void TEST_##group##_GROUP_RUNNER();\
-    TEST_##group##_GROUP_RUNNER();
+    { void TEST_##group##_GROUP_RUNNER();\
+      TEST_##group##_GROUP_RUNNER(); }
 
 //CppUTest Compatibility Macros
 #define UT_PTR_SET(ptr, newPointerValue)               UnityPointer_Set((void**)&ptr, (void*)newPointerValue)

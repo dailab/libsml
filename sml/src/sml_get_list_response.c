@@ -21,7 +21,15 @@
 
 sml_get_list_response *sml_get_list_response_init() {
 	sml_get_list_response *msg = (sml_get_list_response *) malloc(sizeof(sml_get_list_response));
-	memset(msg, 0, sizeof(sml_get_list_response));
+	*msg = ( sml_get_list_response ) {
+		.client_id = NULL,
+		.server_id = NULL,
+		.list_name = NULL,
+		.act_sensor_time = NULL,
+		.val_list = NULL,
+		.list_signature = NULL,
+		.act_gateway_time = NULL
+	};
 	
 	return msg;
 }
