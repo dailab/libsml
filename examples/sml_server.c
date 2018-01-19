@@ -37,6 +37,8 @@ int serial_port_open(const char* device) {
 	struct termios config;
 	memset(&config, 0, sizeof(config));
 
+    if (!strcmp(device,"-")) return 0; // read stdin when "-" is given for the device
+
 #ifdef O_NONBLOCK
 	int fd = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #else
@@ -90,6 +92,7 @@ void transport_receiver(unsigned char *buffer, size_t buffer_len) {
 			sml_get_list_response *body;
 			body = (sml_get_list_response *) message->message_body->data;
 			for (entry = body->val_list; entry != NULL; entry = entry->next) {
+				if (!entry->value) continue; // do not crash on null value
 				value = sml_value_to_double(entry->value);
 				if (value != 0) {
 					int scaler = (entry->scaler) ? *entry->scaler : 1;
@@ -99,7 +102,7 @@ void transport_receiver(unsigned char *buffer, size_t buffer_len) {
 						entry->obj_name->str[0], entry->obj_name->str[1],
 						entry->obj_name->str[2], entry->obj_name->str[3],
 						entry->obj_name->str[4], entry->obj_name->str[5], value);
-					switch (*entry->unit) {
+					if (entry->unit) switch (*entry->unit) {
 					case 0x1B:
 						printf("W");
 						break;
@@ -124,20 +127,14 @@ int main(int argc, char *argv[]) {
 	// serial device. Adjust as needed.
 	if (argc != 2) {
 		printf("Usage: %s <device>\n", argv[0]);
-		printf("device - serial device of connected power meter e.g. /dev/cu.usbserial\n");
+		printf("device - serial device of connected power meter e.g. /dev/cu.usbserial, or - for stdin\n");
 		exit(1); // exit here
-	}
-
-	// check for serial port
-	if (access(argv[1], F_OK) == -1) {
-		printf("Error: no such device (%s)\n", argv[1]);
-		exit(2);
 	}
 
 	// open serial port
 	int fd = serial_port_open(argv[1]);
-	if (!fd) {
-		printf("Error: can''t open device (%s)\n", argv[1]);
+	if (fd<0) {
+		printf("Error: failed to open device (%s)\n", argv[1]);
 		exit(3);
 	}
 
