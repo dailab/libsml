@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with libSML.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SML_SHARED_H_
-#define	_SML_SHARED_H_
+#ifndef SML_SHARED_H_
+#define	SML_SHARED_H_
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -71,7 +71,7 @@ typedef int64_t i64;
 typedef struct {
 	unsigned char *buffer;
 	size_t buffer_len;
-	int cursor;
+	size_t cursor;
 	int error;
 	char *error_msg;
 } sml_buffer;
@@ -114,5 +114,5 @@ void hexdump(unsigned char *buffer, size_t buffer_len);
 #endif
 
 
-#endif /* _SML_SHARED_H_ */
+#endif /* SML_SHARED_H_ */
 

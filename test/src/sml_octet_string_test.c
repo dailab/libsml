@@ -36,6 +36,7 @@ TEST(sml_octet_string, init) {
 	octet_string *str = sml_octet_string_init((unsigned char *)"hallo", 5);
 	TEST_ASSERT_EQUAL(5, str->len);
 	TEST_ASSERT_EQUAL_MEMORY("hallo", str->str, 5);
+	sml_octet_string_free( str );
 }
 
 TEST(sml_octet_string, parse) {
@@ -43,6 +44,7 @@ TEST(sml_octet_string, parse) {
 
 	octet_string *str = sml_octet_string_parse(buf);
 	expected_octet_string(str, "Hallo", 5);
+	sml_octet_string_free( str );
 }
 
 TEST(sml_octet_string, parse_multiple_tl_fields) {
@@ -50,6 +52,7 @@ TEST(sml_octet_string, parse_multiple_tl_fields) {
 
 	octet_string *str = sml_octet_string_parse(buf);
 	expected_octet_string(str, "aaaaoaaaaaaaaaaa", 16);
+	sml_octet_string_free( str );
 }
 
 TEST(sml_octet_string, parse_optional) {
@@ -59,18 +62,22 @@ TEST(sml_octet_string, parse_optional) {
 	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
 	TEST_ASSERT_NULL(str);
 	TEST_ASSERT_EQUAL(1, buf->cursor);
+
+	sml_octet_string_free( str );
 }
 
 TEST(sml_octet_string, write) {
 	octet_string *str = sml_octet_string_init((unsigned char *)"Hallo", 5);
 	sml_octet_string_write(str, buf);
 	expected_buf(buf, "0648616C6C6F", 6);
+	sml_octet_string_free( str );
 }
 
 TEST(sml_octet_string, write_multiple_tl_fields) {
 	octet_string *str = sml_octet_string_init((unsigned char *)"aaaaoaaaaaaaaaaa", 16);
 	sml_octet_string_write(str, buf);
 	expected_buf(buf, "8102616161616F6161616161616161616161", 18);
+	sml_octet_string_free( str );
 }
 
 TEST(sml_octet_string, write_optional) {
@@ -85,11 +92,16 @@ TEST(sml_octet_string, cmp) {
 
 	TEST_ASSERT_TRUE(sml_octet_string_cmp(s1, s2) != 0);
 	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp(s1, s3));
+
+	sml_octet_string_free( s3 );
+	sml_octet_string_free( s2 );
+	sml_octet_string_free( s1 );
 }
 
 TEST(sml_octet_string, cmp_with_hex) {
 	octet_string *s = sml_octet_string_init((unsigned char *)"Hallo", 5);
 	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp_with_hex(s, "48616C6C6F"));
+	sml_octet_string_free( s );
 }
 
 TEST_GROUP_RUNNER(sml_octet_string) {

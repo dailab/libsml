@@ -35,6 +35,7 @@ TEST_TEAR_DOWN(sml_status) {
 TEST(sml_status, init) {
 	sml_status *s = sml_status_init();
 	TEST_ASSERT_NOT_NULL(s);
+	sml_status_free( s );
 }
 
 TEST(sml_status, parse_status8) {
@@ -44,6 +45,8 @@ TEST(sml_status, parse_status8) {
 	TEST_ASSERT_NOT_NULL(s);
 	TEST_ASSERT_EQUAL(1, *(s->data.status8));
 	TEST_ASSERT_EQUAL((SML_TYPE_UNSIGNED | SML_TYPE_NUMBER_8), s->type);
+
+	sml_status_free( s );
 }
 
 TEST(sml_status, parse_optional) {
@@ -53,6 +56,8 @@ TEST(sml_status, parse_optional) {
 	TEST_ASSERT_NULL(s);
 	TEST_ASSERT_FALSE(sml_buf_has_errors(buf));
 	TEST_ASSERT_EQUAL(1, buf->cursor);
+
+	sml_status_free( s );
 }
 
 TEST(sml_status, parse_not_unsigned) {
@@ -61,6 +66,8 @@ TEST(sml_status, parse_not_unsigned) {
 
 	TEST_ASSERT_NULL(s);
 	TEST_ASSERT_TRUE(sml_buf_has_errors(buf));
+
+	sml_status_free( s );
 }
 
 TEST(sml_status, write_status32) {
@@ -70,6 +77,8 @@ TEST(sml_status, write_status32) {
 
 	sml_status_write(s, buf);
 	expected_buf(buf, "650000002A", 5);
+
+	sml_status_free( s );
 }
 
 TEST(sml_status, write_optional) {

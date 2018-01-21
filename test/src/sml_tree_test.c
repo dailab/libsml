@@ -36,6 +36,7 @@ TEST_TEAR_DOWN(sml_tree) {
 TEST(sml_tree, init) {
 	sml_tree *t = sml_tree_init();
 	TEST_ASSERT_NOT_NULL(t);
+	sml_tree_free( t );
 }
 
 TEST(sml_tree, add_tree) {
@@ -44,6 +45,8 @@ TEST(sml_tree, add_tree) {
 
 	TEST_ASSERT_NOT_NULL(t->child_list[0]);
 	TEST_ASSERT_EQUAL(1, t->child_list_len);
+
+	sml_tree_free( t );
 }
 
 TEST(sml_tree, write) {
@@ -51,6 +54,7 @@ TEST(sml_tree, write) {
 	t->parameter_name = sml_octet_string_init((unsigned char *)"Hallo", 5);
 	sml_tree_write(t, buf);
 	expected_buf(buf, "730648616C6C6F0101", 9);
+	sml_tree_free( t );
 }
 
 TEST(sml_tree, parse_with_child) {
@@ -60,6 +64,8 @@ TEST(sml_tree, parse_with_child) {
 	TEST_ASSERT_NOT_NULL(t);
 	TEST_ASSERT_NOT_NULL(t->child_list[0]);
 	TEST_ASSERT_EQUAL(1, t->child_list_len);
+
+	sml_tree_free( t );
 }
 
 TEST(sml_tree, parse_with_error_child) {
@@ -67,6 +73,8 @@ TEST(sml_tree, parse_with_error_child) {
 	sml_tree *t = sml_tree_parse(buf);
 
 	TEST_ASSERT_NULL(t);
+
+	sml_tree_free( t );
 }
 
 TEST_GROUP_RUNNER(sml_tree) {
@@ -92,6 +100,7 @@ TEST_TEAR_DOWN(sml_tree_path) {
 TEST(sml_tree_path, init) {
 	sml_tree_path *t = sml_tree_path_init();
 	TEST_ASSERT_NOT_NULL(t);
+	sml_tree_path_free( t );
 }
 
 TEST(sml_tree_path, add_entry) {
@@ -100,6 +109,7 @@ TEST(sml_tree_path, add_entry) {
 	TEST_ASSERT_EQUAL(0, t->path_entries_len);
 	sml_tree_path_add_path_entry(t, sml_octet_string_init((unsigned char *)"tree", 4));
 	TEST_ASSERT_EQUAL(1, t->path_entries_len);
+	sml_tree_path_free( t );
 }
 
 TEST(sml_tree_path, parse) {
@@ -109,6 +119,7 @@ TEST(sml_tree_path, parse) {
 	TEST_ASSERT_EQUAL(2, t->path_entries_len);
 	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp_with_hex(t->path_entries[0], "48616C6C6F"));
 	TEST_ASSERT_EQUAL(0, sml_octet_string_cmp_with_hex(t->path_entries[1], "64"));
+	sml_tree_path_free( t );
 }
 
 TEST(sml_tree_path, write) {
@@ -117,6 +128,7 @@ TEST(sml_tree_path, write) {
 	sml_tree_path_add_path_entry(t, sml_octet_string_init((unsigned char *)"Hallo", 5));
 	sml_tree_path_write(t, buf);
 	expected_buf(buf, "720648616C6C6F0648616C6C6F", 13);
+	sml_tree_path_free( t );
 }
 
 TEST_GROUP_RUNNER(sml_tree_path) {
@@ -141,6 +153,7 @@ TEST_TEAR_DOWN(sml_proc_par_value) {
 TEST(sml_proc_par_value, init) {
 	sml_proc_par_value *t = sml_proc_par_value_init();
 	TEST_ASSERT_NOT_NULL(t);
+	sml_proc_par_value_free( t );
 }
 
 TEST(sml_proc_par_value, parse_time) {
@@ -149,6 +162,7 @@ TEST(sml_proc_par_value, parse_time) {
 	TEST_ASSERT_NOT_NULL(t);
 	TEST_ASSERT_EQUAL(SML_PROC_PAR_VALUE_TAG_TIME, *(t->tag));
 	TEST_ASSERT_EQUAL(11, buf->cursor);
+	sml_proc_par_value_free( t );
 }
 
 TEST(sml_proc_par_value, write_time) {
@@ -160,6 +174,7 @@ TEST(sml_proc_par_value, write_time) {
 	ppv->data.time = t;
 	sml_proc_par_value_write(ppv, buf);
 	expected_buf(buf, "72620472620165000000FF", 11);
+	sml_proc_par_value_free( ppv );
 }
 
 TEST_GROUP_RUNNER(sml_proc_par_value) {
