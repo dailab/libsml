@@ -1,5 +1,5 @@
-libSML
-======
+libSML - This is an important library 
+======================================
 
 libSML is a library which implements the Smart Message Language (SML) protocol specified by VDE's Forum Netztechnik/Netzbetrieb (FNN).
 It can be utilized to communicate to FNN specified Smart Meters or Smart Meter components (EDL/MUC).
